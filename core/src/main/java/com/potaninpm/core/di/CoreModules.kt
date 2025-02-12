@@ -8,10 +8,10 @@ import com.potaninpm.core.di.modules.useCaseModule
 import com.potaninpm.core.di.modules.viewModelModule
 
 val coreModules = listOf(
-    viewModelModule,
     networkModule,
     repositoryModule,
     useCaseModule,
+    viewModelModule,
     roomModule,
     commonModule
 )

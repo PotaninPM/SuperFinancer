@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
@@ -65,9 +66,7 @@ fun RootNavigation() {
             popExitTransition = { ExitTransition.None }
         ) {
             composable(RootNavDestinations.Home.route) {
-//                HomeScreen(
-//                    rootNavController = rootNavController
-//                )
+                HomeScreen()
             }
 
 //        composable<RootNavDestinations.Welcome> {

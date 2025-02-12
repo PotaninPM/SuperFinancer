@@ -1,4 +1,4 @@
-package com.potaninpm.core
+package com.potaninpm.data
 
 object ApiConstants {
     const val FINNHUB_API_KEY = "cumav1pr01qsaphv6rsgcumav1pr01qsaphv6rt0"

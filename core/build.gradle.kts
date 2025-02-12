@@ -33,6 +33,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature_home"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
     // Koin DI
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.androidx.compose)
