@@ -16,10 +16,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -74,7 +77,7 @@ private fun HomeScreenContent(
 
     var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
 
-//    if (selectedUrl == null) {
+    if (selectedUrl == null) {
         Scaffold(
             topBar = {
                 Column {
@@ -131,17 +134,34 @@ private fun HomeScreenContent(
                 }
             }
         }
-//    } else {
-//        AndroidView(
-//            factory = { context ->
-//                WebView(context).apply {
-//                    webViewClient = WebViewClient()
-//                    settings.javaScriptEnabled = true
-//                    loadUrl(selectedUrl!!)
-//                }
-//            }
-//        )
-//    }
+    } else {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Статья") },
+                    navigationIcon = {
+                        IconButton(onClick = { selectedUrl = null }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Назад"
+                            )
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            AndroidView(
+                modifier = Modifier.padding(innerPadding),
+                factory = { context ->
+                    WebView(context).apply {
+                        webViewClient = WebViewClient()
+                        settings.javaScriptEnabled = true
+                        loadUrl(selectedUrl!!)
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
