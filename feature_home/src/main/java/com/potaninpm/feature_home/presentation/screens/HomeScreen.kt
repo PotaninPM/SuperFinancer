@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -142,7 +144,7 @@ private fun HomeScreenContent(
     onSettingsClick: () -> Unit,
     onRefreshClick: () -> Unit
 ) {
-    val listState = rememberLazyListState()
+    val listState = rememberScrollState()
 
     var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
 
@@ -179,36 +181,29 @@ private fun HomeScreenContent(
 
             Column(
                 modifier = Modifier
+                    .padding(innerPadding)
                     .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 80.dp)
+                    .verticalScroll(listState)
             ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 80.dp)
-                ) {
-                    item {
-                        TickersList(
-                            tickersState,
-                            autoUpdateEnabled = autoUpdateEnabled,
-                            remainingTime = remainingTime,
-                            onRefreshClick = {
-                                onRefreshClick()
-                            }
-                        )
-                    }
 
-                    item {
-                        NewsList(
-                            newsState,
-                            onClick = {
-                                selectedUrl = it
-                            }
-                        )
+                TickersList(
+                    tickersState,
+                    autoUpdateEnabled = autoUpdateEnabled,
+                    remainingTime = remainingTime,
+                    onRefreshClick = {
+                        onRefreshClick()
                     }
-                }
+                )
+
+
+                NewsList(
+                    newsState,
+                    onClick = {
+                        selectedUrl = it
+                    }
+                )
             }
         }
     } else {

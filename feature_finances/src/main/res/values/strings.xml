@@ -2,4 +2,7 @@
 <resources>
     <string name="goals">Your goals</string>
     <string name="finances">Finances</string>
+    <string name="add_goal">Add goal</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

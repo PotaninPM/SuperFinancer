@@ -2,4 +2,7 @@
 <resources>
     <string name="goals">Ваши цели</string>
     <string name="finances">Финансы</string>
+    <string name="add_goal">Добавить цель</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
 </resources>

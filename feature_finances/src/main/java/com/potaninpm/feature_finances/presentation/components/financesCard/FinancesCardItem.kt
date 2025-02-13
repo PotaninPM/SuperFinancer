@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.presentation.components
+package com.potaninpm.feature_finances.presentation.components.financesCard
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
