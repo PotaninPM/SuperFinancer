@@ -21,8 +21,8 @@ fun FinancesCard() {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp),
-        elevation = 12.dp.let { CardDefaults.cardElevation(it, it, it, it, it, it) }
+            .padding(top = 16.dp),
+        elevation = CardDefaults.cardElevation(12.dp)
     ) {
         Column(
             modifier = Modifier
