@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.screens
+package com.potaninpm.feature_finances.presentation.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -34,10 +34,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.components.financesCard.FinancesCard
-import com.potaninpm.feature_finances.components.goals.addGoalDialog.AddGoalDialog
-import com.potaninpm.feature_finances.components.goals.goalCard.GoalCard
-import com.potaninpm.feature_finances.components.operations.OperationsSection
+import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
+import com.potaninpm.feature_finances.presentation.components.goals.addGoalDialog.AddGoalDialog
+import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalCard
+import com.potaninpm.feature_finances.presentation.components.operations.OperationsSection
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

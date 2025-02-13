@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.components.operations
+package com.potaninpm.feature_finances.presentation.components.operations
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme

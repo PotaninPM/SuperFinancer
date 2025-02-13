@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -128,8 +129,7 @@ fun NewsImage(
             )
 
             Text(
-                text = "Изображение не найдено",
-                //stringResource(R.string.image_not_found),
+                stringResource(R.string.image_not_found),
                 color = Color.Gray,
                 fontSize = 14.sp
             )

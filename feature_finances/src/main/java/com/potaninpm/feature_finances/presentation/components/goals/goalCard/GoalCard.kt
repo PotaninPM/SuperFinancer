@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.components.goals.goalCard
+package com.potaninpm.feature_finances.presentation.components.goals.goalCard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

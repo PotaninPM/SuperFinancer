@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
     implementation(project(":feature_home"))
     // Gson
     implementation(libs.gson)

@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.components
+package com.potaninpm.feature_finances.presentation.components
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.components.operations
+package com.potaninpm.feature_finances.presentation.components.operations
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.screens.Operation
-import com.potaninpm.feature_finances.screens.groupOperationsByDate
+import com.potaninpm.feature_finances.presentation.screens.Operation
+import com.potaninpm.feature_finances.presentation.screens.groupOperationsByDate
 
 @Composable
 fun OperationsSection(

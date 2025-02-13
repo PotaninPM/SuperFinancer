@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.viewModels
+package com.potaninpm.feature_finances.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
 

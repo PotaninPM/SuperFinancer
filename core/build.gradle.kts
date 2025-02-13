@@ -67,10 +67,6 @@ dependencies {
     // Navigation
     api(libs.androidx.navigation.compose)
 
-    // Paging
-    api(libs.androidx.paging.runtime)
-    api(libs.androidx.paging.compose)
-
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)
     api(libs.androidx.activity.compose)

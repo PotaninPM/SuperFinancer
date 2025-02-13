@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.components.goals.addGoalDialog
+package com.potaninpm.feature_finances.presentation.components.goals.addGoalDialog
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.components.DatePicker
+import com.potaninpm.feature_finances.presentation.components.DatePicker
 import java.time.LocalDate
 import java.time.ZoneId
 
