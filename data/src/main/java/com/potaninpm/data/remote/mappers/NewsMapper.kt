@@ -5,7 +5,7 @@ import com.potaninpm.domain.model.NewsArticle
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-fun NYTimesArticleDto.toDomain(): NewsArticle {
+fun NYTimesArticleDto.toDomainNews(): NewsArticle {
     val imageUrl = multimedia?.firstOrNull { it.subtype == "xlarge" }?.url
 
     val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")

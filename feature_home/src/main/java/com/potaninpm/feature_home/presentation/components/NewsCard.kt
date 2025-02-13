@@ -17,12 +17,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -93,25 +95,43 @@ fun NewsCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = article.source, style = MaterialTheme.typography.labelSmall)
-                Text(text = article.publishedAt, style = MaterialTheme.typography.labelSmall)
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
-                    onClick()
-                }
-            ) {
-                Text(
-                    text = "Открыть",
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
+                DateAndSource(
+                    date = article.publishedAt,
+                    source = article.source
                 )
+
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        onClick()
+                    }
+                ) {
+                    Text(
+                        text = "Открыть",
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+fun DateAndSource(
+    date: String,
+    source: String
+) {
+    Column(
+        modifier = Modifier
+    ) {
+        Text(text = source, style = MaterialTheme.typography.labelSmall, fontSize = 13.sp, fontStyle = FontStyle.Italic)
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(text = date, style = MaterialTheme.typography.labelSmall, fontSize = 14.sp)
     }
 }
