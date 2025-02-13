@@ -1,7 +1,6 @@
 package com.potaninpm.feature_home.presentation.viewModels
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.domain.model.NewsArticle

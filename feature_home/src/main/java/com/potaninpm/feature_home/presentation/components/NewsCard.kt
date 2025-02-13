@@ -1,7 +1,6 @@
 package com.potaninpm.feature_home.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,8 +37,6 @@ fun NewsCard(
     article: NewsArticle,
     onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
     val painter = if (article.imageUrl.isNullOrEmpty()) {
         painterResource(id = R.drawable.error_24px)
     } else {
