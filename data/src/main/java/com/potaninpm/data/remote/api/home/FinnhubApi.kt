@@ -1,8 +1,8 @@
-package com.potaninpm.data.remote.api
+package com.potaninpm.data.remote.api.home
 
 import com.potaninpm.data.ApiConstants
-import com.potaninpm.data.remote.dto.finnhubDto.FinnhubProfileDto
-import com.potaninpm.data.remote.dto.finnhubDto.FinnhubQuoteDto
+import com.potaninpm.data.remote.dto.home.finnhubDto.FinnhubProfileDto
+import com.potaninpm.data.remote.dto.home.finnhubDto.FinnhubQuoteDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

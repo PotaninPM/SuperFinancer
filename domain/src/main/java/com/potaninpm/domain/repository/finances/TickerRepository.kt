@@ -1,6 +1,6 @@
-package com.potaninpm.domain.repository
+package com.potaninpm.domain.repository.finances
 
-import com.potaninpm.domain.model.Ticker
+import com.potaninpm.domain.model.finances.Ticker
 
 interface TickerRepository {
     suspend fun getTickerInfo(symbol: String): Ticker

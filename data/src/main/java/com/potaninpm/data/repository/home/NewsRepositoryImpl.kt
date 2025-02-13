@@ -1,9 +1,9 @@
-package com.potaninpm.data.repository
+package com.potaninpm.data.repository.home
 
-import com.potaninpm.data.remote.api.NYTimesApi
+import com.potaninpm.data.remote.api.home.NYTimesApi
 import com.potaninpm.data.remote.mappers.toDomainNews
-import com.potaninpm.domain.model.NewsArticle
-import com.potaninpm.domain.repository.NewsRepository
+import com.potaninpm.domain.model.finances.NewsArticle
+import com.potaninpm.domain.repository.finances.NewsRepository
 
 class NewsRepositoryImpl(
     private val nyTimesApi: NYTimesApi

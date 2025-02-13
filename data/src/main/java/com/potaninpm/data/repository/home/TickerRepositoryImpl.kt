@@ -1,8 +1,8 @@
-package com.potaninpm.data.repository
+package com.potaninpm.data.repository.home
 
-import com.potaninpm.data.remote.api.FinnhubApi
-import com.potaninpm.domain.model.Ticker
-import com.potaninpm.domain.repository.TickerRepository
+import com.potaninpm.data.remote.api.home.FinnhubApi
+import com.potaninpm.domain.model.finances.Ticker
+import com.potaninpm.domain.repository.finances.TickerRepository
 
 class TickerRepositoryImpl(val finnhubApi: FinnhubApi) : TickerRepository {
     override suspend fun getTickerInfo(symbol: String): Ticker {

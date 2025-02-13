@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":feature_home"))
+    implementation(project(":feature_finances"))
 
     // Gson
     implementation(libs.gson)

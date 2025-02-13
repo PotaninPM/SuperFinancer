@@ -45,8 +45,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.potaninpm.domain.model.NewsArticle
-import com.potaninpm.domain.model.Ticker
+import com.potaninpm.domain.model.finances.NewsArticle
+import com.potaninpm.domain.model.finances.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.TickerCard
 import com.potaninpm.feature_home.presentation.components.TickerSettingsDialog
@@ -169,10 +169,7 @@ private fun HomeScreenContent(
 
                     //SearchBar()
 
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .height(12.dp)
-                    )
+                    HorizontalDivider()
                 }
             },
             modifier = Modifier
@@ -251,7 +248,7 @@ fun NewsList(
 ) {
     Text(
         text = "Новости",
-        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
         modifier = Modifier
             .padding(top = 16.dp)
     )
@@ -282,13 +279,14 @@ fun TickersList(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = "Тикеры",
-            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
             modifier = Modifier
                 .padding(bottom = 8.dp)
         )
@@ -327,23 +325,3 @@ fun TickersList(
     }
 
 }
-
-//@Preview
-//@Composable
-//private fun HomeScreenDarkPreview() {
-//    MaterialTheme(
-//        colorScheme = darkColorScheme()
-//    ) {
-//        HomeScreenContent()
-//    }
-//}
-//
-//@Preview
-//@Composable
-//private fun HomeScreenLightPreview() {
-//    MaterialTheme(
-//        colorScheme = lightColorScheme()
-//    ) {
-//        HomeScreenContent()
-//    }
-//}

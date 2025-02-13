@@ -1,4 +1,4 @@
-package com.potaninpm.data.remote.dto.nytDto
+package com.potaninpm.data.remote.dto.home.nytDto
 
 import com.google.gson.annotations.SerializedName
 

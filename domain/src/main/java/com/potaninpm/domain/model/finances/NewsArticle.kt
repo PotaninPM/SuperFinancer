@@ -1,4 +1,4 @@
-package com.potaninpm.domain.model
+package com.potaninpm.domain.model.finances
 
 data class NewsArticle(
     val id: String,

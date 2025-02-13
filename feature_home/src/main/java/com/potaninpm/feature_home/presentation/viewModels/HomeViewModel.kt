@@ -3,10 +3,10 @@ package com.potaninpm.feature_home.presentation.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.potaninpm.domain.model.NewsArticle
-import com.potaninpm.domain.model.Ticker
-import com.potaninpm.domain.repository.NewsRepository
-import com.potaninpm.domain.repository.TickerRepository
+import com.potaninpm.domain.model.finances.NewsArticle
+import com.potaninpm.domain.model.finances.Ticker
+import com.potaninpm.domain.repository.finances.NewsRepository
+import com.potaninpm.domain.repository.finances.TickerRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

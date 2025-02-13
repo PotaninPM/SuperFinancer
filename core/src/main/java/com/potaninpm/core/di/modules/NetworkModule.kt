@@ -1,7 +1,7 @@
 package com.potaninpm.core.di.modules
 
-import com.potaninpm.data.remote.api.FinnhubApi
-import com.potaninpm.data.remote.api.NYTimesApi
+import com.potaninpm.data.remote.api.home.FinnhubApi
+import com.potaninpm.data.remote.api.home.NYTimesApi
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

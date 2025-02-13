@@ -1,7 +1,7 @@
 package com.potaninpm.data.remote.mappers
 
-import com.potaninpm.data.remote.dto.nytDto.NYTimesArticleDto
-import com.potaninpm.domain.model.NewsArticle
+import com.potaninpm.data.remote.dto.home.nytDto.NYTimesArticleDto
+import com.potaninpm.domain.model.finances.NewsArticle
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

@@ -1,4 +1,4 @@
-package com.potaninpm.data.remote.dto.finnhubDto
+package com.potaninpm.data.remote.dto.home.finnhubDto
 
 import com.google.gson.annotations.SerializedName
 

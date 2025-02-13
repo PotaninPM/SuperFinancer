@@ -1,7 +1,7 @@
-package com.potaninpm.data.remote.api
+package com.potaninpm.data.remote.api.home
 
 import com.potaninpm.data.ApiConstants
-import com.potaninpm.data.remote.dto.nytDto.NYTimesArticleResponseDto
+import com.potaninpm.data.remote.dto.home.nytDto.NYTimesArticleResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

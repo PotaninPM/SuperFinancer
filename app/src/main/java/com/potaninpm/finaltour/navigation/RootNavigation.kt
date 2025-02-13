@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
@@ -69,12 +70,9 @@ fun RootNavigation() {
                 HomeScreen()
             }
 
-//        composable<RootNavDestinations.Welcome> {
-//            WelcomeScreen(
-//                rootNavController = rootNavController
-//            )
-//        }
-
+            composable(RootNavDestinations.Finances.route) {
+                FinancesScreen()
+            }
         }
     }
 
