@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.potaninpm.feature_finances.screens.FinancesScreen
-import com.potaninpm.feature_home.screens.HomeScreen
+import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem

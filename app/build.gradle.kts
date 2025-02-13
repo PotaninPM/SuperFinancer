@@ -43,50 +43,11 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    implementation(project(":core"))
     implementation(project(":domain"))
+    implementation(project(":core"))
     implementation(project(":feature_home"))
     implementation(project(":feature_finances"))
 
-    // Gson
-    implementation(libs.gson)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-    // Room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-
-    // Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-
-    // Koin DI
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.androidx.compose.navigation)
-
-    // Kotlinx Serialization JSON
-    implementation(libs.kotlinx.serialization.json)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-
-    // Paging
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
