@@ -1,12 +1,13 @@
 package com.potaninpm.feature_home.presentation.screens
 
+import android.content.Context
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,8 +18,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,49 +31,119 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.potaninpm.domain.model.NewsArticle
 import com.potaninpm.domain.model.Ticker
-import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.TickerCard
+import com.potaninpm.feature_home.presentation.components.TickerSettingsDialog
 import com.potaninpm.feature_home.presentation.viewModels.HomeViewModel
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
+
     val tickersState by viewModel.tickers.collectAsState()
     val newsState by viewModel.news.collectAsState()
+    val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
+
+    val prefs = context.getSharedPreferences("ticker_settings", Context.MODE_PRIVATE)
+    var autoUpdateEnabled by rememberSaveable { mutableStateOf(prefs.getBoolean("auto_update_enabled", true)) }
+
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+    var updateInterval by remember {
+        mutableLongStateOf(prefs.getLong("update_interval", 10L))
+    }
+
+    var remainingTime by remember { mutableIntStateOf(updateInterval.toInt()) }
+
+    LaunchedEffect(autoUpdateEnabled) {
+        if (autoUpdateEnabled) {
+            while (true) {
+                remainingTime = 0
+                viewModel.refreshTickersData()
+
+                while (!newTickerDataLoaded) {
+                    delay(300)
+                }
+
+                remainingTime = updateInterval.toInt()
+                delay(updateInterval * 1000L)
+            }
+        }
+    }
+
+    LaunchedEffect(remainingTime) {
+        if (autoUpdateEnabled) {
+            while (remainingTime > 0) {
+                delay(1000L)
+                remainingTime--
+            }
+        }
+    }
 
     HomeScreenContent(
         newsState = newsState,
-        tickersState = tickersState
+        tickersState = tickersState,
+        autoUpdateEnabled = autoUpdateEnabled,
+        onSettingsClick = {
+            showSettingsDialog = true
+        },
+        remainingTime = remainingTime,
+        onRefreshClick = {
+            viewModel.refreshTickersData()
+        }
     )
+
+    if (showSettingsDialog) {
+        TickerSettingsDialog(
+            currentInterval = updateInterval,
+            autoUpdateEnabled = autoUpdateEnabled,
+            onDismiss = { showSettingsDialog = false },
+            onConfirm = { newInterval, isAutoUpdateEnabled ->
+                updateInterval = newInterval
+                autoUpdateEnabled = isAutoUpdateEnabled
+
+                prefs.edit()
+                    .putLong("update_interval", newInterval)
+                    .putBoolean("auto_update_enabled", isAutoUpdateEnabled)
+                    .apply()
+                showSettingsDialog = false
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
     newsState: List<NewsArticle>,
-    tickersState: List<Ticker>
+    tickersState: List<Ticker>,
+    autoUpdateEnabled: Boolean,
+    remainingTime: Int,
+    onSettingsClick: () -> Unit,
+    onRefreshClick: () -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -87,6 +159,14 @@ private fun HomeScreenContent(
                                 text = "Главная",
                                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                             )
+                        },
+                        actions = {
+                            IconButton(onClick = { onSettingsClick() }) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     )
 
@@ -115,12 +195,15 @@ private fun HomeScreenContent(
                         .padding(horizontal = 16.dp)
                         .padding(bottom = 80.dp)
                 ) {
-//                item {
-//                    HorizontalDivider(modifier = Modifier.height(12.dp))
-//                }
-
                     item {
-                        TickersList(tickersState)
+                        TickersList(
+                            tickersState,
+                            autoUpdateEnabled = autoUpdateEnabled,
+                            remainingTime = remainingTime,
+                            onRefreshClick = {
+                                onRefreshClick()
+                            }
+                        )
                     }
 
                     item {
@@ -187,13 +270,55 @@ fun NewsList(
 }
 
 @Composable
-fun TickersList(tickers: List<Ticker>) {
-    Text(
-        text = "Тикеры",
-        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+fun TickersList(
+    tickers: List<Ticker>,
+    autoUpdateEnabled: Boolean,
+    remainingTime: Int,
+    onRefreshClick: () -> Unit
+) {
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isRefreshing) {
+        delay(3000)
+        isRefreshing = false
+    }
+
+    Row(
         modifier = Modifier
-            .padding(bottom = 8.dp)
-    )
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Тикеры",
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+        )
+
+        if (autoUpdateEnabled) {
+            val minutes = remainingTime / 60
+            val seconds = remainingTime % 60
+            Text(
+                text = String.format("Обновится через %02d:%02d", minutes, seconds),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .alpha(if (isRefreshing) 0.5f else 1f)
+                    .clickable(enabled = !isRefreshing) {
+                        isRefreshing = true
+                        onRefreshClick()
+                    }
+            )
+        }
+    }
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -204,49 +329,6 @@ fun TickersList(tickers: List<Ticker>) {
         }
     }
 
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar() {
-    var searchText = remember { mutableStateOf("") }
-    var active = remember { mutableStateOf(false) }
-
-    val colors1 = SearchBarDefaults.colors()
-
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = searchText.value,
-                onQueryChange = { searchText.value = it },
-                onSearch = {
-                    active.value = false
-                },
-                expanded = active.value,
-                onExpandedChange = { active.value = it },
-                enabled = true,
-                placeholder = { Text("Поиск...") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Иконка поиска"
-                    )
-                },
-                trailingIcon = null,
-                interactionSource = null,
-            )
-        },
-        expanded = active.value,
-        onExpandedChange = { active.value = it },
-        modifier = Modifier,
-        shape = SearchBarDefaults.inputFieldShape,
-        colors = colors1,
-        tonalElevation = SearchBarDefaults.TonalElevation,
-        shadowElevation = SearchBarDefaults.ShadowElevation,
-        content = {
-            Text("Content")
-        }
-    )
 }
 
 //@Preview
