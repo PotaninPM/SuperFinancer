@@ -20,4 +20,17 @@ class NewsRepositoryImpl(
             return emptyList()
         }
     }
+
+    override suspend fun searchNews(query: String): List<NewsArticle> {
+        try {
+            val response = nyTimesApi.getArticles(query = query)
+            val articles = response.response.docs.map { dto ->
+                dto.toDomainNews()
+            }
+            return articles
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return emptyList()
+        }
+    }
 }

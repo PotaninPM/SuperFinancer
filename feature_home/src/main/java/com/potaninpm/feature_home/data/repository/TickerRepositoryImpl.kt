@@ -38,4 +38,17 @@ class TickerRepositoryImpl(
     override suspend fun getTickersInfo(symbols: List<String>): List<Ticker> {
         return symbols.map { getTickerInfo(it) }
     }
+
+    override suspend fun searchTickers(query: String): List<Ticker> {
+        return try {
+            val response = finnhubApi.searchTickers(query = query, exchange = "US")
+
+            val symbols = response.result.map { it.symbol }.take(5)
+
+            getTickersInfo(symbols)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
 }

@@ -6,6 +6,8 @@ sealed class RootNavDestinations(val route: String) {
 
     object Home : RootNavDestinations("home")
 
+    object Search : RootNavDestinations("search")
+
     object Finances : RootNavDestinations("finances")
 
     object News : RootNavDestinations("news")

@@ -5,4 +5,6 @@ import com.potaninpm.feature_home.domain.model.Ticker
 interface TickerRepository {
     suspend fun getTickerInfo(symbol: String): Ticker
     suspend fun getTickersInfo(symbols: List<String>): List<Ticker>
+
+    suspend fun searchTickers(query: String): List<Ticker>
 }

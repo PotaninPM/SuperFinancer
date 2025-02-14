@@ -13,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
+import com.potaninpm.feature_home.presentation.screens.SearchScreen
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
@@ -67,11 +68,15 @@ fun RootNavigation() {
             popExitTransition = { ExitTransition.None }
         ) {
             composable(RootNavDestinations.Home.route) {
-                HomeScreen()
+                HomeScreen(rootNavController)
             }
 
             composable(RootNavDestinations.Finances.route) {
                 FinancesScreen()
+            }
+
+            composable(RootNavDestinations.Search.route) {
+                SearchScreen()
             }
         }
     }

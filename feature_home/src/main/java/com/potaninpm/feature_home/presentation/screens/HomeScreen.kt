@@ -20,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,17 +43,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavHostController
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.TickerCard
 import com.potaninpm.feature_home.presentation.components.TickerSettingsDialog
+import com.potaninpm.feature_home.presentation.components.searchBar.FakeSearchBar
+import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.HomeViewModel
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
+    rootNavController: NavHostController,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
@@ -109,6 +112,11 @@ fun HomeScreen(
         remainingTime = remainingTime,
         onRefreshClick = {
             viewModel.refreshTickersData()
+        },
+        onFakeSearchClick = {
+            rootNavController.navigate(RootNavDestinations.Search.route) {
+                //popUpTo(RootNavDestinations.Search) { inclusive = true }
+            }
         }
     )
 
@@ -139,7 +147,8 @@ private fun HomeScreenContent(
     autoUpdateEnabled: Boolean,
     remainingTime: Int,
     onSettingsClick: () -> Unit,
-    onRefreshClick: () -> Unit
+    onRefreshClick: () -> Unit,
+    onFakeSearchClick: () -> Unit
 ) {
     val listState = rememberScrollState()
 
@@ -165,10 +174,6 @@ private fun HomeScreenContent(
                             }
                         }
                     )
-
-                    //SearchBar()
-
-                    HorizontalDivider()
                 }
             },
             modifier = Modifier
@@ -184,6 +189,9 @@ private fun HomeScreenContent(
                     .padding(bottom = 80.dp)
                     .verticalScroll(listState)
             ) {
+                FakeSearchBar {
+                    onFakeSearchClick()
+                }
 
                 TickersList(
                     tickersState,
