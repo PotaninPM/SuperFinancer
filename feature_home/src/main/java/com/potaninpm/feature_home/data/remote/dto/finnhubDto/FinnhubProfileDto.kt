@@ -4,5 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class FinnhubProfileDto(
     @SerializedName("name") val name: String,
-    @SerializedName("logo") val logo: String?
+    @SerializedName("logo") val logo: String?,
+    @SerializedName("currency") val currency: String
 )

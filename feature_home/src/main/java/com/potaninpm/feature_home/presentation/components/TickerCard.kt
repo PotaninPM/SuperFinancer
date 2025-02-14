@@ -33,7 +33,7 @@ fun TickerCard(
     ticker: Ticker,
     modifier: Modifier = Modifier
 ) {
-    val priceColor = if (ticker.change >= 0) Color.Green else Color.Red
+    val priceColor = if (ticker.change >= 0) Color(0xFF05B000) else Color.Red
 
     val painter = if (ticker.logoUrl.isNullOrEmpty()) {
         painterResource(id = R.drawable.error_24px)
@@ -59,7 +59,6 @@ fun TickerCard(
                 modifier = Modifier
                     .size(35.dp)
                     .clip(RoundedCornerShape(8.dp))
-
             )
 
             Column(
@@ -70,14 +69,13 @@ fun TickerCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = if (ticker.change >= 0) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = priceColor
-                    )
                     Text(
                         text = ticker.symbol,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    )
+                    Image(
+                        painter = painterResource(if (ticker.change >= 0) R.drawable.arrow_drop_up_24px else R.drawable.arrow_drop_down_24px),
+                        contentDescription = null,
                     )
                 }
                 ticker.companyName?.let {
@@ -92,7 +90,7 @@ fun TickerCard(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = String.format("%.2f", ticker.currentPrice),
+                    text = String.format("%.2f", ticker.currentPrice) + " " + ticker.currency,
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 )
                 Text(

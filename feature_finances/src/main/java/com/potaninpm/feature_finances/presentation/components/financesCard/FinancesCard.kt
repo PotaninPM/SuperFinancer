@@ -24,7 +24,7 @@ import com.potaninpm.feature_finances.presentation.components.goals.goalCard.Goa
 @Composable
 fun FinancesCard(
     totalSavings: Long,
-
+    totalTarget: Long,
     averageMonthlyIncome: Double,
     monthsToAchieve: Double,
     overallProgress: Float
@@ -62,6 +62,30 @@ fun FinancesCard(
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+
+            FinancesCardItem(
+                title = "${formatMoneyUnsigned(totalTarget - totalSavings)} ₽",
+                subtitle = "Осталось накопить",
+                icon = {
+                    Surface(
+                        modifier = Modifier
+                            .size(43.dp)
+                            .clip(CircleShape),
+                        color = MaterialTheme.colorScheme.error
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.savings_24px),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .padding(8.dp)
+                        )
+                    }
+
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             FinancesCardItem(
                 title = "${formatMoneyUnsigned(totalSavings)} ₽",

@@ -58,12 +58,12 @@ fun OperationItem(
             )
         }
 
-        val amountColor = if (operation.amount >= 0) Color.Green else MaterialTheme.colorScheme.error
+        val amountColor = if (operation.amount >= 0) Color(0xFF059300) else MaterialTheme.colorScheme.error
 
         Text(
             text = formatMoneySigned(operation.amount),
             style = MaterialTheme.typography.bodyLarge,
-            color = amountColor.copy(alpha = 0.8f)
+            color = amountColor
         )
     }
 }

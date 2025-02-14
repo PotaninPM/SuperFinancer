@@ -168,6 +168,7 @@ private fun FinancesScreenContent(
         ) {
             FinancesCard(
                 totalSavings = totalSavings,
+                totalTarget = totalTarget,
                 averageMonthlyIncome = averageMonthlyInflow,
                 monthsToAchieve = monthsToAchieve,
                 overallProgress = overallProgress
@@ -237,7 +238,7 @@ fun AddButton(
             tint = MaterialTheme.colorScheme.primary
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         Text(
             stringResource(title),

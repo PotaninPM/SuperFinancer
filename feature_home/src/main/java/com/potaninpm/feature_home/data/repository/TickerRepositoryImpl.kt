@@ -16,6 +16,7 @@ class TickerRepositoryImpl(
                 symbol = symbol,
                 companyName = profile.name,
                 currentPrice = quote.currentPrice,
+                currency = profile.currency,
                 change = quote.change,
                 changePercent = quote.changePercent,
                 logoUrl = profile.logo
@@ -28,7 +29,8 @@ class TickerRepositoryImpl(
                 currentPrice = 0.0f,
                 change = 0.0f,
                 changePercent = 0.0f,
-                logoUrl = ""
+                logoUrl = "",
+                currency = ""
             )
         }
     }

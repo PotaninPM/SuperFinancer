@@ -42,7 +42,7 @@ fun OperationsSection(
                     icon = {
                         if (operation.amount >= 0) {
                             Icon(
-                                painter = painterResource(R.drawable.icome_24px),
+                                painter = painterResource(R.drawable.add_24px),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier
@@ -50,7 +50,7 @@ fun OperationsSection(
                             )
                         } else {
                             Icon(
-                                painter = painterResource(R.drawable.delete_24px),
+                                painter = painterResource(R.drawable.remove_24px),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier
