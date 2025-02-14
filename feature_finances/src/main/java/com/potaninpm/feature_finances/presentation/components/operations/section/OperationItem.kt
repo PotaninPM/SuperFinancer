@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.functions.formatMoneySigned
 import com.potaninpm.feature_finances.domain.model.Operation
 import java.text.NumberFormat
 import java.util.Locale
@@ -60,20 +61,9 @@ fun OperationItem(
         val amountColor = if (operation.amount >= 0) Color.Green else MaterialTheme.colorScheme.error
 
         Text(
-            text = formatMoney(operation.amount),
+            text = formatMoneySigned(operation.amount),
             style = MaterialTheme.typography.bodyLarge,
             color = amountColor.copy(alpha = 0.8f)
         )
-    }
-}
-
-fun formatMoney(value: Double): String {
-    val numberFormat = NumberFormat.getInstance(Locale("ru", "RU"))
-    val formattedValue = numberFormat.format(value)
-
-    return if (value >= 0) {
-        "+$formattedValue ₽"
-    } else {
-        "$formattedValue ₽"
     }
 }

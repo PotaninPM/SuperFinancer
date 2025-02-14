@@ -1,6 +1,8 @@
 package com.potaninpm.feature_finances.presentation.screens
 
+import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -134,8 +136,13 @@ private fun FinancesScreenContent(
     val goals by viewModel.goals.collectAsState()
     val operations by viewModel.operations.collectAsState()
     val totalSavings by viewModel.totalSavings.collectAsState()
-    val overallProgress by viewModel.overallProgress.collectAsState()
+    val totalTarget by viewModel.totalTarget.collectAsState()
+    val averageMonthlyInflow by viewModel.averageMonthlyInflow.collectAsState()
 
+    val monthsToAchieve = (totalTarget - totalSavings) / averageMonthlyInflow
+    val overallProgress = totalSavings.toFloat() / totalTarget.toFloat()
+
+    Log.i("INFOG", overallProgress.toString())
     Scaffold(
         topBar = {
             Column {
@@ -161,6 +168,8 @@ private fun FinancesScreenContent(
         ) {
             FinancesCard(
                 totalSavings = totalSavings,
+                averageMonthlyIncome = averageMonthlyInflow,
+                monthsToAchieve = monthsToAchieve,
                 overallProgress = overallProgress
             )
 

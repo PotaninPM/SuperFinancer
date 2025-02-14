@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import java.text.NumberFormat
-import java.util.Locale
+import com.potaninpm.core.functions.formatMoneySigned
+import com.potaninpm.core.functions.formatMoneyUnsigned
 
 @Composable
 fun GoalTextInfo(
@@ -21,8 +21,8 @@ fun GoalTextInfo(
     targetAmount: Long,
     currency: String
 ) {
-    val formattedCurrentAmount = formatMoney(currentAmount)
-    val formattedTargetAmount = formatMoney(targetAmount)
+    val formattedCurrentAmount = formatMoneyUnsigned(currentAmount)
+    val formattedTargetAmount = formatMoneyUnsigned(targetAmount)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -60,11 +60,4 @@ fun GoalTextInfo(
             }
         }
     }
-}
-
-fun formatMoney(value: Long): String {
-    val numberFormat = NumberFormat.getInstance(Locale("ru", "RU"))
-    val formattedValue = numberFormat.format(value)
-
-    return formattedValue
 }

@@ -1,5 +1,6 @@
 package com.potaninpm.feature_finances.presentation.components.goals.goalCard
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -17,10 +18,13 @@ import com.potaninpm.feature_finances.R
 
 @Composable
 fun GoalProgress(
+    modifier: Modifier = Modifier,
     currentAmount: Long,
-    targetAmount: Long
+    targetAmount: Long,
+    overallProgress: Float? = null,
+    insideThing: @Composable () -> Unit
 ) {
-    val progress = if (targetAmount > 0) {
+    val progress = overallProgress ?: if (targetAmount > 0) {
         currentAmount.toFloat() / targetAmount.toFloat()
     } else 0f
 
@@ -39,6 +43,7 @@ fun GoalProgress(
     }
 
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
@@ -56,13 +61,7 @@ fun GoalProgress(
                 modifier = Modifier.size(25.dp)
             )
         } else {
-            Text(
-                text = "${(progress * 100).toInt()}%",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = progressColor,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            insideThing()
         }
     }
 }

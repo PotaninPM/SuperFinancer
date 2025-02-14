@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
 
 class FinancesViewModel(
     private val goalRepository: GoalsRepository,
@@ -27,13 +29,28 @@ class FinancesViewModel(
             .map { list -> list.map { it.toDomain() } }
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val totalSavings: StateFlow<Long> = goals.map { list -> list.sumOf { it.currentAmount } }
-        .stateIn(viewModelScope, SharingStarted.Lazily, 0L)
+    val totalSavings: StateFlow<Long> =
+        goals.map { list -> list.sumOf { it.currentAmount } }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0L)
 
-    val overallProgress: StateFlow<Float> = goals.map { list ->
-        val totalTarget = list.sumOf { it.targetAmount }
-        if (totalTarget > 0) (list.sumOf { it.currentAmount }.toFloat() / totalTarget * 100) else 0f
-    }.stateIn(viewModelScope, SharingStarted.Lazily, 0f)
+    val totalTarget: StateFlow<Long> =
+        goals.map { list -> list.sumOf { it.targetAmount } }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0L)
+
+    val averageMonthlyInflow: StateFlow<Double> =
+        operations.map { ops ->
+            val deposits = ops.filter { it.amount > 0 }
+            val groups: Map<Int, List<Operation>> = deposits.groupBy { op ->
+                val date = Instant.ofEpochMilli(op.date)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                date.year * 100 + date.monthValue
+            }
+            if (groups.isNotEmpty()) {
+                groups.values.map { group -> group.sumOf { it.amount } }.average()
+            } else 0.0
+        }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     fun addGoal(title: String, targetAmount: Long, currency: String, dueDate: Long?) {
         viewModelScope.launch {

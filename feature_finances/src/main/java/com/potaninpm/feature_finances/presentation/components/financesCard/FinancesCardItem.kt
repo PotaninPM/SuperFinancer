@@ -27,14 +27,7 @@ fun FinancesCardItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Surface(
-            modifier = Modifier
-                .size(43.dp)
-                .clip(CircleShape),
-            color = MaterialTheme.colorScheme.primary
-        ) {
-            icon()
-        }
+        icon()
 
         Spacer(modifier = Modifier.width(12.dp))
 

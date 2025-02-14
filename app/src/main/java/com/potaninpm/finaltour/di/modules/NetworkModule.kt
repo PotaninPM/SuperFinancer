@@ -25,6 +25,7 @@ val networkModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
     single { get<Retrofit>(named("finnhubRetrofit")).create(FinnhubApi::class.java) }
 
     single(named("nytimesRetrofit")) {
