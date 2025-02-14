@@ -1,5 +1,8 @@
 package com.potaninpm.finaltour.di.modules
 
+
+import com.potaninpm.feature_finances.data.repository.GoalsRepository
+import com.potaninpm.feature_finances.data.repository.OperationsRepository
 import com.potaninpm.feature_home.data.repository.NewsRepositoryImpl
 import com.potaninpm.feature_home.data.repository.TickerRepositoryImpl
 import com.potaninpm.feature_home.domain.repository.NewsRepository
@@ -9,4 +12,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single<TickerRepository> { TickerRepositoryImpl(get()) }
     single<NewsRepository> { NewsRepositoryImpl(get()) }
+
+    single<GoalsRepository> { GoalsRepository(get()) }
+    single<OperationsRepository> { OperationsRepository(get()) }
 }

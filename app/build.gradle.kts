@@ -42,9 +42,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
+
+    implementation(project(":common"))
     implementation(project(":feature_home"))
     implementation(project(":feature_finances"))
+
+    // Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

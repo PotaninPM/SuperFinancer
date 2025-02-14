@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,14 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.feature_finances.R
+import com.potaninpm.feature_finances.presentation.components.CustomElevatedCard
 
 @Composable
-fun FinancesCard() {
-    ElevatedCard(
+fun FinancesCard(
+    totalSavings: Long,
+    overallProgress: Float
+) {
+    CustomElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(top = 16.dp),
-        elevation = CardDefaults.cardElevation(12.dp)
     ) {
         Column(
             modifier = Modifier
@@ -30,7 +30,7 @@ fun FinancesCard() {
                 .padding(16.dp),
         ) {
             FinancesCardItem(
-                title = "345.6 ₽",
+                title = "$totalSavings ₽",
                 subtitle = "Всего накоплено",
                 icon = {
                     Icon(
@@ -46,7 +46,7 @@ fun FinancesCard() {
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
             FinancesCardItem(
-                title = "3000 ₽ / месяц",
+                title = "${overallProgress.toInt()}%",
                 subtitle = "Поступления",
                 icon = {
                     Icon(

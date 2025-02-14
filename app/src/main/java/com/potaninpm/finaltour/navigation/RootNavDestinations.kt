@@ -1,7 +1,5 @@
 package com.potaninpm.finaltour.navigation
 
-import kotlinx.serialization.Serializable
-
 sealed class RootNavDestinations(val route: String) {
 
     object Welcome : RootNavDestinations("welcome")

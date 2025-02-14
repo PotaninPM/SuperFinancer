@@ -2,12 +2,8 @@ package com.potaninpm.feature_finances.presentation.components.goals.goalCard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +35,7 @@ fun GoalProgress(
     val painter = if (progress == 1f) {
         painterResource(id = R.drawable.check_24px)
     } else {
-        painterResource(id = R.drawable.trophy_24px)
+        painterResource(id = R.drawable.account_balance_24px)
     }
 
     Box(

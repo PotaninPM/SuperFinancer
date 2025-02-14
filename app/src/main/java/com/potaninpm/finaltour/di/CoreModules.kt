@@ -7,11 +7,12 @@ import com.potaninpm.finaltour.di.modules.roomModule
 import com.potaninpm.finaltour.di.modules.useCaseModule
 import com.potaninpm.finaltour.di.modules.viewModelModule
 
+
 val coreModules = listOf(
     networkModule,
+    roomModule,
     repositoryModule,
     useCaseModule,
     viewModelModule,
-    roomModule,
     commonModule
 )

@@ -1,12 +1,10 @@
 package com.potaninpm.feature_finances.presentation.components.goals.addGoalDialog
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,24 +16,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import com.potaninpm.feature_finances.R
+import androidx.compose.ui.unit.dp
+import com.potaninpm.core.components.CurrencyDropdown
+import com.potaninpm.core.components.CustomTextField
 import com.potaninpm.feature_finances.presentation.components.DatePicker
+import com.potaninpm.feature_finances.R
 import java.time.LocalDate
 import java.time.ZoneId
 
 @Composable
 fun AddGoalDialog(
     onDismiss: () -> Unit,
-    onAddGoal: (String, Long, Long?) -> Unit
+    onAddGoal: (String, Long, String, Long?) -> Unit
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var targetSum by rememberSaveable { mutableStateOf("") }
-
+    var selectedCurrency by rememberSaveable { mutableStateOf("₽") }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-
     var showDatePicker by remember { mutableStateOf(false) }
+
+    var nameError by rememberSaveable { mutableStateOf<String?>(null) }
+    var targetSumError by rememberSaveable { mutableStateOf<String?>(null) }
+
     val dateFormatter = remember { java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy") }
+    val currencyOptions = listOf("₽", "$", "€", "£", "¥")
 
     if (showDatePicker) {
         DatePicker(
@@ -47,39 +51,60 @@ fun AddGoalDialog(
         )
     }
 
+    val isNameValid = name.isNotEmpty()
+    val isTargetSumValid = targetSum.toLongOrNull()?.let { it <= 100_000_000 } ?: false
+    val isFormValid = isNameValid && isTargetSumValid
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Новая цель") },
         text = {
-            Column {
-                OutlinedTextField(
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                CustomTextField(
                     value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Название цели") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = targetSum,
-                    onValueChange = { sum ->
-                        targetSum = sum
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = { Text("Требуемая сумма") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                OutlinedTextField(
-                    value = selectedDate?.format(dateFormatter) ?: "Выбрать дату",
+                    hint = "Название цели",
+                    type = null,
+                    isError = nameError != null,
+                    error = nameError,
                     onValueChange = {
+                        name = it
+                        nameError = if (it.isEmpty()) "Название не может быть пустым" else null
+                    }
+                )
 
-                    },
-                    readOnly = true,
-                    label = { Text("Дата") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            showDatePicker = true
+                CustomTextField(
+                    value = targetSum,
+                    hint = "Требуемая сумма",
+                    type = "number",
+                    isError = targetSumError != null,
+                    error = targetSumError,
+                    onValueChange = {
+                        targetSum = it
+                        targetSumError = when {
+                            it.isEmpty() -> "Сумма не может быть пустой"
+                            it.toLongOrNull() == null -> "Введите корректное число"
+                            it.toLong() > 100_000_000_000 -> "Сумма не может превышать 100 миллионов"
+                            else -> null
                         }
+                    }
+                )
+
+                CurrencyDropdown(
+                    selectedCurrency = selectedCurrency,
+                    onCurrencySelected = { selectedCurrency = it },
+                    currencyOptions = currencyOptions
+                )
+
+                CustomTextField(
+                    value = selectedDate?.format(dateFormatter) ?: "Выбрать дату",
+                    hint = "Дата",
+                    type = null,
+                    isError = false,
+                    error = null,
+                    onValueChange = {}
                 )
             }
         },
@@ -88,8 +113,9 @@ fun AddGoalDialog(
                 onClick = {
                     val targetAmount = targetSum.toLongOrNull() ?: 0L
                     val dueDateTimestamp = selectedDate?.atStartOfDay(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
-                    onAddGoal(name, targetAmount, dueDateTimestamp)
-                }
+                    onAddGoal(name, targetAmount, selectedCurrency, dueDateTimestamp)
+                },
+                enabled = isFormValid
             ) {
                 Text(stringResource(R.string.save), fontWeight = FontWeight.SemiBold)
             }
@@ -101,3 +127,5 @@ fun AddGoalDialog(
         }
     )
 }
+
+

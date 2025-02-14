@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.potaninpm.finaltour.navigation.RootNavigation
 import com.potaninpm.finaltour.theme.DraftForProdTheme
-import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            KoinAndroidContext {
+            KoinContext {
                 DraftForProdTheme {
                     RootNavigation()
                 }

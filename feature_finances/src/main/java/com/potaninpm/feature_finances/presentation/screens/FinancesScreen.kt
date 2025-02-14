@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,32 +24,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
+import com.potaninpm.feature_finances.data.local.entities.GoalEntity
+import com.potaninpm.feature_finances.domain.model.Operation
 import com.potaninpm.feature_finances.presentation.components.goals.addGoalDialog.AddGoalDialog
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalCard
-import com.potaninpm.feature_finances.presentation.components.operations.OperationsSection
+import com.potaninpm.feature_finances.presentation.components.operations.dialog.AddOperationDialog
+import com.potaninpm.feature_finances.presentation.components.operations.section.OperationsSection
+import com.potaninpm.feature_finances.presentation.viewModels.FinancesViewModel
+import com.potaninpm.feature_finances.R
+import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
+import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-
-data class Operation(
-    val date: Long,
-    val title: String,
-    val subtitle: String,
-    val amount: Double,
-    val comment: String? = null
-)
 
 fun groupOperationsByDate(operations: List<Operation>): Map<LocalDate, List<Operation>> {
     return operations.groupBy { operation ->
@@ -58,29 +58,64 @@ fun groupOperationsByDate(operations: List<Operation>): Map<LocalDate, List<Oper
     }
 }
 
-
 @Composable
-fun FinancesScreen() {
+fun FinancesScreen(
+    viewModel: FinancesViewModel = koinViewModel()
+) {
     var showAddGoalDialog by rememberSaveable { mutableStateOf(false) }
+    var showAddOperationDialog by rememberSaveable { mutableStateOf(false) }
 
     val onAddGoalClick = {
         showAddGoalDialog = true
     }
 
+    val onAddOperationClick = {
+        showAddOperationDialog = true
+    }
+
     if (showAddGoalDialog) {
         AddGoalDialog(
-            onDismiss = {
-                showAddGoalDialog = false
-            },
-            onAddGoal = { name, targetAmount, dueDate ->
+            onDismiss = { showAddGoalDialog = false },
+            onAddGoal = { title, targetAmount, currency, dueDate ->
+                viewModel.addGoal(title, targetAmount, currency, dueDate)
                 showAddGoalDialog = false
             }
         )
     }
 
+    if (showAddOperationDialog) {
+        val goals by viewModel.goals.collectAsState()
+
+        AddOperationDialog(
+            goals = goals,
+            onDismiss = { showAddOperationDialog = false },
+            onAddOperation = { goalId, amount, comment ->
+                val goal = goals.find { it.id == goalId } ?: return@AddOperationDialog
+                if (amount >= 0) {
+                    viewModel.addDeposit(goal, amount, comment)
+                } else {
+                    viewModel.addWithdrawal(goal, -amount, comment)
+                }
+                showAddOperationDialog = false
+            }
+        )
+    }
+
     FinancesScreenContent(
+        viewModel = viewModel,
         onAddGoalClick = {
             onAddGoalClick()
+        },
+        onAddOperationClick = {
+            onAddOperationClick()
+        },
+        onDeleteGoalClick = { goal ->
+            viewModel.deleteGoal(goal)
+        },
+        onWithdrawClick = {
+//            viewModel.addWithdrawal(
+//
+//            )
         }
     )
 }
@@ -88,9 +123,18 @@ fun FinancesScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FinancesScreenContent(
-    onAddGoalClick: () -> Unit
+    viewModel: FinancesViewModel,
+    onAddGoalClick: () -> Unit,
+    onAddOperationClick: () -> Unit,
+    onDeleteGoalClick: (GoalEntity) -> Unit,
+    onWithdrawClick: () -> Unit
 ) {
     val state = rememberScrollState()
+
+    val goals by viewModel.goals.collectAsState()
+    val operations by viewModel.operations.collectAsState()
+    val totalSavings by viewModel.totalSavings.collectAsState()
+    val overallProgress by viewModel.overallProgress.collectAsState()
 
     Scaffold(
         topBar = {
@@ -115,87 +159,64 @@ private fun FinancesScreenContent(
                 .padding(bottom = 80.dp)
                 .verticalScroll(state)
         ) {
-            FinancesCard()
+            FinancesCard(
+                totalSavings = totalSavings,
+                overallProgress = overallProgress
+            )
 
             YourGoalsSection(
                 titleRes = R.string.goals,
-            ) {
-                for (i in 1..5) {
-                    GoalCard(
-                        title = "Накопить на квартиру",
-                        currentAmount = 1000 * 2 * i.toLong(),
-                        targetAmount = 10000,
-                        onDeleteClick = {
+                content = {
+                    if (goals.isEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .alpha(0.7f),
+                            text = "У вас пока нет целей",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    } else {
+                        goals.forEach { goal ->
+                            GoalCard(
+                                title = goal.title,
+                                dateOfReaching = goal.dueDate.toString(),
+                                currentAmount = goal.currentAmount,
+                                targetAmount = goal.targetAmount,
+                                currency = goal.currency,
+                                onDeleteClick = { viewModel.deleteGoal(goal) },
+                                onWithdrawClick = {
 
-                        },
-                        onWithdrawClick = {
-
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
-                    )
-                }
-
-                AddGoalButton(
-                    onAddGoalClick = onAddGoalClick
-                )
-            }
+                    }
+                },
+                onAddGoalClick = onAddGoalClick
+            )
 
             HorizontalDivider(
                 modifier = Modifier
             )
 
             OperationsSection(
-                sampleOperations
+                operations = operations,
+                onAddOperationClick = onAddOperationClick
             )
         }
     }
 }
 
-val sampleOperations = listOf(
-    Operation(
-        date = 1698307200000,
-        title = "Снятие денег",
-        subtitle = "На квартиру",
-        amount = -95.0
-    ),
-    Operation(
-        date = 1678307200003,
-        title = "Снятие денег",
-        subtitle = "На квартиру",
-        amount = -22165.0,
-    ),
-    Operation(
-        date = 1678307200002,
-        title = "Пополнение",
-        subtitle = "На машину",
-        amount = 1500.0,
-    ),
-    Operation(
-        date = 1678307200001,
-        title = "Снятие денег",
-        subtitle = "На квартиру",
-        amount = -61.76,
-    ),
-    Operation(
-        date = 1678307200000,
-        title = "Пополнение",
-        subtitle = "На квартиру",
-        amount = 20592.0,
-        comment = "На кормление рыбок"
-    )
-)
-
-
 @Composable
-fun AddGoalButton(
-    onAddGoalClick: () -> Unit
+fun AddButton(
+    onAddClick: () -> Unit,
+    @StringRes title: Int,
 ) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
-            .padding(vertical = 12.dp)
+            .padding(vertical = 10.dp)
             .clickable {
-                onAddGoalClick()
+                onAddClick()
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -210,7 +231,7 @@ fun AddGoalButton(
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
-            stringResource(R.string.add_goal),
+            stringResource(title),
             fontSize = 17.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.SemiBold
@@ -221,13 +242,14 @@ fun AddGoalButton(
 @Composable
 fun YourGoalsSection(
     @StringRes titleRes: Int,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    onAddGoalClick: () -> Unit
 ) {
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+                .padding(top = 10.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -235,8 +257,11 @@ fun YourGoalsSection(
                 text = stringResource(id = titleRes),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier
+            )
 
+            AddButton(
+                onAddClick = onAddGoalClick,
+                title = R.string.add_goal
             )
         }
         content()

@@ -21,6 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "ProdFinalTour"
 include(":app")
+include(":common")
 include(":feature_home")
 include(":feature_finances")
-include(":core")

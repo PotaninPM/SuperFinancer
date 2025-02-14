@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="goals">Your goals</string>
-    <string name="finances">Finances</string>
-    <string name="add_goal">Add goal</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="delete">Delete</string>
-    <string name="withdraw">Withdraw</string>
+    <string name="goals">Ваши цели</string>
+    <string name="finances">Финансы</string>
+    <string name="add_goal">Добавить цель</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="withdraw">Снять</string>
+    <string name="add_operation">Add operation</string>
+
 </resources>

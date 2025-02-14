@@ -1,56 +1,48 @@
 package com.potaninpm.feature_finances.presentation.components.goals.goalCard
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.potaninpm.feature_finances.presentation.components.CustomElevatedCard
 
 @Composable
 fun GoalCard(
     title: String,
+    dateOfReaching: String,
     currentAmount: Long,
     targetAmount: Long,
+    currency: String,
     onDeleteClick: () -> Unit,
     onWithdrawClick: () -> Unit
 ) {
-    ElevatedCard(
+    CustomElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp),
-        elevation = CardDefaults.cardElevation(12.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 12.dp)
+                .padding(vertical = 12.dp),
+            verticalAlignment = Alignment.Top,
         ) {
-            GoalHeader(
+            GoalTextInfo(
                 title = title,
+                dateOfReaching = dateOfReaching,
                 currentAmount = currentAmount,
-                targetAmount = targetAmount
+                targetAmount = targetAmount,
+                currency = currency
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                GoalFooter(
-                    onDeleteClick = onDeleteClick,
-                    onWithdrawClick = onWithdrawClick
-                )
-            }
+            GoalStatAndAction(
+                currentAmount = currentAmount,
+                targetAmount = targetAmount,
+                onDeleteClick = onDeleteClick,
+                onWithdrawClick = onWithdrawClick
+            )
         }
     }
 }

@@ -16,8 +16,7 @@ activityCompose = "1.10.0"
 composeBom = "2025.01.01"
 room = "2.6.1"
 navigationCompose = "2.8.5"
-ksp = "2.1.0-1.0.29"
-paging = "3.3.5"
+ksp = "2.0.21-1.0.27"
 appcompat = "1.7.0"
 material = "1.12.0"
 
@@ -57,8 +56,6 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
-androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
-androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
