@@ -38,7 +38,7 @@ fun Modifier.shimmerLoading(
             brush = Brush.linearGradient(
                 colors = listOf(
                     Color.LightGray.copy(alpha = 0.2f),
-                    Color.LightGray.copy(alpha = 1.0f),
+                    Color.LightGray.copy(alpha = 0.7f),
                     Color.LightGray.copy(alpha = 0.2f),
                 ),
                 start = Offset(x = translateAnimation, y = translateAnimation),

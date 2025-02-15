@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -37,7 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.components.CustomElevatedCard
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -160,8 +163,9 @@ fun TickersListSearch(
                 .padding(top = 16.dp)
         )
 
-        Card(
+        CustomElevatedCard(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
             Spacer(modifier = Modifier.height(12.dp))
@@ -178,6 +182,8 @@ fun TickersListSearch(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -194,7 +200,7 @@ fun TickerInfoSearch(ticker: Ticker) {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 18.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -224,6 +230,9 @@ fun TickerInfoSearch(ticker: Ticker) {
             }
             ticker.companyName?.let {
                 Text(
+                    modifier = Modifier
+                        .widthIn(max = 170.dp),
+                    maxLines = 1,
                     text = it,
                     style = MaterialTheme.typography.bodySmall
                 )
