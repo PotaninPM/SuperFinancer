@@ -77,7 +77,7 @@ fun AddGoalDialog(
 
                 CustomTextField(
                     value = targetSum,
-                    hint = "Требуемая сумма",
+                    hint = "Требуемая сумма (₽)",
                     type = "number",
                     isError = targetSumError != null,
                     error = targetSumError,
@@ -92,16 +92,11 @@ fun AddGoalDialog(
                     }
                 )
 
-                CurrencyDropdown(
-                    selectedCurrency = selectedCurrency,
-                    onCurrencySelected = { selectedCurrency = it },
-                    currencyOptions = currencyOptions
-                )
-
                 CustomTextField(
                     value = selectedDate?.format(dateFormatter) ?: "Выбрать дату",
                     hint = "Дата",
                     type = null,
+                    enabled = false,
                     isError = false,
                     error = null,
                     onValueChange = {}

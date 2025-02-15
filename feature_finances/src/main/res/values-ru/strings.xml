@@ -8,5 +8,6 @@
     <string name="delete">Удалить</string>
     <string name="withdraw">Снять</string>
     <string name="add_operation">Add operation</string>
+    <string name="no_operations_yet">У вас пока нет операций</string>
 
 </resources>

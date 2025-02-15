@@ -9,6 +9,7 @@ data class OperationEntity(
     val goalId: Long,
     val type: String,
     val amount: Double,
+    val currency: String,
     val comment: String? = null,
     val date: Long = System.currentTimeMillis()
 )

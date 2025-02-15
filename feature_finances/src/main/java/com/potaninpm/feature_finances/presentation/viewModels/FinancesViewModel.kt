@@ -72,6 +72,7 @@ class FinancesViewModel(
                     OperationEntity(
                         goalId = goal.id,
                         type = "withdrawal",
+                        currency = goal.currency,
                         amount = -goal.currentAmount.toDouble(),
                         comment = "Цель удалена"
                     )
@@ -91,6 +92,7 @@ class FinancesViewModel(
                 OperationEntity(
                     goalId = goal.id,
                     type = "deposit",
+                    currency = goal.currency,
                     amount = amount.toDouble(),
                     comment = comment
                 )
@@ -111,6 +113,7 @@ class FinancesViewModel(
                 OperationEntity(
                     goalId = goal.id,
                     type = "withdrawal",
+                    currency = goal.currency,
                     amount = -amount.toDouble(),
                     comment = comment
                 )

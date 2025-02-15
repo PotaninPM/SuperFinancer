@@ -35,7 +35,7 @@ fun FakeSearchBar(
             .fillMaxWidth()
             .height(55.dp)
             .border(
-                width = 1.dp,
+                width = 2.dp,
                 color = Color.Gray,
                 shape = MaterialTheme.shapes.medium
             )
@@ -64,9 +64,8 @@ fun FakeSearchBar(
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.arrow_drop_up_24px),
-                    contentDescription = "Выбрать",
-                    tint = MaterialTheme.colorScheme.primary
+                    painter = painterResource(id = R.drawable.mic_24px),
+                    contentDescription = "Выбрать"
                 )
             }
         }

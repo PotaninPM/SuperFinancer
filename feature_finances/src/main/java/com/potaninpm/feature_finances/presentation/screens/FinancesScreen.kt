@@ -139,7 +139,7 @@ private fun FinancesScreenContent(
     val totalTarget by viewModel.totalTarget.collectAsState()
     val averageMonthlyInflow by viewModel.averageMonthlyInflow.collectAsState()
 
-    val monthsToAchieve = (totalTarget - totalSavings) / averageMonthlyInflow
+    val monthsToAchieve = if (averageMonthlyInflow == 0.0) -1.0 else (totalTarget - totalSavings) / averageMonthlyInflow
     val overallProgress = totalSavings.toFloat() / totalTarget.toFloat()
 
     Log.i("INFOG", overallProgress.toString())

@@ -106,7 +106,6 @@ fun FinancesCard(
                                 .padding(8.dp)
                         )
                     }
-
                 }
             )
 
@@ -162,10 +161,12 @@ fun FinancesCard(
 }
 
 fun formatDuration(months: Double): String {
-    return if (months < 1.0) {
+    return if (months == -1.0) {
+        "Неизвестно"
+    } else if (months < 1.0) {
         val days = (months * 30).toInt()
         "$days дней"
-    } else if (months >= 1.0 && months < 12.0) {
+    } else if (months in 1.0..12.0) {
         val formattedMonths = String.format("%.1f", months)
         "$formattedMonths месяцев"
     } else {

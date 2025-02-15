@@ -1,6 +1,8 @@
 package com.potaninpm.core.components
 
+import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +22,7 @@ fun CustomTextField(
     value: String,
     hint: String,
     type: String?,
+    enabled: Boolean = true,
     isError: Boolean,
     error: String?,
     onValueChange: (String) -> Unit
@@ -35,6 +38,10 @@ fun CustomTextField(
                     width = 2.dp,
                     color = if (isError) MaterialTheme.colorScheme.error else Color.Gray,
                     shape = MaterialTheme.shapes.medium
+                ).clickable(
+                    onClick = {
+                        Log.i("CustomTextField", "onClick")
+                    }
                 ),
             singleLine = true,
             isError = isError,

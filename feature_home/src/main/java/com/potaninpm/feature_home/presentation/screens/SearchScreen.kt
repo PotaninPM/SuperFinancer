@@ -1,6 +1,7 @@
 package com.potaninpm.feature_home.presentation.screens
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
+import androidx.room.util.query
 import coil3.compose.rememberAsyncImagePainter
 import com.potaninpm.core.components.CustomElevatedCard
 import com.potaninpm.feature_home.R
@@ -52,6 +54,7 @@ import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.KoinApplication.Companion.init
 
 @Composable
 fun SearchScreen(
@@ -60,6 +63,8 @@ fun SearchScreen(
 ) {
     val focusRequester = remember { FocusRequester() }
 
+    val searchResults by searchViewModel.searchResults.collectAsState()
+
     val query by searchViewModel.query.collectAsState()
     val results by searchViewModel.searchResults.collectAsState()
 
@@ -67,38 +72,42 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
-    val currentBackStackEntry = navController.currentBackStackEntry
-
-    DisposableEffect(currentBackStackEntry) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                searchViewModel.setQuery("")
-            }
-        }
-        currentBackStackEntry?.lifecycle?.addObserver(observer)
-        onDispose {
-            currentBackStackEntry?.lifecycle?.removeObserver(observer)
-        }
+    BackHandler {
+        //searchViewModel.setQuery("")
+        searchViewModel.clearAll()
+        navController.popBackStack()
     }
 
-    Column {
-        SearchScreenContent(
-            query = query,
-            onQueryChange = { newQuery ->
-                if (newQuery.isNotEmpty()) {
-                    searchViewModel.setQuery(newQuery)
-                }
-            },
-            results = results,
-            focusRequester = focusRequester,
-        )
-    }
+//    val currentBackStackEntry = navController.currentBackStackEntry
+//
+//    DisposableEffect(currentBackStackEntry) {
+//        val observer = LifecycleEventObserver { _, event ->
+//            if (event == Lifecycle.Event.ON_DESTROY) {
+//                searchViewModel.setQuery("")
+//            }
+//        }
+//        currentBackStackEntry?.lifecycle?.addObserver(observer)
+//        onDispose {
+//            currentBackStackEntry?.lifecycle?.removeObserver(observer)
+//        }
+//    }
+
+    SearchScreenContent(
+        query = query,
+        onQueryChange = { newQuery ->
+            searchViewModel.setQuery(newQuery)
+        },
+        results = results,
+        focusRequester = focusRequester,
+        onClear = { searchViewModel.clearAll() }
+    )
 }
 
 @Composable
 private fun SearchScreenContent(
     query: String,
     onQueryChange: (String) -> Unit,
+    onClear: () -> Unit,
     results: SearchResults,
     focusRequester: FocusRequester
 ) {
@@ -132,9 +141,14 @@ private fun SearchScreenContent(
                 .padding(top = 12.dp)
         ) {
             SearchBar(
-                query = query,
                 onQueryChange = onQueryChange,
-                focusRequester = focusRequester
+                focusRequester = focusRequester,
+                onMicClick = {
+
+                },
+                onClear = {
+                    onClear()
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))

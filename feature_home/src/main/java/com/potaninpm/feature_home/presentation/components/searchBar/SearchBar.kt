@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,15 +33,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.feature_home.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchBar(
-    query: String,
+    onMicClick: () -> Unit,
+    onClear: () -> Unit,
     onQueryChange: (String) -> Unit,
     focusRequester: FocusRequester
 ) {
     var searchText by rememberSaveable {
-        mutableStateOf(query)
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(searchText) {
+        delay(500)
+
+        if (searchText.isEmpty()) {
+            onClear()
+        } else {
+            onQueryChange(searchText)
+        }
     }
 
     Column(
@@ -69,17 +82,28 @@ fun SearchBar(
                 .height(55.dp)
                 .focusRequester(focusRequester)
                 .border(
-                    width = 1.dp,
+                    width = 2.dp,
                     color = Color.Gray,
                     shape = MaterialTheme.shapes.medium
                 ),
             trailingIcon = {
-                IconButton(
-                    onClick = {
-
+                if (searchText.isNotEmpty()) {
+                    Text("Clear",
+                        modifier = Modifier
+                            .clickable {
+                                searchText = ""
+                                onQueryChange("")
+                                onClear()
+                            }
+                    )
+                } else {
+                    IconButton(
+                        onClick = {
+                            onMicClick()
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.mic_24px), contentDescription = null)
                     }
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.arrow_drop_up_24px), contentDescription = null)
                 }
             },
             leadingIcon = {

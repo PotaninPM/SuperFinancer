@@ -61,7 +61,7 @@ fun OperationItem(
         val amountColor = if (operation.amount >= 0) Color(0xFF059300) else MaterialTheme.colorScheme.error
 
         Text(
-            text = formatMoneySigned(operation.amount),
+            text = formatMoneySigned(operation.amount, operation.currency),
             style = MaterialTheme.typography.bodyLarge,
             color = amountColor
         )
