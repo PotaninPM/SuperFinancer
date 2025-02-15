@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.feature_home.presentation.screens.SearchScreen
@@ -27,7 +28,8 @@ fun RootNavigation() {
 
     val routesWithBottomBar = listOf(
         RootNavDestinations.Home.route,
-        RootNavDestinations.Finances.route
+        RootNavDestinations.Finances.route,
+        RootNavDestinations.Feed.route
     )
 
     Scaffold(
@@ -49,7 +51,7 @@ fun RootNavigation() {
                             unselectedIcon = ImageVector.vectorResource(id = R.drawable.paid_24px_not_filled)
                         ),
                         BottomNavItem(
-                            route = RootNavDestinations.News,
+                            route = RootNavDestinations.Feed,
                             labelRes = R.string.news,
                             selectedIcon = ImageVector.vectorResource(id = R.drawable.newspaper_24px_filled),
                             unselectedIcon = ImageVector.vectorResource(id = R.drawable.newspaper_24px_not_filled)
@@ -76,7 +78,11 @@ fun RootNavigation() {
             }
 
             composable(RootNavDestinations.Search.route) {
-                SearchScreen()
+                SearchScreen(rootNavController)
+            }
+
+            composable(RootNavDestinations.Feed.route) {
+                FeedScreen()
             }
         }
     }

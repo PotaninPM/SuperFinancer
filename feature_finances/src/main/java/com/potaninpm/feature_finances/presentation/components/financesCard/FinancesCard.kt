@@ -32,6 +32,7 @@ fun FinancesCard(
     CustomElevatedCard(
         modifier = Modifier
             .padding(top = 16.dp),
+        background = null
     ) {
         Column(
             modifier = Modifier

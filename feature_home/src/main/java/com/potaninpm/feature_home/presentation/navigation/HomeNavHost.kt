@@ -20,7 +20,7 @@ fun HomeNavHost() {
         }
 
         composable(RootNavDestinations.Search.route) {
-            SearchScreen()
+            SearchScreen(rootNavController)
         }
     }
 }

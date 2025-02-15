@@ -10,5 +10,5 @@ sealed class RootNavDestinations(val route: String) {
 
     object Finances : RootNavDestinations("finances")
 
-    object News : RootNavDestinations("news")
+    object Feed : RootNavDestinations("feed")
 }

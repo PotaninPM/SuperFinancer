@@ -21,6 +21,8 @@ fun GoalCard(
 ) {
     CustomElevatedCard(
         modifier = Modifier
+            .fillMaxWidth(),
+        background = null
     ) {
         Row(
             modifier = Modifier

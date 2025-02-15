@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.flowOf
 
 class SearchViewModel(
     private val newsRepository: NewsRepository,
@@ -32,19 +33,21 @@ class SearchViewModel(
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     var searchResults: StateFlow<SearchResults> = _query
-        .debounce(100)
+        .debounce(500)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .flatMapLatest { q ->
-            flow {
-                coroutineScope {
-                    val newsD = async { newsRepository.searchNews(q)}
-                    val tickersD = async { tickerRepository.searchTickers(q) }
-
-                    val news = newsD.await()
-                    val tickers = tickersD.await().take(10)
-
-                    emit(SearchResults(news, tickers))
+            if (q.isBlank()) {
+                flowOf(SearchResults(emptyList(), emptyList()))
+            } else {
+                flow {
+                    coroutineScope {
+                        val newsD = async { newsRepository.searchNews(q) }
+                        val tickersD = async { tickerRepository.searchTickers(q) }
+                        val news = newsD.await()
+                        val tickers = tickersD.await().take(10)
+                        emit(SearchResults(news, tickers))
+                    }
                 }
             }
         }

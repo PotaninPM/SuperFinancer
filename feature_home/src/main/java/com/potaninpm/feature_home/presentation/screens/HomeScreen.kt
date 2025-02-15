@@ -263,7 +263,7 @@ fun NewsList(
     var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRefreshing) {
-        delay(3000)
+        delay(1000)
         isRefreshing = false
     }
 

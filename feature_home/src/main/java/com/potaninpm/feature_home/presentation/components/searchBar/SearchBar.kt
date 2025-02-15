@@ -46,6 +46,7 @@ fun SearchBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     ) {
         TextField(
             value = searchText,

@@ -3,8 +3,8 @@ package com.potaninpm.feature_home.presentation.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,23 +12,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
 import com.potaninpm.core.components.CustomElevatedCard
 import com.potaninpm.feature_home.R
@@ -46,13 +48,14 @@ import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
-import com.potaninpm.feature_home.presentation.components.TickerCard
+import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreen(
+    navController: NavController,
     searchViewModel: SearchViewModel = koinViewModel()
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -62,6 +65,20 @@ fun SearchScreen(
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+
+    val currentBackStackEntry = navController.currentBackStackEntry
+
+    DisposableEffect(currentBackStackEntry) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                searchViewModel.setQuery("")
+            }
+        }
+        currentBackStackEntry?.lifecycle?.addObserver(observer)
+        onDispose {
+            currentBackStackEntry?.lifecycle?.removeObserver(observer)
+        }
     }
 
     Column {
@@ -85,9 +102,17 @@ private fun SearchScreenContent(
     results: SearchResults,
     focusRequester: FocusRequester
 ) {
-    var searchText by remember {
-        mutableStateOf(query)
+    val categories by remember {
+        mutableStateOf(
+            listOf(
+                "Тикеры",
+                "Новости",
+                "Компании"
+            )
+        )
     }
+
+    var selectedCategory by remember { mutableStateOf(categories.first()) }
 
     val state = rememberScrollState()
 
@@ -105,27 +130,59 @@ private fun SearchScreenContent(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(top = 12.dp)
-                .padding(horizontal = 16.dp)
         ) {
             SearchBar(
-                query = searchText,
+                query = query,
                 onQueryChange = onQueryChange,
                 focusRequester = focusRequester
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+
+                items(categories) { name ->
+                    SearchCategoriesCard(
+                        category = name,
+                        selected = selectedCategory == name,
+                        onClick = {
+                            selectedCategory = name
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             Column(
                 modifier = Modifier
                     .verticalScroll(state)
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
             ) {
-                TickersListSearch(
-                    tickers = results.tickers
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                NewsListSearch(
-                    news = results.news
-                )
+                when (selectedCategory) {
+                    "Тикеры" -> {
+                        TickersListSearch(
+                            tickers = results.tickers
+                        )
+                    }
+                    "Новости" -> {
+                        NewsListSearch(
+                            news = results.news,
+                            //onClick = { url ->  }
+                        )
+                    }
+                    "Компании" -> {
+                        //CompaniesListSearch(companies = results.companies)
+                    }
+                }
             }
         }
     }
@@ -156,34 +213,38 @@ fun TickersListSearch(
     tickers: List<Ticker>
 ) {
     if (tickers.isNotEmpty()) {
-        Text(
-            text = "Тикеры",
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-            modifier = Modifier
-                .padding(top = 16.dp)
-        )
-
-        CustomElevatedCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Тикеры",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                modifier = Modifier
+            )
 
-            tickers.forEach { ticker ->
-                Log.i("INFOG2", "Ticker: $ticker")
+            CustomElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                background = null
+            ) {
+                Spacer(modifier = Modifier.height(12.dp))
 
-                if (ticker.currentPrice != 0.0f) {
-                    TickerInfoSearch(
-                        ticker = ticker
-                    )
+                tickers.forEach { ticker ->
+                    Log.i("INFOG2", "Ticker: $ticker")
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    if (ticker.currentPrice != 0.0f) {
+                        TickerInfoSearch(
+                            ticker = ticker
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(40.dp))
+        }
     }
 }
 
