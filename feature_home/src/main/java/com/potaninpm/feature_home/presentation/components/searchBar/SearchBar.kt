@@ -51,7 +51,7 @@ fun SearchBar(
 
     if (micClicked) {
         LaunchedEffect(key1 = micClicked) {
-            kotlinx.coroutines.delay(2000L)
+            kotlinx.coroutines.delay(4000L)
             micClicked = false
         }
     }

@@ -1,6 +1,7 @@
 package com.potaninpm.finaltour.di.modules
 
 
+import com.potaninpm.feature_feed.data.repository.PostRepository
 import com.potaninpm.feature_finances.data.repository.GoalsRepository
 import com.potaninpm.feature_finances.data.repository.OperationsRepository
 import com.potaninpm.feature_home.data.repository.NewsRepositoryImpl
@@ -15,4 +16,6 @@ val repositoryModule = module {
 
     single<GoalsRepository> { GoalsRepository(get()) }
     single<OperationsRepository> { OperationsRepository(get()) }
+
+    single<PostRepository> { PostRepository(get()) }
 }

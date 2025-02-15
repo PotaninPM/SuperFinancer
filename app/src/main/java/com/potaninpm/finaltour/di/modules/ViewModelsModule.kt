@@ -11,5 +11,5 @@ val viewModelModule = module {
     single { HomeViewModel(get(), get()) }
     single { FinancesViewModel(get(), get()) }
     viewModel { SearchViewModel(get(), get()) }
-    single { PostsViewModel() }
+    single { PostsViewModel(get()) }
 }
