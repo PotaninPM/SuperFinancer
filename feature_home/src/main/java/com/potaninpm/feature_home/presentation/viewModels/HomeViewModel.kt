@@ -3,6 +3,8 @@ package com.potaninpm.feature_home.presentation.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.domain.repository.NewsRepository
@@ -31,8 +33,10 @@ class HomeViewModel(
     }
 
     private fun loadData() {
+
         viewModelScope.launch {
             val tickerSymbols = listOf("AAPL", "GOOG", "MSFT", "TSLA")
+
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
             val newsDeferred = async { newsRepository.getLatestNews() }
 
@@ -49,7 +53,6 @@ class HomeViewModel(
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
 
             _tickers.value = tickersDeferred.await()
-            Log.i("INFOG2", _tickers.value.toString())
             _newTickerDataLoaded.value = true
         }
     }

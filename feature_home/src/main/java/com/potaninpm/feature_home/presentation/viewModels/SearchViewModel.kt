@@ -32,7 +32,7 @@ class SearchViewModel(
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     var searchResults: StateFlow<SearchResults> = _query
-        .debounce(300)
+        .debounce(100)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .flatMapLatest { q ->

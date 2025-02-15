@@ -26,6 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -35,7 +37,7 @@ import com.potaninpm.feature_home.R
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    onClick: () -> Unit
+    focusRequester: FocusRequester
 ) {
     var searchText by rememberSaveable {
         mutableStateOf(query)
@@ -44,18 +46,12 @@ fun SearchBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .clickable {
-                Log.d("INFOG", "SearchBar: onClick")
-                onClick()
-            }
     ) {
         TextField(
             value = searchText,
             onValueChange = {
                 searchText = it
                 onQueryChange(it)
-                onClick()
             },
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.colors(
@@ -66,14 +62,11 @@ fun SearchBar(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 disabledTextColor = Color.White
             ),
-            placeholder = { Text("Search games") },
+            placeholder = { Text("Search...") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp)
-                .clickable {
-                    Log.d("INFOG", "SearchBar: TextField.onClick")
-                    onClick()
-                }
+                .focusRequester(focusRequester)
                 .border(
                     width = 1.dp,
                     color = Color.Gray,
