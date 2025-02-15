@@ -56,4 +56,11 @@ class HomeViewModel(
             _newTickerDataLoaded.value = true
         }
     }
+
+    fun refreshNewsData() {
+        viewModelScope.launch {
+            val newsDeferred = async { newsRepository.getLatestNews() }
+            _news.value = newsDeferred.await()
+        }
+    }
 }

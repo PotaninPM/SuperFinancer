@@ -6,6 +6,7 @@ import android.webkit.WebViewClient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,6 +47,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import com.potaninpm.core.components.shimmerCards.ShimmerNewsCard
+import com.potaninpm.core.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
@@ -83,6 +88,7 @@ fun HomeScreen(
                 remainingTime = 0
                 viewModel.refreshTickersData()
 
+
                 while (!newTickerDataLoaded) {
                     delay(300)
                 }
@@ -110,8 +116,11 @@ fun HomeScreen(
             showSettingsDialog = true
         },
         remainingTime = remainingTime,
-        onRefreshClick = {
+        onTickerRefreshClick = {
             viewModel.refreshTickersData()
+        },
+        onNewsRefreshClick = {
+            viewModel.refreshNewsData()
         },
         onFakeSearchClick = {
             rootNavController.navigate(RootNavDestinations.Search.route) {
@@ -147,7 +156,8 @@ private fun HomeScreenContent(
     autoUpdateEnabled: Boolean,
     remainingTime: Int,
     onSettingsClick: () -> Unit,
-    onRefreshClick: () -> Unit,
+    onNewsRefreshClick: () -> Unit,
+    onTickerRefreshClick: () -> Unit,
     onFakeSearchClick: () -> Unit
 ) {
     val listState = rememberScrollState()
@@ -198,7 +208,7 @@ private fun HomeScreenContent(
                     autoUpdateEnabled = autoUpdateEnabled,
                     remainingTime = remainingTime,
                     onRefreshClick = {
-                        onRefreshClick()
+                        onTickerRefreshClick()
                     }
                 )
 
@@ -207,6 +217,9 @@ private fun HomeScreenContent(
                     newsState,
                     onClick = {
                         selectedUrl = it
+                    },
+                    onNewsRefreshClick = {
+                        onNewsRefreshClick()
                     }
                 )
             }
@@ -244,22 +257,62 @@ private fun HomeScreenContent(
 @Composable
 fun NewsList(
     newsState: List<NewsArticle>,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onNewsRefreshClick: () -> Unit
 ) {
-    Text(
-        text = "Новости",
-        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-        modifier = Modifier
-            .padding(top = 16.dp)
-    )
+    var isRefreshing by remember { mutableStateOf(false) }
 
-    newsState.forEach { article ->
-        NewsCard(
-            article = article,
-            onClick = {
-                onClick(article.webUrl)
-            }
+    LaunchedEffect(isRefreshing) {
+        delay(3000)
+        isRefreshing = false
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Новости",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier
+                .padding(bottom = 8.dp)
         )
+
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .alpha(if (isRefreshing) 0.5f else 1f)
+                .clickable(enabled = !isRefreshing) {
+                    isRefreshing = true
+                    onNewsRefreshClick()
+                }
+        )
+    }
+
+    if (newsState.isNotEmpty()) {
+        if (isRefreshing) {
+            for (i in 0..1) {
+                ShimmerNewsCard()
+            }
+        } else {
+            newsState.forEach { article ->
+                NewsCard(
+                    article = article,
+                    onClick = {
+                        onClick(article.webUrl)
+                    }
+                )
+            }
+        }
+    } else {
+        for (i in 0..1) {
+            ShimmerNewsCard()
+        }
     }
 }
 
@@ -315,12 +368,34 @@ fun TickersList(
         }
     }
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(tickers) { ticker ->
-            TickerCard(ticker = ticker)
+    if (tickers.isEmpty()) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items(3) {
+                ShimmerTickerCard()
+            }
+        }
+    } else {
+        if (isRefreshing) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items(3) {
+                    ShimmerTickerCard()
+                }
+            }
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items(tickers) { ticker ->
+                    TickerCard(ticker = ticker)
+                }
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ import com.potaninpm.feature_home.domain.repository.TickerRepository
 class TickerRepositoryImpl(
     private val finnhubApi: FinnhubApi
 ) : TickerRepository {
+
     override suspend fun getTickerInfo(symbol: String): Ticker {
         try {
             val quote = finnhubApi.getQuote(symbol)
@@ -36,7 +37,13 @@ class TickerRepositoryImpl(
     }
 
     override suspend fun getTickersInfo(symbols: List<String>): List<Ticker> {
-        return symbols.map { getTickerInfo(it) }
+        val tickers = symbols.map { getTickerInfo(it) }
+
+        return if (tickers.all { it.currentPrice == 0.0f }) {
+            emptyList()
+        } else {
+            tickers
+        }
     }
 
     override suspend fun searchTickers(query: String): List<Ticker> {
