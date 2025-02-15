@@ -240,7 +240,7 @@ fun TickersListSearch(
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "Тикеры",
+                text = stringResource(R.string.tickers),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 modifier = Modifier
             )
