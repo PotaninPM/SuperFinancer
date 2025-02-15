@@ -1,5 +1,6 @@
 package com.potaninpm.feature_home.presentation.screens
 
+import android.speech.SpeechRecognizer
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -28,6 +29,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,7 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -45,6 +49,7 @@ import androidx.navigation.NavController
 import androidx.room.util.query
 import coil3.compose.rememberAsyncImagePainter
 import com.potaninpm.core.components.CustomElevatedCard
+import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -52,6 +57,7 @@ import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
+import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.KoinApplication.Companion.init
@@ -61,12 +67,27 @@ fun SearchScreen(
     navController: NavController,
     searchViewModel: SearchViewModel = koinViewModel()
 ) {
-    val focusRequester = remember { FocusRequester() }
-
-    val searchResults by searchViewModel.searchResults.collectAsState()
+    val context = LocalContext.current
 
     val query by searchViewModel.query.collectAsState()
+
+    val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
+
+    val focusRequester = remember { FocusRequester() }
+
     val results by searchViewModel.searchResults.collectAsState()
+
+    val onMicClick = {
+        startVoiceRecognition(
+            context,
+            speechRecognizer,
+            onError = {
+
+            }
+        ) { recognizedText ->
+            searchViewModel.setQuery(recognizedText)
+        }
+    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -78,20 +99,6 @@ fun SearchScreen(
         navController.popBackStack()
     }
 
-//    val currentBackStackEntry = navController.currentBackStackEntry
-//
-//    DisposableEffect(currentBackStackEntry) {
-//        val observer = LifecycleEventObserver { _, event ->
-//            if (event == Lifecycle.Event.ON_DESTROY) {
-//                searchViewModel.setQuery("")
-//            }
-//        }
-//        currentBackStackEntry?.lifecycle?.addObserver(observer)
-//        onDispose {
-//            currentBackStackEntry?.lifecycle?.removeObserver(observer)
-//        }
-//    }
-
     SearchScreenContent(
         query = query,
         onQueryChange = { newQuery ->
@@ -99,7 +106,11 @@ fun SearchScreen(
         },
         results = results,
         focusRequester = focusRequester,
-        onClear = { searchViewModel.clearAll() }
+        onMicClick = onMicClick,
+        onClear = {
+            searchViewModel.clearAll()
+            navController.navigate(RootNavDestinations.Home.route)
+        }
     )
 }
 
@@ -108,20 +119,20 @@ private fun SearchScreenContent(
     query: String,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit,
+    onMicClick: () -> Unit,
     results: SearchResults,
     focusRequester: FocusRequester
 ) {
     val categories by remember {
         mutableStateOf(
             listOf(
-                "Тикеры",
-                "Новости",
-                "Компании"
+                R.string.tickers,
+                R.string.news
             )
         )
     }
 
-    var selectedCategory by remember { mutableStateOf(categories.first()) }
+    var selectedCategory by remember { mutableIntStateOf(categories.first()) }
 
     val state = rememberScrollState()
 
@@ -141,10 +152,11 @@ private fun SearchScreenContent(
                 .padding(top = 12.dp)
         ) {
             SearchBar(
+                query = query,
                 onQueryChange = onQueryChange,
                 focusRequester = focusRequester,
                 onMicClick = {
-
+                    onMicClick()
                 },
                 onClear = {
                     onClear()
@@ -164,7 +176,7 @@ private fun SearchScreenContent(
 
                 items(categories) { name ->
                     SearchCategoriesCard(
-                        category = name,
+                        category = stringResource(name),
                         selected = selectedCategory == name,
                         onClick = {
                             selectedCategory = name
@@ -182,19 +194,16 @@ private fun SearchScreenContent(
                     .padding(horizontal = 16.dp)
             ) {
                 when (selectedCategory) {
-                    "Тикеры" -> {
+                    R.string.tickers -> {
                         TickersListSearch(
                             tickers = results.tickers
                         )
                     }
-                    "Новости" -> {
+                    R.string.news -> {
                         NewsListSearch(
                             news = results.news,
                             //onClick = { url ->  }
                         )
-                    }
-                    "Компании" -> {
-                        //CompaniesListSearch(companies = results.companies)
                     }
                 }
             }
@@ -206,7 +215,7 @@ private fun SearchScreenContent(
 fun NewsListSearch(news: List<NewsArticle>) {
     if (news.isNotEmpty()) {
         Text(
-            text = "Новости",
+            text = stringResource(R.string.news),
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
         )
 
@@ -245,8 +254,6 @@ fun TickersListSearch(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 tickers.forEach { ticker ->
-                    Log.i("INFOG2", "Ticker: $ticker")
-
                     if (ticker.currentPrice != 0.0f) {
                         TickerInfoSearch(
                             ticker = ticker

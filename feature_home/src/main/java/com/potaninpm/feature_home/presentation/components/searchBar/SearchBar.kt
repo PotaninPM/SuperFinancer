@@ -1,17 +1,16 @@
 package com.potaninpm.feature_home.presentation.components.searchBar
 
-import android.util.Log
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -24,37 +23,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.potaninpm.feature_home.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun SearchBar(
+    query: String,
     onMicClick: () -> Unit,
     onClear: () -> Unit,
     onQueryChange: (String) -> Unit,
     focusRequester: FocusRequester
 ) {
-    var searchText by rememberSaveable {
-        mutableStateOf("")
-    }
+    val context = LocalContext.current
 
-    LaunchedEffect(searchText) {
-        delay(500)
+    var microphonePermGiven by remember { mutableStateOf(false) }
+    var micClicked by remember { mutableStateOf(false) }
 
-        if (searchText.isEmpty()) {
-            onClear()
-        } else {
-            onQueryChange(searchText)
+    if (micClicked) {
+        LaunchedEffect(key1 = micClicked) {
+            kotlinx.coroutines.delay(2000L)
+            micClicked = false
         }
     }
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            microphonePermGiven = isGranted
+            if (!isGranted) {
+                Toast.makeText(context, "Разрешение на микрофон обязательно!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
 
     Column(
         modifier = Modifier
@@ -62,9 +71,8 @@ fun SearchBar(
             .padding(horizontal = 16.dp)
     ) {
         TextField(
-            value = searchText,
+            value = query,
             onValueChange = {
-                searchText = it
                 onQueryChange(it)
             },
             shape = MaterialTheme.shapes.medium,
@@ -87,22 +95,35 @@ fun SearchBar(
                     shape = MaterialTheme.shapes.medium
                 ),
             trailingIcon = {
-                if (searchText.isNotEmpty()) {
-                    Text("Clear",
+                if (query.isNotEmpty()) {
+                    micClicked = false
+                    Text(
+                        stringResource(R.string.cancel),
                         modifier = Modifier
+                            .padding(end = 16.dp)
                             .clickable {
-                                searchText = ""
                                 onQueryChange("")
                                 onClear()
-                            }
+                            },
+                        color = MaterialTheme.colorScheme.primary
                     )
                 } else {
                     IconButton(
                         onClick = {
-                            onMicClick()
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                            } else {
+                                microphonePermGiven = true
+                                micClicked = true
+                                onMicClick()
+                            }
                         }
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.mic_24px), contentDescription = null)
+                        if (micClicked) {
+                            Icon(painter = painterResource(id = R.drawable.mic_24px), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        } else {
+                            Icon(painter = painterResource(id = R.drawable.mic_24px), contentDescription = null)
+                        }
                     }
                 }
             },

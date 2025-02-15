@@ -2,4 +2,7 @@
 <resources>
     <string name="image_not_found">Изображение не найдено</string>
     <string name="search">Search...</string>
+    <string name="cancel">Cancel</string>
+    <string name="tickers">Тикеры</string>
+    <string name="news">Новости</string>
 </resources>
