@@ -1,27 +1,27 @@
 package com.potaninpm.feature_feed.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,9 +33,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
+import com.potaninpm.feature_feed.presentation.components.AddPostDialog
+import com.potaninpm.feature_feed.presentation.components.CommentsBottomSheet
 import com.potaninpm.feature_feed.presentation.components.PostCard
+import com.potaninpm.feature_feed.presentation.viewModels.CommentsViewModel
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -44,11 +50,14 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedScreen(
-    viewModel: PostsViewModel = koinViewModel()
+    postsViewModel: PostsViewModel = koinViewModel()
 ) {
-    val allPosts by viewModel.allPostsFlow.collectAsState()
-    val favoritePosts by viewModel.favoritePostsFlow.collectAsState()
-    val myPosts by viewModel.myPostsFlow.collectAsState()
+    val allPosts by postsViewModel.allPostsFlow.collectAsState()
+    val favoritePosts by postsViewModel.favoritePostsFlow.collectAsState()
+    val myPosts by postsViewModel.myPostsFlow.collectAsState()
+
+    Log.i("FeedScreen", "allPosts: $allPosts")
+    Log.i("FeedScreen", "favoritePosts: $favoritePosts")
 
     var showAddPostDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -57,52 +66,79 @@ fun FeedScreen(
         pageCount = { 3 }
     )
 
-    if (showAddPostDialog) {
+    var selectedPost by remember { mutableStateOf<PostEntity?>(null) }
 
+    if (showAddPostDialog) {
+        AddPostDialog(
+            onDismiss = { showAddPostDialog = false },
+            onCreatePost = { text, photos, tags ->
+                postsViewModel.addPost(text, photos, tags)
+                showAddPostDialog = false
+            }
+        )
+    }
+
+    if (selectedPost != null) {
+        Log.i("FeedScreen", "selectedPost: $selectedPost")
+        CommentsBottomSheet(
+            post = selectedPost!!,
+            onDismiss = { selectedPost = null }
+        )
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    TabRow(
+                    Row(
                         modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
-                        selectedTabIndex = currentTab
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
                     ) {
-                        listOf("Все посты", "Избранные", "Мои").forEachIndexed { index, title ->
-                            Tab(
-                                selected = currentTab == index,
-                                onClick = {
-                                    currentTab = index
-                                    scope.launch { pagerState.animateScrollToPage(index) }
-                                },
-                                text = { Text(title) }
+                        listOf("Все посты", "Любимые", "Мои").forEachIndexed { index, title ->
+                            Text(
+                                text = title,
+                                modifier = Modifier
+                                    .clickable {
+                                        currentTab = index
+                                        scope.launch { pagerState.animateScrollToPage(index) }
+                                    },
+                                color = if (currentTab == index) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurface
+                                    },
+                                fontWeight = if (currentTab == index) {
+                                        FontWeight.Bold
+                                    } else {
+                                        FontWeight.Normal
+                                    },
                             )
+
+                            Spacer(modifier = Modifier.width(8.dp))
                         }
+
                     }
                 },
                 actions = {
-
+                    IconButton(
+                        onClick = {
+                            showAddPostDialog = true
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.add_circle_24px),
+                            contentDescription = null
+                        )
+                    }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    showAddPostDialog = true
-                }
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add post")
-            }
-        },
-
+        }
     ) { innerPadding ->
-        /*HorizontalPager(
+        HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
+                .padding(bottom = 85.dp)
         ) { page ->
             when (page) {
                 0 -> PostList(
@@ -111,10 +147,10 @@ fun FeedScreen(
 
                     },
                     onLongClickFavorite = {
-                        viewModel.favoritePost(it)
+                        postsViewModel.favoritePost(it)
                     },
-                    onAddComment = { post, comment ->
-                        viewModel.addComment(post.id, comment)
+                    onShowComments = {
+                        selectedPost = it
                     }
                 )
                 1 -> PostList(
@@ -123,10 +159,10 @@ fun FeedScreen(
 
                     },
                     onLongClickFavorite = {
-                        viewModel.favoritePost(it)
+                        postsViewModel.favoritePost(it)
                     },
-                    onAddComment = { post, comment ->
-                        viewModel.addComment(post.id, comment)
+                    onShowComments = {
+                        selectedPost = it
                     }
                 )
                 2 -> PostList(
@@ -134,13 +170,13 @@ fun FeedScreen(
                     onPostClick = {
 
                     },
-                    onLongClickFavorite = { viewModel.favoritePost(it) },
-                    onAddComment = { post, comment ->
-                        viewModel.addComment(post.id, comment)
+                    onLongClickFavorite = { postsViewModel.favoritePost(it) },
+                    onShowComments = {
+                        selectedPost = it
                     }
                 )
             }
-        }*/
+        }
     }
 }
 
@@ -148,20 +184,23 @@ fun FeedScreen(
 fun PostList(
     posts: List<PostEntity>,
     onPostClick: (PostEntity) -> Unit,
-    onLongClickFavorite: (PostEntity) -> Unit,
-    onAddComment: (PostEntity, String) -> Unit
+    onShowComments: (PostEntity) -> Unit,
+    onLongClickFavorite: (PostEntity) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
         items(posts, key = { it.id }) { post ->
             PostCard(
                 post = post,
                 onPostClick = onPostClick,
+                onLongPostClick = onLongClickFavorite,
                 onFavorite = onLongClickFavorite,
-                onAddComment = onAddComment
+                onShowComments = {
+                    onShowComments(post)
+                }
             )
         }
     }

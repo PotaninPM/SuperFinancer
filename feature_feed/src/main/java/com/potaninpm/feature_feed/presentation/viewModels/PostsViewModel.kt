@@ -1,5 +1,6 @@
 package com.potaninpm.feature_feed.presentation.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_feed.data.local.entities.CommentEntity
@@ -26,26 +27,16 @@ class PostsViewModel(
                     text = text,
                     imageData = imageData,
                     tags = tags,
-                    author = currentUser)
+                    author = currentUser
+                )
             )
+            Log.d("PostsViewModel", "Post added")
         }
     }
 
     fun favoritePost(post: PostEntity) {
         viewModelScope.launch {
             repository.updatePost(post.copy(isFavorite = !post.isFavorite))
-        }
-    }
-
-    fun addComment(postId: Long, commentText: String) {
-        viewModelScope.launch {
-            repository.addComment(
-                CommentEntity(
-                    postId = postId,
-                    author = currentUser,
-                    text = commentText
-                )
-            )
         }
     }
 }

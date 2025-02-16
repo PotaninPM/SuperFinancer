@@ -4,5 +4,5 @@
     <string name="main">Главная</string>
     <string name="home">Домой</string>
     <string name="finances">Финансы</string>
-    <string name="news">Новости</string>
+    <string name="posts">Посты</string>
 </resources>

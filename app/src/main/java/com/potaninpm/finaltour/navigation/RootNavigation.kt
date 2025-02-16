@@ -52,7 +52,7 @@ fun RootNavigation() {
                         ),
                         BottomNavItem(
                             route = RootNavDestinations.Feed,
-                            labelRes = R.string.news,
+                            labelRes = R.string.posts,
                             selectedIcon = ImageVector.vectorResource(id = R.drawable.newspaper_24px_filled),
                             unselectedIcon = ImageVector.vectorResource(id = R.drawable.newspaper_24px_not_filled)
                         )

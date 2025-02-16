@@ -9,6 +9,7 @@ data class PostEntity(
     val text: String,
     val imageData: List<ByteArray>,
     val tags: List<String>,
+    val webUrl: String = "",
     val isFavorite: Boolean = false,
     val author: String,
     val date: Long = System.currentTimeMillis()
