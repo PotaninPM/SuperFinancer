@@ -9,5 +9,7 @@ data class CommentEntity(
     val postId: Long,
     val author: String,
     val text: String,
-    val date: Long = System.currentTimeMillis()
+    val date: Long = System.currentTimeMillis(),
+    val likes: Int = 0,
+    val dislikes: Int = 0
 )

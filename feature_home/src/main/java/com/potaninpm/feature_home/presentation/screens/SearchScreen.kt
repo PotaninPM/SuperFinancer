@@ -48,7 +48,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import androidx.room.util.query
 import coil3.compose.rememberAsyncImagePainter
-import com.potaninpm.core.components.CustomElevatedCard
+import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle

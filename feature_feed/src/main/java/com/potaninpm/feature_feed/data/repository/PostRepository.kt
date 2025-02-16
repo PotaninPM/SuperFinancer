@@ -17,4 +17,5 @@ class PostRepository(
     suspend fun addComment(comment: CommentEntity) = db.commentDao().insertComment(comment)
 
     fun getCommentsForPost(postId: Long): Flow<List<CommentEntity>> = db.commentDao().getComments(postId)
+    suspend fun likeOrDislikeComment(comment: CommentEntity) = db.commentDao().updateComment(comment)
 }

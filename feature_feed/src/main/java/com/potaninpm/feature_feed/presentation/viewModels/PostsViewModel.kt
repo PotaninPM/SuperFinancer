@@ -36,7 +36,10 @@ class PostsViewModel(
 
     fun favoritePost(post: PostEntity) {
         viewModelScope.launch {
-            repository.updatePost(post.copy(isFavorite = !post.isFavorite))
+            val updatedLikes = if (!post.isFavorite) post.likes + 1 else (post.likes - 1).coerceAtLeast(0)
+            val updatedPost = post.copy(isFavorite = !post.isFavorite, likes = updatedLikes)
+
+            repository.updatePost(updatedPost)
         }
     }
 }

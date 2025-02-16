@@ -54,6 +54,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 
@@ -61,6 +62,7 @@ import com.potaninpm.feature_feed.data.local.entities.PostEntity
 fun PostCard(
     post: PostEntity,
     onPostClick: (PostEntity) -> Unit,
+    onArticleClick: (String) -> Unit,
     onLongPostClick: (PostEntity) -> Unit,
     onFavorite: (PostEntity) -> Unit,
     onShowComments: (PostEntity) -> Unit
@@ -83,8 +85,8 @@ fun PostCard(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 14.dp)
-                .padding(top = 10.dp)
+                .padding(horizontal = 12.dp)
+                .padding(top = 16.dp)
         ) {
             PostHeader(post, onFavorite)
 
@@ -98,7 +100,7 @@ fun PostCard(
                 Spacer(modifier = Modifier.height(12.dp))
                 AttachedArticleSection(
                     onArticleClick = {
-
+                        onArticleClick(post.webUrl)
                     }
                 )
             }
@@ -121,18 +123,8 @@ fun PostHeader(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .background(Color(0xFFD1E3FF), shape = RoundedCornerShape(18.dp))
-        ) {
-            Text(
-                text = post.author.firstOrNull()?.toString().orEmpty(),
-                modifier = Modifier.align(Alignment.Center),
-                color = Color(0xFF3B5998),
-                fontWeight = FontWeight.Bold
-            )
-        }
+        UserAvatar(post.author)
+
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = post.author,
@@ -140,10 +132,25 @@ fun PostHeader(
             fontSize = 18.sp
         )
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = { onFavorite(post) }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (post.likes > 0) {
+                Text(
+                    text = post.likes.toString(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.width(4.dp))
+
             Icon(
                 imageVector = if (post.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = "Toggle Favorite",
+                modifier = Modifier
+                    .clickable {
+                        onFavorite(post)
+                    },
                 tint = if (post.isFavorite) Color.Red else Color.Gray
             )
         }
@@ -388,6 +395,7 @@ fun CommentsSection(
                 tint = MaterialTheme.colorScheme.primary
             )
         }
+        Spacer(modifier = Modifier.height(4.dp))
     }
 }
 

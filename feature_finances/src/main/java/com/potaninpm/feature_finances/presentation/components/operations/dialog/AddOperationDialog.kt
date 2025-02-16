@@ -24,7 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.potaninpm.core.components.CustomTextField
+import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
 @Composable

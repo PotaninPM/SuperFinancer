@@ -1,9 +1,9 @@
 package com.potaninpm.feature_feed.presentation.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_feed.data.local.entities.CommentEntity
+import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import com.potaninpm.feature_feed.data.repository.PostRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +29,12 @@ class CommentsViewModel(
                     text = commentText
                 )
             )
+        }
+    }
+
+    fun likeOrDislikeComment(comment: CommentEntity) {
+        viewModelScope.launch {
+
         }
     }
 }

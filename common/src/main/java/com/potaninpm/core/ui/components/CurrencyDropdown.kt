@@ -1,4 +1,4 @@
-package com.potaninpm.core.components
+package com.potaninpm.core.ui.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth

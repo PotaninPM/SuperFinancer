@@ -1,6 +1,8 @@
 package com.potaninpm.feature_feed.presentation.screens
 
 import android.util.Log
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,11 +35,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.potaninpm.core.ui.screens.ArticleWebView
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import com.potaninpm.feature_feed.presentation.components.AddPostDialog
@@ -56,9 +63,6 @@ fun FeedScreen(
     val favoritePosts by postsViewModel.favoritePostsFlow.collectAsState()
     val myPosts by postsViewModel.myPostsFlow.collectAsState()
 
-    Log.i("FeedScreen", "allPosts: $allPosts")
-    Log.i("FeedScreen", "favoritePosts: $favoritePosts")
-
     var showAddPostDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var currentTab by remember { mutableIntStateOf(0) }
@@ -66,6 +70,7 @@ fun FeedScreen(
         pageCount = { 3 }
     )
 
+    var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPost by remember { mutableStateOf<PostEntity?>(null) }
 
     if (showAddPostDialog) {
@@ -79,104 +84,152 @@ fun FeedScreen(
     }
 
     if (selectedPost != null) {
-        Log.i("FeedScreen", "selectedPost: $selectedPost")
         CommentsBottomSheet(
             post = selectedPost!!,
             onDismiss = { selectedPost = null }
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
-                    ) {
-                        listOf("Все посты", "Любимые", "Мои").forEachIndexed { index, title ->
-                            Text(
-                                text = title,
-                                modifier = Modifier
-                                    .clickable {
-                                        currentTab = index
-                                        scope.launch { pagerState.animateScrollToPage(index) }
-                                    },
-                                color = if (currentTab == index) {
+    if (selectedUrl == null) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                        ) {
+                            listOf("Все посты", "Любимые", "Мои").forEachIndexed { index, title ->
+                                Text(
+                                    text = title,
+                                    modifier = Modifier
+                                        .clickable {
+                                            currentTab = index
+                                            scope.launch { pagerState.animateScrollToPage(index) }
+                                        },
+                                    color = if (currentTab == index) {
                                         MaterialTheme.colorScheme.primary
                                     } else {
                                         MaterialTheme.colorScheme.onSurface
                                     },
-                                fontWeight = if (currentTab == index) {
+                                    fontWeight = if (currentTab == index) {
                                         FontWeight.Bold
                                     } else {
                                         FontWeight.Normal
                                     },
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+
+                        }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                showAddPostDialog = true
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.add_circle_24px),
+                                contentDescription = null
                             )
-
-                            Spacer(modifier = Modifier.width(8.dp))
                         }
-
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            showAddPostDialog = true
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.add_circle_24px),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(bottom = 85.dp)
-        ) { page ->
-            when (page) {
-                0 -> PostList(
-                    posts = allPosts,
-                    onPostClick = {
-
-                    },
-                    onLongClickFavorite = {
-                        postsViewModel.favoritePost(it)
-                    },
-                    onShowComments = {
-                        selectedPost = it
-                    }
-                )
-                1 -> PostList(
-                    posts = favoritePosts,
-                    onPostClick = {
-
-                    },
-                    onLongClickFavorite = {
-                        postsViewModel.favoritePost(it)
-                    },
-                    onShowComments = {
-                        selectedPost = it
-                    }
-                )
-                2 -> PostList(
-                    posts = myPosts,
-                    onPostClick = {
-
-                    },
-                    onLongClickFavorite = { postsViewModel.favoritePost(it) },
-                    onShowComments = {
-                        selectedPost = it
                     }
                 )
             }
+        ) { innerPadding ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(bottom = 85.dp)
+            ) { page ->
+                when (page) {
+                    0 -> PostList(
+                        posts = allPosts,
+                        onPostClick = {
+
+                        },
+                        onLongClickFavorite = {
+                            postsViewModel.favoritePost(it)
+                        },
+                        onShowComments = {
+                            selectedPost = it
+                        },
+                        onArticleClick = {
+                            selectedUrl = it
+                        }
+                    )
+
+                    1 -> PostList(
+                        posts = favoritePosts,
+                        onPostClick = {
+
+                        },
+                        onLongClickFavorite = {
+                            postsViewModel.favoritePost(it)
+                        },
+                        onShowComments = {
+                            selectedPost = it
+                        },
+                        onArticleClick = {
+                            selectedUrl = it
+                        }
+                    )
+
+                    2 -> PostList(
+                        posts = myPosts,
+                        onPostClick = {
+
+                        },
+                        onLongClickFavorite = { postsViewModel.favoritePost(it) },
+                        onShowComments = {
+                            selectedPost = it
+                        },
+                        onArticleClick = {
+                            selectedUrl = it
+                        }
+                    )
+                }
+            }
         }
+    } else {
+        ArticleWebView(
+            selectedUrl = selectedUrl!!,
+            onCreateClick = {
+                //selectedUrl = null
+            },
+            onBackClick = {
+                selectedUrl = null
+            }
+        )
+//        Scaffold(
+//            topBar = {
+//                TopAppBar(
+//                    title = { Text("Статья") },
+//                    navigationIcon = {
+//                        IconButton(onClick = { selectedUrl = null }) {
+//                            Icon(
+//                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+//                                contentDescription = "Назад"
+//                            )
+//                        }
+//                    }
+//                )
+//            }
+//        ) { innerPadding ->
+//            AndroidView(
+//                modifier = Modifier.padding(innerPadding),
+//                factory = { context ->
+//                    WebView(context).apply {
+//                        webViewClient = WebViewClient()
+//                        settings.javaScriptEnabled = true
+//                        loadUrl(selectedUrl!!)
+//                    }
+//                }
+//            )
+//        }
     }
 }
 
@@ -184,6 +237,7 @@ fun FeedScreen(
 fun PostList(
     posts: List<PostEntity>,
     onPostClick: (PostEntity) -> Unit,
+    onArticleClick: (String) -> Unit,
     onShowComments: (PostEntity) -> Unit,
     onLongClickFavorite: (PostEntity) -> Unit
 ) {
@@ -197,6 +251,7 @@ fun PostList(
                 post = post,
                 onPostClick = onPostClick,
                 onLongPostClick = onLongClickFavorite,
+                onArticleClick = onArticleClick,
                 onFavorite = onLongClickFavorite,
                 onShowComments = {
                     onShowComments(post)

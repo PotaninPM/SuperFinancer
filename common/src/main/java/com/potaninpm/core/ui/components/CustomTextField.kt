@@ -1,4 +1,4 @@
-package com.potaninpm.core.components
+package com.potaninpm.core.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.border

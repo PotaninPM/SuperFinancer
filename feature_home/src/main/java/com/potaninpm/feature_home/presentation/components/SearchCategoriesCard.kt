@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.potaninpm.core.components.CustomElevatedCard
+import com.potaninpm.core.ui.components.CustomElevatedCard
 
 @Composable
 fun SearchCategoriesCard(

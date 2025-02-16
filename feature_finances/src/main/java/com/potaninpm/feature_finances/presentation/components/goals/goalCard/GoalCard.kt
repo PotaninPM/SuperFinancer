@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.potaninpm.core.components.CustomElevatedCard
+import com.potaninpm.core.ui.components.CustomElevatedCard
 
 @Composable
 fun GoalCard(

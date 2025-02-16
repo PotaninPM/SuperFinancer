@@ -1,4 +1,4 @@
-package com.potaninpm.core.components
+package com.potaninpm.core.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme

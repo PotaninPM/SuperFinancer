@@ -44,8 +44,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
-import com.potaninpm.core.components.shimmerCards.ShimmerNewsCard
-import com.potaninpm.core.components.shimmerCards.ShimmerTickerCard
+import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
+import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
+import com.potaninpm.core.ui.screens.ArticleWebView
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
@@ -222,32 +223,12 @@ private fun HomeScreenContent(
             }
         }
     } else {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Статья") },
-                    navigationIcon = {
-                        IconButton(onClick = { selectedUrl = null }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Назад"
-                            )
-                        }
-                    }
-                )
+        ArticleWebView(
+            selectedUrl = selectedUrl!!,
+            onBackClick = {
+                selectedUrl = null
             }
-        ) { innerPadding ->
-            AndroidView(
-                modifier = Modifier.padding(innerPadding),
-                factory = { context ->
-                    WebView(context).apply {
-                        webViewClient = WebViewClient()
-                        settings.javaScriptEnabled = true
-                        loadUrl(selectedUrl!!)
-                    }
-                }
-            )
-        }
+        )
     }
 }
 

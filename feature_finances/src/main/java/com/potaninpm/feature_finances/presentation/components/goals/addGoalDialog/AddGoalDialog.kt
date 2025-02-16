@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.potaninpm.core.components.CurrencyDropdown
-import com.potaninpm.core.components.CustomTextField
+import com.potaninpm.core.ui.components.CurrencyDropdown
+import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.presentation.components.DatePicker
 import com.potaninpm.feature_finances.R
 import java.time.LocalDate

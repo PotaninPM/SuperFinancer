@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.potaninpm.core.components.CustomElevatedCard
+import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.functions.formatMoneyUnsigned
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalProgress
