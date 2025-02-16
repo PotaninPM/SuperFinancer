@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.functions.formatMoneySigned
 import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.presentation.components.operations.CommentSection
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -48,7 +49,7 @@ fun OperationItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = operation.title,
+                text = if (operation.amount >= 0) "Пополнение" else "Снятие",
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
@@ -66,4 +67,6 @@ fun OperationItem(
             color = amountColor
         )
     }
+    operation.comment?.let { CommentSection(comment = it) }
 }
+
