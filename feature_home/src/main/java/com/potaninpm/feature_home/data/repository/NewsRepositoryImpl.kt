@@ -18,8 +18,8 @@ class NewsRepositoryImpl(
 ) : NewsRepository {
     private val LAST_UPDATE_KEY = "news_cache_last_update"
 
-    // six days in millisec
-    private val SIX_DAYS = 6 * 24 * 60 * 60 * 1000L
+    // six hours in millisec
+    private val SIX_HOURS = 6 * 60 * 60 * 1000L
 
     override suspend fun getLatestNews(): List<NewsArticle> = withContext(Dispatchers.IO) {
         val currentTime = System.currentTimeMillis()
@@ -37,7 +37,7 @@ class NewsRepositoryImpl(
         } catch (e: Exception) {
             e.printStackTrace()
             val lastUpdateTime = prefs.getLong(LAST_UPDATE_KEY, 0L)
-            if (currentTime - lastUpdateTime < SIX_DAYS) {
+            if (currentTime - lastUpdateTime < SIX_HOURS) {
                 val cachedNews = newsArticleDao.getAllNews()
                 cachedNews.map { it.toDomainNews() }
             } else {
