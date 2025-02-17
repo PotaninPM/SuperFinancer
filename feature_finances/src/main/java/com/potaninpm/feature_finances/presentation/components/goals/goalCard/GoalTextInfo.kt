@@ -8,10 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.functions.formatMoneySigned
 import com.potaninpm.core.functions.formatMoneyUnsigned
+import com.potaninpm.feature_finances.R
 
 @Composable
 fun GoalTextInfo(
@@ -52,7 +54,7 @@ fun GoalTextInfo(
                 )
             } else {
                 Text(
-                    text = "Без срока",
+                    text = stringResource(R.string.without_date),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.bodyLarge

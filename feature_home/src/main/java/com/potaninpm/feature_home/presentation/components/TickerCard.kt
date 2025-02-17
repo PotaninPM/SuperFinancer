@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
@@ -88,7 +89,7 @@ fun TickerCard(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = String.format("%.2f", ticker.currentPrice) + " " + ticker.currency,
+                    text = String.format(stringResource(R.string._2f), ticker.currentPrice) + " " + ticker.currency,
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 )
                 Text(

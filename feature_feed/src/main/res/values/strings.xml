@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="write_comment">Напишите комментарий</string>
-    <string name="more">Еще</string>
-    <string name="post_created">Пост создан</string>
+    <string name="write_comment">Write a comment</string>
+    <string name="more">More</string>
+    <string name="post_created">Post created</string>
 </resources>

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="image_not_found">Изображение не найдено</string>
-    <string name="search">Поиск...</string>
+    <string name="search">Поиск…</string>
     <string name="cancel">Cancel</string>
     <string name="tickers">Тикеры</string>
     <string name="news">Новости</string>
+    <string name="choose">Выбрать</string>
+    <string name="micro_perm_is_required">Разрешение на микрофон обязательно!</string>
+    <string name="open">Открыть</string>
+    <string name="tickers_settings">Настройки обновления тикеров</string>
+    <string name="turn_on_auto_update">Включить автообновление</string>
+    <string name="field_cant_be_empty">Поле не может быть пустым</string>
+    <string name="interval_8">Интервал не может быть меньше 8 секунд</string>
+    <string name="interval_3600">Интервал не может быть больше 3600 секунд</string>
+    <string name="update_interval">Интервал обновления (сек.)</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="main">Главная</string>
+    <string name="will_update_02d_02d">Обновится через %02d:%02d</string>
+    <string name="_2f">%.2f</string>
 </resources>

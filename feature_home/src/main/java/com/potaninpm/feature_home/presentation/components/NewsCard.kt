@@ -96,7 +96,7 @@ fun NewsCard(
                     }
                 ) {
                     Text(
-                        text = "Открыть",
+                        text = stringResource(R.string.open),
                         textAlign = TextAlign.Center,
                         fontSize = 14.sp,
                     )

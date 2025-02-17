@@ -9,5 +9,17 @@
     <string name="withdraw">Снять</string>
     <string name="add_operation">Add operation</string>
     <string name="no_operations_yet">У вас пока нет операций</string>
-
+    <string name="percent_goals">Процент достижения целей</string>
+    <string name="left_to_save">Осталось накопить</string>
+    <string name="all_saved">Всего накоплено</string>
+    <string name="month_income">Ежемесячный доход</string>
+    <string name="when_end_up_saving">Когда накопите</string>
+    <string name="no_idea">Неизвестно</string>
+    <string name="days">%1$s дней</string>
+    <string name="years_month_left">%1$s лет %2$s месяцев</string>
+    <string name="month_left">%1$s месяцев</string>
+    <string name="target">Цель</string>
+    <string name="near_days">В ближайшее дни</string>
+    <string name="all_goals_done">Все цели выполнены!</string>
+    <string name="without_date">Без срока</string>
 </resources>

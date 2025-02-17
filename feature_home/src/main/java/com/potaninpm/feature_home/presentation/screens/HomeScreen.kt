@@ -37,12 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_feed.presentation.screens.ArticleWebView
+import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
@@ -66,7 +68,7 @@ fun HomeScreen(
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
 
     val prefs = context.getSharedPreferences("ticker_settings", Context.MODE_PRIVATE)
-    var autoUpdateEnabled by rememberSaveable { mutableStateOf(prefs.getBoolean("auto_update_enabled", true)) }
+    var autoUpdateEnabled by rememberSaveable { mutableStateOf(prefs.getBoolean("auto_update_enabled", false)) }
 
     var showSettingsDialog by remember { mutableStateOf(false) }
 
@@ -167,7 +169,7 @@ private fun HomeScreenContent(
                     TopAppBar(
                         title = {
                             Text(
-                                text = "Главная",
+                                text = stringResource(R.string.main),
                                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         },
@@ -252,7 +254,7 @@ fun NewsList(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Новости",
+            text = stringResource(R.string.news),
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
             modifier = Modifier
                 .padding(bottom = 8.dp)
@@ -315,7 +317,7 @@ fun TickersList(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Тикеры",
+            text = stringResource(R.string.tickers),
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
             modifier = Modifier
                 .padding(bottom = 8.dp)
@@ -325,7 +327,7 @@ fun TickersList(
             val minutes = remainingTime / 60
             val seconds = remainingTime % 60
             Text(
-                text = String.format("Обновится через %02d:%02d", minutes, seconds),
+                text = String.format(stringResource(R.string.will_update_02d_02d), minutes, seconds),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = 8.dp)

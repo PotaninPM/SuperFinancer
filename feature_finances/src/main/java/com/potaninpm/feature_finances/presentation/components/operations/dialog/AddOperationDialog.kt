@@ -22,9 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.potaninpm.core.ui.components.CustomTextField
+import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
 @Composable
@@ -33,15 +36,16 @@ fun AddOperationDialog(
     onDismiss: () -> Unit,
     onAddOperation: (Long, Long, String?) -> Unit
 ) {
-    var selectedGoalId by rememberSaveable { mutableStateOf(if (goals.isNotEmpty()) goals.first().id else null) }
+    var selectedGoal by remember { mutableStateOf(if (goals.isNotEmpty()) goals.first() else null) }
     var amountText by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
 
     var amountError by rememberSaveable { mutableStateOf<String?>(null) }
+    val maxAmount = selectedGoal?.targetAmount?.minus(selectedGoal?.currentAmount ?: 0L) ?: 0L
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Добавить операцию") },
+        title = { Text(stringResource(R.string.add_operation)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -50,9 +54,11 @@ fun AddOperationDialog(
                     var expanded by remember { mutableStateOf(false) }
                     Box {
                         OutlinedTextField(
-                            value = goals.firstOrNull { it.id == selectedGoalId }?.title ?: "",
-                            onValueChange = {},
-                            label = { Text("Цель") },
+                            value = goals.firstOrNull { it.id == selectedGoal?.id }?.title ?: "",
+                            onValueChange = {
+
+                            },
+                            label = { Text(stringResource(R.string.target)) },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -67,7 +73,7 @@ fun AddOperationDialog(
                                 DropdownMenuItem(
                                     text = { Text(goal.title) },
                                     onClick = {
-                                        selectedGoalId = goal.id
+                                        selectedGoal = goal
                                         expanded = false
                                     }
                                 )
@@ -78,7 +84,7 @@ fun AddOperationDialog(
 
                 CustomTextField(
                     value = amountText,
-                    hint = "Сумма операции (${goals.firstOrNull { it.id == selectedGoalId }?.currency ?: "₽"})",
+                    hint = "Сумма операции (${goals.firstOrNull { it.id == selectedGoal?.id }?.currency ?: "₽"})",
                     type = "number",
                     isError = amountError != null,
                     error = amountError,
@@ -87,6 +93,7 @@ fun AddOperationDialog(
                         amountError = when {
                             it.isEmpty() -> "Сумма не может быть пустой"
                             it.toLongOrNull() == null -> "Введите корректное число"
+                            it.toLong() + selectedGoal?.currentAmount!! > maxAmount -> "Сумма пополнения больше цели, максимум ${maxAmount}"
                             else -> null
                         }
                     }
@@ -106,8 +113,8 @@ fun AddOperationDialog(
             Button(
                 onClick = {
                     val amount = amountText.toLongOrNull() ?: 0L
-                    val goalId = selectedGoalId ?: return@Button
-                    onAddOperation(goalId, amount, comment.takeIf { it.isNotBlank() })
+                    val goal = selectedGoal ?: return@Button
+                    onAddOperation(goal.id, amount, comment.takeIf { it.isNotBlank() })
                 },
                 enabled = amountError == null && amountText.isNotEmpty()
             ) {

@@ -94,7 +94,6 @@ fun SearchScreen(
     }
 
     BackHandler {
-        //searchViewModel.setQuery("")
         searchViewModel.clearAll()
         navController.popBackStack()
     }
@@ -327,7 +326,7 @@ fun TickerInfoSearch(ticker: Ticker) {
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = String.format("%.2f", ticker.currentPrice) + " " + ticker.currency,
+                text = String.format(stringResource(R.string._2f), ticker.currentPrice) + " " + ticker.currency,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
             )
             Text(

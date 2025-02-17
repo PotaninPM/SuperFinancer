@@ -19,8 +19,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.potaninpm.feature_home.R
 
 @Composable
 fun TickerSettingsDialog(
@@ -29,13 +32,15 @@ fun TickerSettingsDialog(
     onDismiss: () -> Unit,
     onConfirm: (Long, Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+
     var intervalText by rememberSaveable { mutableStateOf(currentInterval.toString()) }
     var isError by rememberSaveable { mutableStateOf("") }
     var isAutoUpdateEnabled by rememberSaveable { mutableStateOf(autoUpdateEnabled) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Настройки обновления тикеров") },
+        title = { Text(stringResource(R.string.tickers_settings)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth()
@@ -48,7 +53,7 @@ fun TickerSettingsDialog(
                         checked = isAutoUpdateEnabled,
                         onCheckedChange = { isAutoUpdateEnabled = it }
                     )
-                    Text("Включить автообновление", modifier = Modifier.padding(start = 8.dp))
+                    Text(stringResource(R.string.turn_on_auto_update), modifier = Modifier.padding(start = 8.dp))
                 }
 
                 if (isAutoUpdateEnabled) {
@@ -57,13 +62,13 @@ fun TickerSettingsDialog(
                         onValueChange = {
                             intervalText = it
                             isError = when {
-                                it.isEmpty() -> "Поле не может быть пустым"
-                                (it.toIntOrNull() ?: 0) < 8 -> "Интервал не может быть меньше 8 секунд"
-                                (it.toIntOrNull() ?: 0) > 3600 -> "Интервал не может быть больше 3600 секунд"
+                                it.isEmpty() -> context.getString(R.string.field_cant_be_empty)
+                                (it.toIntOrNull() ?: 0) < 8 -> context.getString(R.string.interval_8)
+                                (it.toIntOrNull() ?: 0) > 3600 -> context.getString(R.string.interval_3600)
                                 else -> ""
                             }
                         },
-                        label = { Text("Интервал обновления (сек.)") },
+                        label = { Text(stringResource(R.string.update_interval)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         isError = isError.isNotEmpty(),
                         supportingText = {
@@ -85,12 +90,12 @@ fun TickerSettingsDialog(
                     onConfirm(newInterval, isAutoUpdateEnabled)
                 }
             ) {
-                Text("Подтвердить")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
             OutlinedButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

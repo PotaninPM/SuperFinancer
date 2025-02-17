@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.functions.formatMoneyUnsigned
@@ -41,7 +42,7 @@ fun FinancesCard(
         ) {
             FinancesCardItem(
                 title = "${(overallProgress * 100).toInt()}%",
-                subtitle = "Процент достижения целей",
+                subtitle = stringResource(R.string.percent_goals),
                 icon = {
                     GoalProgress(
                         modifier = Modifier
@@ -66,7 +67,7 @@ fun FinancesCard(
 
             FinancesCardItem(
                 title = "${formatMoneyUnsigned(totalTarget - totalSavings)} ₽",
-                subtitle = "Осталось накопить",
+                subtitle = stringResource(R.string.left_to_save),
                 icon = {
                     Surface(
                         modifier = Modifier
@@ -90,7 +91,7 @@ fun FinancesCard(
 
             FinancesCardItem(
                 title = "${formatMoneyUnsigned(totalSavings)} ₽",
-                subtitle = "Всего накоплено",
+                subtitle = stringResource(R.string.all_saved),
                 icon = {
                     Surface(
                         modifier = Modifier
@@ -113,7 +114,7 @@ fun FinancesCard(
 
             FinancesCardItem(
                 title = "${formatMoneyUnsigned(averageMonthlyIncome.toLong())} ₽",
-                subtitle = "Ежемесячный доход",
+                subtitle = stringResource(R.string.month_income),
                 icon = {
                     Surface(
                         modifier = Modifier
@@ -137,7 +138,7 @@ fun FinancesCard(
 
             FinancesCardItem(
                 title = formatDuration(monthsToAchieve),
-                subtitle = "Когда накопите",
+                subtitle = stringResource(R.string.when_end_up_saving),
                 icon = {
                     Surface(
                         modifier = Modifier
@@ -160,18 +161,26 @@ fun FinancesCard(
     }
 }
 
+@Composable
 fun formatDuration(months: Double): String {
-    return if (months == -1.0) {
-        "Неизвестно"
+    return if (months == 0.0) {
+        stringResource(R.string.all_goals_done)
+    } else if (months == -1.0) {
+        stringResource(R.string.no_idea)
     } else if (months < 1.0) {
         val days = (months * 30).toInt()
-        "$days дней"
+
+        if (days < 5) {
+            stringResource(R.string.near_days)
+        } else {
+            stringResource(R.string.days, days)
+        }
     } else if (months in 1.0..12.0) {
         val formattedMonths = String.format("%.1f", months)
-        "$formattedMonths месяцев"
+        stringResource(R.string.month_left, formattedMonths)
     } else {
         val years = (months / 12).toInt()
         val remainingMonths = (months % 12).toInt()
-        "$years лет $remainingMonths месяцев"
+        stringResource(R.string.years_month_left, years, remainingMonths)
     }
 }

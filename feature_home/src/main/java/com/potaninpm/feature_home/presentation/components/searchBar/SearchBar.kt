@@ -51,7 +51,7 @@ fun SearchBar(
 
     if (micClicked) {
         LaunchedEffect(key1 = micClicked) {
-            kotlinx.coroutines.delay(4000L)
+            kotlinx.coroutines.delay(5000L)
             micClicked = false
         }
     }
@@ -60,7 +60,8 @@ fun SearchBar(
         onResult = { isGranted ->
             microphonePermGiven = isGranted
             if (!isGranted) {
-                Toast.makeText(context, "Разрешение на микрофон обязательно!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    context.getString(R.string.micro_perm_is_required), Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -84,7 +85,7 @@ fun SearchBar(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 disabledTextColor = Color.White
             ),
-            placeholder = { Text("Search...") },
+            placeholder = { Text(stringResource(R.string.search)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp)

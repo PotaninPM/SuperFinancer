@@ -65,7 +65,7 @@ fun FakeSearchBar(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.mic_24px),
-                    contentDescription = "Выбрать"
+                    contentDescription = stringResource(R.string.choose)
                 )
             }
         }

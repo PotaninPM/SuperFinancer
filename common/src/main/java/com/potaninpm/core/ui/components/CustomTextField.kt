@@ -40,7 +40,7 @@ fun CustomTextField(
                     shape = MaterialTheme.shapes.medium
                 ).clickable(
                     onClick = {
-                        Log.i("CustomTextField", "onClick")
+
                     }
                 ),
             singleLine = true,
