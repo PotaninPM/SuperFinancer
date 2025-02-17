@@ -23,15 +23,6 @@ class NewsRepositoryImpl(
 
     override suspend fun getLatestNews(): List<NewsArticle> = withContext(Dispatchers.IO) {
         val currentTime = System.currentTimeMillis()
-        val lastUpdateTime = prefs.getLong(LAST_UPDATE_KEY, 0L)
-
-        if (currentTime - lastUpdateTime < SIX_DAYS) {
-            val cashedNews = newsArticleDao.getAllNews()
-
-            if (cashedNews.isNotEmpty()) {
-                return@withContext cashedNews.map { it.toDomainNews() }
-            }
-        }
 
         return@withContext try {
             val response = nyTimesApi.getArticles()
@@ -45,7 +36,13 @@ class NewsRepositoryImpl(
             articles
         } catch (e: Exception) {
             e.printStackTrace()
-            newsArticleDao.getAllNews().map { it.toDomainNews() }
+            val lastUpdateTime = prefs.getLong(LAST_UPDATE_KEY, 0L)
+            if (currentTime - lastUpdateTime < SIX_DAYS) {
+                val cachedNews = newsArticleDao.getAllNews()
+                cachedNews.map { it.toDomainNews() }
+            } else {
+                emptyList()
+            }
         }
     }
 
