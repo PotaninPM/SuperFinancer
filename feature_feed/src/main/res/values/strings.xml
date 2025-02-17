@@ -2,4 +2,5 @@
 <resources>
     <string name="write_comment">Напишите комментарий</string>
     <string name="more">Еще</string>
+    <string name="post_created">Пост создан</string>
 </resources>

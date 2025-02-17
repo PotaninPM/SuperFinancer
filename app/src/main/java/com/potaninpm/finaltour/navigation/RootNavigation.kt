@@ -7,10 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.potaninpm.feature_feed.presentation.screens.CreatePostScreen
 import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
@@ -18,6 +21,7 @@ import com.potaninpm.feature_home.presentation.screens.SearchScreen
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
+import java.net.URLDecoder
 
 @Composable
 fun RootNavigation() {
@@ -82,8 +86,22 @@ fun RootNavigation() {
             }
 
             composable(RootNavDestinations.Feed.route) {
-                FeedScreen()
+                FeedScreen(rootNavController)
             }
+
+            composable(
+                "${RootNavDestinations.CreatePost.route}/{url}",
+                arguments = listOf(navArgument("url") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
+                val url = URLDecoder.decode(encodedUrl, "UTF-8")
+
+                CreatePostScreen(rootNavController, url)
+            }
+
+//            composable(RootNavDestinations.ArticleWebView.route) {
+//                ArticleWebView()
+//            }
         }
     }
 

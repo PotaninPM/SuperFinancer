@@ -1,42 +1,31 @@
-package com.potaninpm.core.ui.screens
+package com.potaninpm.feature_feed.presentation.screens
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavController
 import com.potaninpm.core.R
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleWebView(
     selectedUrl: String,
+    rootNavController: NavController,
     onCreateClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
@@ -46,7 +35,12 @@ fun ArticleWebView(
                 title = { Text(stringResource(R.string.article)) },
                 actions = {
                     Button(
-                        onClick = { onCreateClick() },
+                        onClick = {
+                            val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
+
+                            onCreateClick()
+                            rootNavController.navigate("create_post/$encodedUrl")
+                                  },
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Text(stringResource(R.string.create))

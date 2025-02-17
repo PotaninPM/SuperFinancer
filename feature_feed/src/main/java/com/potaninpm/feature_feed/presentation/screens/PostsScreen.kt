@@ -1,8 +1,5 @@
 package com.potaninpm.feature_feed.presentation.screens
 
-import android.util.Log
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,8 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,14 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.potaninpm.core.ui.screens.ArticleWebView
+import androidx.navigation.NavController
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
-import com.potaninpm.feature_feed.presentation.components.AddPostDialog
 import com.potaninpm.feature_feed.presentation.components.CommentsBottomSheet
 import com.potaninpm.feature_feed.presentation.components.PostCard
-import com.potaninpm.feature_feed.presentation.viewModels.CommentsViewModel
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -57,6 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedScreen(
+    rootNavController: NavController,
     postsViewModel: PostsViewModel = koinViewModel()
 ) {
     val allPosts by postsViewModel.allPostsFlow.collectAsState()
@@ -72,16 +65,6 @@ fun FeedScreen(
 
     var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPost by remember { mutableStateOf<PostEntity?>(null) }
-
-    if (showAddPostDialog) {
-        AddPostDialog(
-            onDismiss = { showAddPostDialog = false },
-            onCreatePost = { text, photos, tags ->
-                postsViewModel.addPost(text, photos, tags)
-                showAddPostDialog = false
-            }
-        )
-    }
 
     if (selectedPost != null) {
         CommentsBottomSheet(
@@ -127,7 +110,7 @@ fun FeedScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                showAddPostDialog = true
+                                rootNavController.navigate("create_post/${""}")
                             }
                         ) {
                             Icon(
@@ -198,8 +181,9 @@ fun FeedScreen(
         ArticleWebView(
             selectedUrl = selectedUrl!!,
             onCreateClick = {
-                //selectedUrl = null
+
             },
+            rootNavController = rootNavController,
             onBackClick = {
                 selectedUrl = null
             }

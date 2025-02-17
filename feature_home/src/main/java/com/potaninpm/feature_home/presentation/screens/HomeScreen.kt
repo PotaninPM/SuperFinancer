@@ -1,8 +1,6 @@
 package com.potaninpm.feature_home.presentation.screens
 
 import android.content.Context
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,11 +39,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
-import com.potaninpm.core.ui.screens.ArticleWebView
+import com.potaninpm.feature_feed.presentation.screens.ArticleWebView
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
@@ -122,9 +118,10 @@ fun HomeScreen(
         },
         onFakeSearchClick = {
             rootNavController.navigate(RootNavDestinations.Search.route) {
-                //popUpTo(RootNavDestinations.Search) { inclusive = true }
+
             }
-        }
+        },
+        rootNavController = rootNavController
     )
 
     if (showSettingsDialog) {
@@ -149,6 +146,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
+    rootNavController: NavHostController,
     newsState: List<NewsArticle>,
     tickersState: List<Ticker>,
     autoUpdateEnabled: Boolean,
@@ -227,7 +225,8 @@ private fun HomeScreenContent(
             selectedUrl = selectedUrl!!,
             onBackClick = {
                 selectedUrl = null
-            }
+            },
+            rootNavController = rootNavController
         )
     }
 }
