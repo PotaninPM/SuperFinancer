@@ -1,6 +1,5 @@
 package com.potaninpm.feature_feed.presentation.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_feed.data.local.entities.PostEntity

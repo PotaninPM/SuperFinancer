@@ -1,7 +1,6 @@
 package com.potaninpm.feature_finances.presentation.screens
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,15 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,19 +31,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.potaninpm.core.ui.components.AddButton
+import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.AddGoalDialog
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.TransferDialog
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.WithdrawDialog
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalCard
 import com.potaninpm.feature_finances.presentation.components.operations.dialog.AddOperationDialog
 import com.potaninpm.feature_finances.presentation.components.operations.section.OperationsSection
 import com.potaninpm.feature_finances.presentation.viewModels.FinancesViewModel
-import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
-import com.potaninpm.feature_finances.presentation.components.goals.dialogs.TransferDialog
-import com.potaninpm.feature_finances.presentation.components.goals.dialogs.WithdrawDialog
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.LocalDate

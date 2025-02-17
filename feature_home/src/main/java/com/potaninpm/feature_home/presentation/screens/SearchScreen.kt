@@ -1,7 +1,6 @@
 package com.potaninpm.feature_home.presentation.screens
 
 import android.speech.SpeechRecognizer
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,13 +41,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
-import androidx.room.util.query
 import coil3.compose.rememberAsyncImagePainter
-import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.functions.startVoiceRecognition
+import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -60,7 +55,6 @@ import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
 import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.KoinApplication.Companion.init
 
 @Composable
 fun SearchScreen(

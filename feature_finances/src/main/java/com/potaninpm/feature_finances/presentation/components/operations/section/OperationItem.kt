@@ -1,6 +1,5 @@
 package com.potaninpm.feature_finances.presentation.components.operations.section
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +22,6 @@ import com.potaninpm.core.functions.formatMoneySigned
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.domain.model.Operation
 import com.potaninpm.feature_finances.presentation.components.operations.CommentSection
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun OperationItem(

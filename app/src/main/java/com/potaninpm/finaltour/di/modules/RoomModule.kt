@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.room.Room
 import com.potaninpm.feature_feed.data.local.database.PostDatabase
 import com.potaninpm.feature_finances.data.local.database.FinanceDatabase
-import com.potaninpm.feature_home.data.local.dao.NewsArticleDao
 import com.potaninpm.feature_home.data.local.database.NewsDatabase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext

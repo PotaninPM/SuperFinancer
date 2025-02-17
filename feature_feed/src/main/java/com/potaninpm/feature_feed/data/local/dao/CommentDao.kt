@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.potaninpm.feature_feed.data.local.entities.CommentEntity
-import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
