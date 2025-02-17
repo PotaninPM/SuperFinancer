@@ -377,7 +377,7 @@ fun CommentsSection(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.forum_24px),
-                    contentDescription = "Comments",
+                    contentDescription = stringResource(R.string.comments),
                     tint = MaterialTheme.colorScheme.primary
                 )
 

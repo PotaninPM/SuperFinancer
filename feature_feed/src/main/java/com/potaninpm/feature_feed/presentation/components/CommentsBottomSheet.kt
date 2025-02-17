@@ -120,7 +120,7 @@ fun CommentsBottomSheetHeader(totalComments: Int, onDismiss: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.comments, totalComments),
+            text = stringResource(R.string.comments_fig, totalComments),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )

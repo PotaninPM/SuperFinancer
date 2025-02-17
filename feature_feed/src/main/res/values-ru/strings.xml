@@ -5,7 +5,6 @@
     <string name="post_created">Пост создан</string>
     <string name="add_photo">Добавить фото</string>
     <string name="attach_photos">Прикрепите фото</string>
-    <string name="comments">Комментарии (%1$s)</string>
     <string name="close">Закрыть</string>
     <string name="send">Отправить</string>
     <string name="like">Лайк</string>
@@ -32,5 +31,7 @@
     <string name="all_posts">Все посты</string>
     <string name="favorite">Любимые</string>
     <string name="my">Мои</string>
-    <string name="show_comments">Show Comments</string>
+    <string name="show_comments">Показать комментарии</string>
+    <string name="comments_fig">Комментарии (%1$s)</string>
+    <string name="comments">Комментарии</string>
 </resources>
