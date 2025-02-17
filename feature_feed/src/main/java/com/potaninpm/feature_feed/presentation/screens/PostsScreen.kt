@@ -56,7 +56,6 @@ fun FeedScreen(
     val favoritePosts by postsViewModel.favoritePostsFlow.collectAsState()
     val myPosts by postsViewModel.myPostsFlow.collectAsState()
 
-    var showAddPostDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var currentTab by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(

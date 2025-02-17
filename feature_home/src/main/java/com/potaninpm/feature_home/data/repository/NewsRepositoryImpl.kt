@@ -10,7 +10,7 @@ class NewsRepositoryImpl(
 ) : NewsRepository {
     override suspend fun getLatestNews(): List<NewsArticle> {
         try {
-            val response = nyTimesApi.getArticles(query = "finance")
+            val response = nyTimesApi.getArticles()
             val articles = response.response.docs.map { dto ->
                 dto.toDomainNews()
             }
