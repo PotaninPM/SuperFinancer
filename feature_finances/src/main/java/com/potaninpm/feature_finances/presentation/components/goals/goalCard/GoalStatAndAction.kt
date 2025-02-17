@@ -16,13 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.potaninpm.feature_finances.R
+import com.potaninpm.feature_finances.presentation.components.goals.GoalActionMenu
 
 @Composable
 fun GoalStatAndAction(
     currentAmount: Long,
     targetAmount: Long,
     onWithdrawClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onTransferClick: () -> Unit
 ) {
     val progress =  if (targetAmount > 0) {
         currentAmount.toFloat() / targetAmount.toFloat()
@@ -42,14 +44,10 @@ fun GoalStatAndAction(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Icon(
-            painter = painterResource(R.drawable.more_vert_24px),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(start = 6.dp)
-                .clickable {
-
-                }
+        GoalActionMenu(
+            onDelete = onDeleteClick,
+            onWithdraw = onWithdrawClick,
+            onTransfer = onTransferClick
         )
 
         GoalProgress(

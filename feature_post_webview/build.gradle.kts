@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    namespace = "com.potaninpm.feature_webview_post"
-    compileSdk = 34
+    namespace = "com.potaninpm.feature_post_webview"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26

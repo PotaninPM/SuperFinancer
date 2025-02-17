@@ -7,7 +7,7 @@
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
     <string name="withdraw">Снять</string>
-    <string name="add_operation">Add operation</string>
+    <string name="add_operation">Добавить операцию</string>
     <string name="no_operations_yet">У вас пока нет операций</string>
     <string name="percent_goals">Процент достижения целей</string>
     <string name="left_to_save">Осталось накопить</string>
@@ -22,4 +22,6 @@
     <string name="near_days">В ближайшее дни</string>
     <string name="all_goals_done">Все цели выполнены!</string>
     <string name="without_date">Без срока</string>
+    <string name="np_goals_yet">У вас пока нет целей</string>
+    <string name="income">Пополнение</string>
 </resources>

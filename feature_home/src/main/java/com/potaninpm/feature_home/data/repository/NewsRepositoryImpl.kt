@@ -1,23 +1,51 @@
 package com.potaninpm.feature_home.data.repository
 
+import android.content.SharedPreferences
+import com.potaninpm.feature_home.data.local.dao.NewsArticleDao
+import com.potaninpm.feature_home.data.mappers.toDomainNews
+import com.potaninpm.feature_home.data.mappers.toEntity
 import com.potaninpm.feature_home.data.remote.api.NYTimesApi
 import com.potaninpm.feature_home.data.remote.mappers.toDomainNews
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.repository.NewsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class NewsRepositoryImpl(
-    private val nyTimesApi: NYTimesApi
+    private val nyTimesApi: NYTimesApi,
+    private val newsArticleDao: NewsArticleDao,
+    private val prefs: SharedPreferences
 ) : NewsRepository {
-    override suspend fun getLatestNews(): List<NewsArticle> {
-        try {
+    private val LAST_UPDATE_KEY = "news_cache_last_update"
+
+    // six days in millisec
+    private val SIX_DAYS = 6 * 24 * 60 * 60 * 1000L
+
+    override suspend fun getLatestNews(): List<NewsArticle> = withContext(Dispatchers.IO) {
+        val currentTime = System.currentTimeMillis()
+        val lastUpdateTime = prefs.getLong(LAST_UPDATE_KEY, 0L)
+
+        if (currentTime - lastUpdateTime < SIX_DAYS) {
+            val cashedNews = newsArticleDao.getAllNews()
+
+            if (cashedNews.isNotEmpty()) {
+                return@withContext cashedNews.map { it.toDomainNews() }
+            }
+        }
+
+        return@withContext try {
             val response = nyTimesApi.getArticles()
             val articles = response.response.docs.map { dto ->
                 dto.toDomainNews()
             }
-            return articles
+
+            newsArticleDao.clearNews()
+            newsArticleDao.insertAll(articles.map { it.toEntity(currentTime) })
+            prefs.edit().putLong(LAST_UPDATE_KEY, currentTime).apply()
+            articles
         } catch (e: Exception) {
             e.printStackTrace()
-            return emptyList()
+            newsArticleDao.getAllNews().map { it.toDomainNews() }
         }
     }
 

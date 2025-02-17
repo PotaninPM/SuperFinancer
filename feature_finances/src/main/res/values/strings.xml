@@ -22,4 +22,6 @@
     <string name="near_days">In the coming days</string>
     <string name="all_goals_done">All goals completed!</string>
     <string name="without_date">Without date</string>
+    <string name="np_goals_yet">You don\'t have goals yet</string>
+    <string name="income">Пополнение</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.potaninpm.feature_webview_post
+package com.potaninpm.feature_post_webview
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.potaninpm.feature_webview_post.test", appContext.packageName)
+        assertEquals("com.potaninpm.feature_post_webview.test", appContext.packageName)
     }
 }

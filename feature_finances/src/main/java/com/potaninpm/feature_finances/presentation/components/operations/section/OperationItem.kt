@@ -1,5 +1,6 @@
 package com.potaninpm.feature_finances.presentation.components.operations.section
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.functions.formatMoneySigned
+import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.domain.model.Operation
 import com.potaninpm.feature_finances.presentation.components.operations.CommentSection
 import java.text.NumberFormat
@@ -28,6 +31,13 @@ fun OperationItem(
     operation: Operation,
     icon: @Composable () -> Unit
 ) {
+    val operationType = when (operation.type) {
+        "deposit" -> stringResource(R.string.income)
+        "withdrawal" -> "Снятие"
+        "transfer_in" -> "Перевод"
+        else -> "???"
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,10 +58,12 @@ fun OperationItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
+
             Text(
-                text = if (operation.amount >= 0) "Пополнение" else "Снятие",
+                text = operationType,
                 style = MaterialTheme.typography.bodyLarge
             )
+
             Text(
                 text = operation.subtitle,
                 style = MaterialTheme.typography.bodyMedium,

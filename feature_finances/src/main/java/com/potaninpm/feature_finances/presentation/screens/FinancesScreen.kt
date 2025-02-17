@@ -1,8 +1,6 @@
 package com.potaninpm.feature_finances.presentation.screens
 
-import android.util.Log
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,9 +24,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,13 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.model.Operation
-import com.potaninpm.feature_finances.presentation.components.goals.addGoalDialog.AddGoalDialog
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.AddGoalDialog
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalCard
 import com.potaninpm.feature_finances.presentation.components.operations.dialog.AddOperationDialog
 import com.potaninpm.feature_finances.presentation.components.operations.section.OperationsSection
 import com.potaninpm.feature_finances.presentation.viewModels.FinancesViewModel
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.TransferDialog
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.WithdrawDialog
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -110,14 +112,6 @@ fun FinancesScreen(
         },
         onAddOperationClick = {
             onAddOperationClick()
-        },
-        onDeleteGoalClick = { goal ->
-            viewModel.deleteGoal(goal)
-        },
-        onWithdrawClick = {
-//            viewModel.addWithdrawal(
-//
-//            )
         }
     )
 }
@@ -127,9 +121,7 @@ fun FinancesScreen(
 private fun FinancesScreenContent(
     viewModel: FinancesViewModel,
     onAddGoalClick: () -> Unit,
-    onAddOperationClick: () -> Unit,
-    onDeleteGoalClick: (GoalEntity) -> Unit,
-    onWithdrawClick: () -> Unit
+    onAddOperationClick: () -> Unit
 ) {
     val state = rememberScrollState()
 
@@ -139,10 +131,55 @@ private fun FinancesScreenContent(
     val totalTarget by viewModel.totalTarget.collectAsState()
     val averageMonthlyInflow by viewModel.averageMonthlyInflow.collectAsState()
 
+    var fromGoal by remember { mutableStateOf<GoalEntity?>(null) }
+    var actionType by remember { mutableStateOf<String?>(null) } // "delete", "withdraw", "transfer"
+
     val monthsToAchieve = if (averageMonthlyInflow == 0.0) -1.0 else (totalTarget - totalSavings) / averageMonthlyInflow
     val overallProgress = totalSavings.toFloat() / totalTarget.toFloat()
 
-    Log.i("INFOG", overallProgress.toString())
+    if (fromGoal != null && actionType != null) {
+        when (actionType) {
+            "delete" -> {
+                LaunchedEffect(fromGoal) {
+                    viewModel.deleteGoal(fromGoal!!)
+                    fromGoal = null
+                    actionType = null
+                }
+            }
+            "withdraw" -> {
+                WithdrawDialog(
+                    goal = fromGoal!!,
+                    onDismiss = { fromGoal = null; actionType = null },
+                    onConfirm = { amount, comment ->
+                        viewModel.addWithdrawal(fromGoal!!, amount, comment)
+                        fromGoal = null
+                        actionType = null
+                    },
+                    onDeleteGoal = {
+                        viewModel.deleteGoal(fromGoal!!)
+                        fromGoal = null
+                        actionType = null
+                    }
+                )
+            }
+            "transfer" -> {
+                TransferDialog(
+                    fromGoal = fromGoal!!,
+                    availableTargetGoals = goals.filter { it.id != fromGoal!!.id },
+                    onDismiss = { fromGoal = null; actionType = null },
+                    onConfirm = { fromId, toId, amount, comment ->
+                        val targetGoal = goals.find { it.id == toId }
+                        if (targetGoal != null) {
+                            viewModel.transferMoney(fromGoal!!, targetGoal, amount, comment)
+                        }
+                        fromGoal = null
+                        actionType = null
+                    }
+                )
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             Column {
@@ -182,7 +219,7 @@ private fun FinancesScreenContent(
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                                 .alpha(0.7f),
-                            text = "У вас пока нет целей",
+                            text = stringResource(R.string.np_goals_yet),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     } else {
@@ -193,9 +230,17 @@ private fun FinancesScreenContent(
                                 currentAmount = goal.currentAmount,
                                 targetAmount = goal.targetAmount,
                                 currency = goal.currency,
-                                onDeleteClick = { viewModel.deleteGoal(goal) },
+                                onDeleteClick = {
+                                    fromGoal = goal
+                                    actionType = "delete"
+                                },
                                 onWithdrawClick = {
-
+                                    fromGoal = goal
+                                    actionType = "withdraw"
+                                },
+                                onTransferClick = {
+                                    fromGoal = goal
+                                    actionType = "transfer"
                                 }
                             )
                             Spacer(modifier = Modifier.height(12.dp))

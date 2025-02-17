@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.data.local.mappers
+package com.potaninpm.feature_finances.data.mappers
 
 import com.potaninpm.feature_finances.data.local.entities.OperationEntity
 import com.potaninpm.feature_finances.domain.model.Operation
@@ -7,10 +7,11 @@ fun OperationEntity.toDomain(): Operation {
     return Operation(
         date = this.date,
         title = "Операция #$id",
-        subtitle = "Тип: $type, Цель: $goalId",
+        subtitle = "Цель: $goalId",
         amount = this.amount,
+        type = this.type,
         currency = this.currency,
-        comment = this.comment
+        comment = this.comment,
     )
 }
 

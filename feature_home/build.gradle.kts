@@ -43,6 +43,11 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":feature_feed"))
 
+    // Room
+    ksp(libs.androidx.room.compiler)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.ktx)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

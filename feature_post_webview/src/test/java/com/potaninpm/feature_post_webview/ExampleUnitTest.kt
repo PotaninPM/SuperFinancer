@@ -1,4 +1,4 @@
-package com.potaninpm.feature_webview_post
+package com.potaninpm.feature_post_webview
 
 import org.junit.Test
 

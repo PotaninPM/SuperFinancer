@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.data.local.entities.OperationEntity
-import com.potaninpm.feature_finances.data.local.mappers.toDomain
+import com.potaninpm.feature_finances.data.mappers.toDomain
 import com.potaninpm.feature_finances.data.repository.GoalsRepository
 import com.potaninpm.feature_finances.data.repository.OperationsRepository
 import com.potaninpm.feature_finances.domain.model.Operation
@@ -64,6 +64,36 @@ class FinancesViewModel(
             )
         }
     }
+
+    fun transferMoney(sourceGoal: GoalEntity, targetGoal: GoalEntity, amount: Long, comment: String?) {
+        viewModelScope.launch {
+            operationRepository.addOperation(
+                OperationEntity(
+                    goalId = sourceGoal.id,
+                    type = "transfer_out",
+                    currency = sourceGoal.currency,
+                    amount = -amount.toDouble(),
+                    comment = "Перевод на ${targetGoal.title}: ${comment.orEmpty()}"
+                )
+            )
+
+            operationRepository.addOperation(
+                OperationEntity(
+                    goalId = targetGoal.id,
+                    type = "transfer_in",
+                    currency = targetGoal.currency,
+                    amount = amount.toDouble(),
+                    comment = "Получено переводом из ${sourceGoal.title}: ${comment.orEmpty()}"
+                )
+            )
+            val updatedSource = sourceGoal.copy(currentAmount = sourceGoal.currentAmount - amount)
+            goalRepository.updateGoal(updatedSource)
+
+            val updatedTarget = targetGoal.copy(currentAmount = targetGoal.currentAmount + amount)
+            goalRepository.updateGoal(updatedTarget)
+        }
+    }
+
 
     fun deleteGoal(goal: GoalEntity) {
         viewModelScope.launch {
