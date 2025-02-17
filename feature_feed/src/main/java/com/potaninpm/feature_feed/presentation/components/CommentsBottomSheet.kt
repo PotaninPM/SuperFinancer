@@ -1,6 +1,6 @@
 package com.potaninpm.feature_feed.presentation.components
 
-import android.util.Log
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -66,9 +67,6 @@ fun CommentsBottomSheet(
     )
 
     val comments by commentsViewModel.comments.collectAsState()
-    var commentText by remember { mutableStateOf("") }
-
-    Log.i("CommentsBottomSheet", "comments: $comments")
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -106,7 +104,6 @@ fun CommentsBottomSheet(
             CommentInputSection { commentText ->
                 if (commentText.isNotBlank()) {
                     commentsViewModel.addComment(commentText)
-                    //onAddComment(commentText)
                 }
             }
         }
@@ -123,12 +120,12 @@ fun CommentsBottomSheetHeader(totalComments: Int, onDismiss: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Комментарии ($totalComments)",
+            text = stringResource(R.string.comments, totalComments),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
         IconButton(onClick = onDismiss) {
-            Icon(imageVector = Icons.Default.Close, contentDescription = "Закрыть")
+            Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.close))
         }
     }
 }
@@ -172,7 +169,7 @@ fun CommentInputSection(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Отправить",
+                        contentDescription = stringResource(R.string.send),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -183,6 +180,8 @@ fun CommentInputSection(
 
 @Composable
 fun CommentItem(comment: CommentEntity) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -200,7 +199,7 @@ fun CommentItem(comment: CommentEntity) {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = timeAgo(comment.date),
+                    text = timeAgo(comment.date, context),
                     style = MaterialTheme.typography.labelMedium,
                     color = Color.Gray
                 )
@@ -220,22 +219,25 @@ fun CommentItem(comment: CommentEntity) {
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ThumbUp,
-                    contentDescription = "Лайк",
+                    contentDescription = stringResource(R.string.like),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(16.dp)
                 )
+
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
                     text = comment.likes.toString(),
                     style = MaterialTheme.typography.labelMedium
                 )
+
                 Spacer(modifier = Modifier.width(16.dp))
                 Icon(
                     painter = painterResource(R.drawable.thumb_down_not_filled_24px),
-                    contentDescription = "Дизлайк",
+                    contentDescription = stringResource(R.string.dislike),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(16.dp)
                 )
+
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
                     text = comment.dislikes.toString(),
@@ -246,11 +248,12 @@ fun CommentItem(comment: CommentEntity) {
     }
 }
 
-fun timeAgo(timestamp: Long): String {
+fun timeAgo(timestamp: Long, context: Context): String {
     val diff = System.currentTimeMillis() - timestamp
     val days = diff / (1000 * 60 * 60 * 24)
+
     return when {
-        days >= 1 -> "$days дн. назад"
-        else -> "Сегодня"
+        days >= 1 -> context.getString(R.string.days_ago, days.toString())
+        else -> context.getString(R.string.today)
     }
 }

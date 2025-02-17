@@ -52,7 +52,7 @@ fun ArticleWebView(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
+                            contentDescription = stringResource(com.potaninpm.feature_feed.R.string.back)
                         )
                     }
                 }

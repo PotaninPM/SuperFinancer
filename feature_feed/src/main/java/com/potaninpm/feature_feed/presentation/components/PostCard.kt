@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -145,7 +146,7 @@ fun PostHeader(
 
             Icon(
                 imageVector = if (post.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                contentDescription = "Toggle Favorite",
+                contentDescription = stringResource(R.string.toggle_favorite),
                 modifier = Modifier
                     .clickable {
                         onFavorite(post)
@@ -166,7 +167,7 @@ fun PostImagesSection(post: PostEntity) {
             items(post.imageData) { imageBytes ->
                 Image(
                     painter = rememberAsyncImagePainter(model = imageBytes),
-                    contentDescription = "Post Image",
+                    contentDescription = stringResource(R.string.post_image),
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -182,7 +183,6 @@ fun PostImagesSection(post: PostEntity) {
                 .height(150.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.Gray)
-                //.shimmerLoading(2000)
         )
     }
 }
@@ -200,7 +200,7 @@ fun PostTagsSection(
                 TagChip(
                     tagText = {
                         Text(
-                            text = "#$tag",
+                            text = stringResource(R.string.tag, tag),
                             modifier = Modifier
                                 .padding(horizontal = 8.dp, vertical = 3.dp),
                             fontWeight = FontWeight.W500,
@@ -264,7 +264,7 @@ fun AttachedArticleSection(
                 )
 
                 Text(
-                    text = "Прикрепленная статья",
+                    text = stringResource(R.string.attached_article),
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
@@ -273,7 +273,7 @@ fun AttachedArticleSection(
 
             Icon(
                 painter = painterResource(id = R.drawable.arrow_right_24px),
-                contentDescription = "Show Article",
+                contentDescription = stringResource(R.string.show_article),
                 modifier = Modifier
                     .size(20.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -301,11 +301,13 @@ fun PostTextSection(
 fun ExpandableText(
     text: String,
     minimizedMaxLines: Int = 3,
-    readMoreText: String = "Еще",
-    readLessText: String = "Скрыть",
+    readMoreText: String = stringResource(R.string.more),
+    readLessText: String = stringResource(R.string.hide),
     style: TextStyle = LocalTextStyle.current,
     onClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     var isExpanded by remember { mutableStateOf(false) }
     var finalText by remember { mutableStateOf(AnnotatedString(text)) }
 
@@ -328,7 +330,7 @@ fun ExpandableText(
                 finalText = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
                         append(text.take(adjustedIndex))
-                        append("... ")
+                        append(context.getString(R.string.three_dots))
                     }
                     withStyle(style = SpanStyle(color = color, fontWeight = FontWeight.Bold)) {
                         append(readMoreText)

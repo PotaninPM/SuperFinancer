@@ -34,6 +34,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -72,6 +73,12 @@ fun FeedScreen(
         )
     }
 
+    val allHeaders = listOf(
+        stringResource(R.string.all_posts),
+        stringResource(R.string.favorite),
+        stringResource(R.string.my)
+    )
+
     if (selectedUrl == null) {
         Scaffold(
             topBar = {
@@ -81,7 +88,7 @@ fun FeedScreen(
                             modifier = Modifier
                                 .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
                         ) {
-                            listOf("Все посты", "Любимые", "Мои").forEachIndexed { index, title ->
+                            allHeaders.forEachIndexed { index, title ->
                                 Text(
                                     text = title,
                                     modifier = Modifier

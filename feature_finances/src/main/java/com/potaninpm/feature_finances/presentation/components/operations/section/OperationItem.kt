@@ -31,9 +31,9 @@ fun OperationItem(
 ) {
     val operationType = when (operation.type) {
         OperationType.DEPOSIT.type -> stringResource(R.string.income)
-        OperationType.WITHDRAWAL.type -> "Снятие"
+        OperationType.WITHDRAWAL.type -> stringResource(R.string.withdrawal)
         OperationType.TRANSFER.type -> stringResource(R.string.transfer)
-        else -> "???"
+        else -> ""
     }
 
     val iconColor = when (operation.type) {

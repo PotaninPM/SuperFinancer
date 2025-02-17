@@ -46,6 +46,7 @@ import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_feed.R
+import com.potaninpm.feature_feed.domain.model.TagTypes
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -60,7 +61,15 @@ fun CreatePostScreen(
     var postText by rememberSaveable { mutableStateOf("") }
     var tagsSelected by remember { mutableStateOf<List<String>>(emptyList()) }
     var photoBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
-    val allTags = listOf("Бизнес", "Финансы", "Развлечения", "Инвестиции", "Новости")
+
+    val allTags = listOf(
+        TagTypes(stringResource(id = R.string.business), "business"),
+        TagTypes(stringResource(id = R.string.finances), "finances"),
+        TagTypes(stringResource(id = R.string.entertainment), "entertainment"),
+        TagTypes(stringResource(id = R.string.investments), "investments"),
+        TagTypes(stringResource(id = R.string.news), "news")
+    )
+
     var fullScreenImage by remember { mutableStateOf<ByteArray?>(null) }
 
     val context = LocalContext.current
@@ -87,12 +96,12 @@ fun CreatePostScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Создать пост") },
+                title = { Text(stringResource(R.string.create_post)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
@@ -101,10 +110,10 @@ fun CreatePostScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = {
-                    Text("Создать пост")
+                    Text(stringResource(R.string.create_post))
                 },
                 icon = {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Создать пост")
+                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.create_post))
                 },
                 onClick = {
                     if (postText.isNotBlank() && tagsSelected.isNotEmpty()) {
@@ -128,13 +137,6 @@ fun CreatePostScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize()
         ) {
-//            OutlinedTextField(
-//                value = postText,
-//                maxLines = 5,
-//                onValueChange = { postText = it },
-//                label = { Text("Текст поста") },
-//                modifier = Modifier.fillMaxWidth()
-//            )
             CustomTextField(
                 value = postText,
                 onValueChange = { postText = it },
@@ -142,12 +144,12 @@ fun CreatePostScreen(
                 isError = false,
                 maxLines = 5,
                 error = null,
-                hint = "Введите текст поста"
+                hint = stringResource(R.string.enter_post_text)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("Выберите тэги (минимум 1)")
+            Text(stringResource(R.string.choose_tags))
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -155,15 +157,15 @@ fun CreatePostScreen(
             ) {
                 items(allTags) { tag ->
                     FilterChip(
-                        selected = tag in tagsSelected,
+                        selected = tag.tagType in tagsSelected,
                         onClick = {
-                            tagsSelected = if (tag in tagsSelected) {
-                                tagsSelected - tag
+                            tagsSelected = if (tag.tagType in tagsSelected) {
+                                tagsSelected - tag.tagType
                             } else {
-                                tagsSelected + tag
+                                tagsSelected + tag.tagType
                             }
                         },
-                        label = { Text(tag) }
+                        label = { Text(tag.tagName) }
                     )
                 }
             }
@@ -181,7 +183,7 @@ fun CreatePostScreen(
                 items(photoBytesList) { bytes ->
                     Image(
                         painter = rememberAsyncImagePainter(model = bytes),
-                        contentDescription = "Фото",
+                        contentDescription = stringResource(R.string.photo),
                         modifier = Modifier
                             .size(120.dp)
                             .clickable { fullScreenImage = bytes }
