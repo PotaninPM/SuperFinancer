@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
-import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.domain.Operation
 import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.AddGoalDialog
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.TransferDialog
@@ -141,27 +141,33 @@ private fun FinancesScreenContent(
                 }
             }
             "withdraw" -> {
-                WithdrawDialog(
-                    goal = fromGoal!!,
-                    onDismiss = { fromGoal = null; actionType = null },
-                    onConfirm = { amount, comment ->
-                        viewModel.addWithdrawal(fromGoal!!, amount, comment)
-                        fromGoal = null
-                        actionType = null
-                    },
-                    onDeleteGoal = {
-                        viewModel.deleteGoal(fromGoal!!)
-                        fromGoal = null
-                        actionType = null
-                    }
-                )
+                if (fromGoal!!.currentAmount == 0L) {
+                    viewModel.deleteGoal(fromGoal!!)
+                    fromGoal = null
+                    actionType = null
+                } else {
+                    WithdrawDialog(
+                        goal = fromGoal!!,
+                        onDismiss = { fromGoal = null; actionType = null },
+                        onConfirm = { amount, comment ->
+                            viewModel.addWithdrawal(fromGoal!!, amount, comment)
+                            fromGoal = null
+                            actionType = null
+                        },
+                        onDeleteGoal = {
+                            viewModel.deleteGoal(fromGoal!!)
+                            fromGoal = null
+                            actionType = null
+                        }
+                    )
+                }
             }
             "transfer" -> {
                 TransferDialog(
                     fromGoal = fromGoal!!,
                     availableTargetGoals = goals.filter { it.id != fromGoal!!.id },
                     onDismiss = { fromGoal = null; actionType = null },
-                    onConfirm = { fromId, toId, amount, comment ->
+                    onConfirm = { _, toId, amount, comment ->
                         val targetGoal = goals.find { it.id == toId }
                         if (targetGoal != null) {
                             viewModel.transferMoney(fromGoal!!, targetGoal, amount, comment)

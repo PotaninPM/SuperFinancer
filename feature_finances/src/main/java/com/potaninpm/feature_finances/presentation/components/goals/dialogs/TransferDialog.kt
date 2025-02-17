@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
 @Composable
@@ -37,12 +39,13 @@ fun TransferDialog(
     var comment by rememberSaveable { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
-    val amountError = remember(amountText) {
-        when {
-            amountText.isEmpty() -> "Сумма не может быть пустой"
-            amountText.toLongOrNull() == null -> "Введите корректное число"
-            else -> null
-        }
+    val amountValue = amountText.toLongOrNull()
+
+    val amountError = when {
+        amountText.isEmpty() -> "Сумма не может быть пустой"
+        amountValue == null -> "Введите корректное число"
+        amountValue > fromGoal.currentAmount -> "Недостаточно средств (макс. ${fromGoal.currentAmount})"
+        else -> null
     }
 
     AlertDialog(
@@ -50,29 +53,36 @@ fun TransferDialog(
         title = { Text("Перевести деньги") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
+                CustomTextField(
                     value = fromGoal.title,
-                    onValueChange = {
-
-                    },
-                    label = { Text("Откуда перевод") },
-                    readOnly = true,
-                    modifier = Modifier.fillMaxWidth()
+                    hint = "Откуда перевод",
+                    type = "text",
+                    enabled = false,
+                    isError = false,
+                    error = null,
+                    onValueChange = {},
+                    borderColor = null,
+                    onClick = {}
                 )
+
                 Box {
-                    OutlinedTextField(
+                    CustomTextField(
                         value = selectedTarget?.title.orEmpty(),
+                        hint = "Куда перевести",
+                        type = "text",
+                        enabled = false,
+                        isError = false,
+                        error = null,
                         onValueChange = {},
-                        label = { Text("Куда перевести") },
-                        readOnly = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { expanded = true }
+                        borderColor = null,
+                        onClick = { expanded = true }
                     )
+
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                     ) {
                         availableTargetGoals.forEach { targetGoal ->
                             DropdownMenuItem(
@@ -85,21 +95,29 @@ fun TransferDialog(
                         }
                     }
                 }
-                OutlinedTextField(
-                    value = amountText,
-                    onValueChange = { amountText = it },
-                    label = { Text("Сумма перевода") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = amountError != null
-                )
-                amountError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
-                OutlinedTextField(
+                CustomTextField(
+                    value = amountText,
+                    hint = "Сумма перевода",
+                    type = "number",
+                    enabled = true,
+                    isError = amountError != null,
+                    error = amountError,
+                    onValueChange = { amountText = it },
+                    borderColor = null,
+                    onClick = {}
+                )
+
+                CustomTextField(
                     value = comment,
+                    hint = "Комментарий (опционально)",
+                    type = "text",
+                    enabled = true,
+                    isError = false,
+                    error = null,
                     onValueChange = { comment = it },
-                    label = { Text("Комментарий (опционально)") },
-                    modifier = Modifier.fillMaxWidth()
+                    borderColor = null,
+                    onClick = {}
                 )
             }
         },

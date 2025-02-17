@@ -20,7 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.functions.formatMoneySigned
 import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.domain.Operation
+import com.potaninpm.feature_finances.domain.OperationType
 import com.potaninpm.feature_finances.presentation.components.operations.CommentSection
 
 @Composable
@@ -29,11 +30,27 @@ fun OperationItem(
     icon: @Composable () -> Unit
 ) {
     val operationType = when (operation.type) {
-        "deposit" -> stringResource(R.string.income)
-        "withdrawal" -> "Снятие"
-        "transfer_in" -> "Перевод"
+        OperationType.DEPOSIT.type -> stringResource(R.string.income)
+        OperationType.WITHDRAWAL.type -> "Снятие"
+        OperationType.TRANSFER.type -> stringResource(R.string.transfer)
         else -> "???"
     }
+
+    val iconColor = when (operation.type) {
+        OperationType.DEPOSIT.type -> MaterialTheme.colorScheme.primary
+        OperationType.WITHDRAWAL.type -> MaterialTheme.colorScheme.error
+        OperationType.TRANSFER.type -> MaterialTheme.colorScheme.primary
+        else -> Color.Gray
+    }
+
+    val amountColor = when (operation.type) {
+        OperationType.DEPOSIT.type -> Color(0xFF059300)
+        OperationType.WITHDRAWAL.type -> MaterialTheme.colorScheme.error
+        OperationType.TRANSFER.type -> Color.Gray
+        else -> Color.Gray
+    }
+
+    val signed = operation.type != OperationType.TRANSFER.type
 
     Row(
         modifier = Modifier
@@ -45,7 +62,7 @@ fun OperationItem(
             modifier = Modifier
                 .size(43.dp)
                 .clip(CircleShape),
-            color = MaterialTheme.colorScheme.primary
+            color = iconColor
         ) {
             icon()
         }
@@ -68,10 +85,8 @@ fun OperationItem(
             )
         }
 
-        val amountColor = if (operation.amount >= 0) Color(0xFF059300) else MaterialTheme.colorScheme.error
-
         Text(
-            text = formatMoneySigned(operation.amount, operation.currency),
+            text = formatMoneySigned(operation.amount, operation.currency, signed = signed),
             style = MaterialTheme.typography.bodyLarge,
             color = amountColor
         )

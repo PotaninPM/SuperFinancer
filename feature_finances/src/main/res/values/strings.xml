@@ -24,4 +24,6 @@
     <string name="without_date">Without date</string>
     <string name="np_goals_yet">You don\'t have goals yet</string>
     <string name="income">Пополнение</string>
+    <string name="before">До %1$s</string>
+    <string name="transfer">Transfer</string>
 </resources>

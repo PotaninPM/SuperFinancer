@@ -1,7 +1,7 @@
 package com.potaninpm.feature_finances.data.mappers
 
 import com.potaninpm.feature_finances.data.local.entities.OperationEntity
-import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.domain.Operation
 
 fun OperationEntity.toDomain(): Operation {
     return Operation(

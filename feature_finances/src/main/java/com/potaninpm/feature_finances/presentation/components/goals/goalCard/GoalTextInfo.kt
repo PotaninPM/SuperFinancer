@@ -13,6 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.functions.formatMoneyUnsigned
 import com.potaninpm.feature_finances.R
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun GoalTextInfo(
@@ -45,8 +49,11 @@ fun GoalTextInfo(
             )
 
             if (dateOfReaching != "null") {
+                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.systemDefault())
+                val dateOfReach =  formatter.format(Instant.ofEpochMilli(dateOfReaching.toLong()))
+
                 Text(
-                    text = "До $dateOfReaching",
+                    text = stringResource(R.string.before, dateOfReach),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.bodyLarge

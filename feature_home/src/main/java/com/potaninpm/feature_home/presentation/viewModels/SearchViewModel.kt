@@ -6,12 +6,14 @@ import com.potaninpm.feature_home.domain.model.SearchResults
 import com.potaninpm.feature_home.domain.repository.NewsRepository
 import com.potaninpm.feature_home.domain.repository.TickerRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 class SearchViewModel(
     private val newsRepository: NewsRepository,
     private val tickerRepository: TickerRepository

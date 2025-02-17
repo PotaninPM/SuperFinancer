@@ -9,6 +9,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -48,16 +49,18 @@ fun AddOperationDialog(
                 if (goals.isNotEmpty()) {
                     var expanded by remember { mutableStateOf(false) }
                     Box {
-                        OutlinedTextField(
+                        CustomTextField(
                             value = goals.firstOrNull { it.id == selectedGoal?.id }?.title ?: "",
+                            hint = stringResource(R.string.target),
+                            enabled = false,
+                            type = "text",
                             onValueChange = {
 
                             },
-                            label = { Text(stringResource(R.string.target)) },
-                            readOnly = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { expanded = true }
+                            onClick = {
+                                expanded = true
+                            },
+                            borderColor = MaterialTheme.colorScheme.primary
                         )
 
                         DropdownMenu(
@@ -117,7 +120,7 @@ fun AddOperationDialog(
         },
         dismissButton = {
             OutlinedButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

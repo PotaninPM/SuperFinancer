@@ -30,10 +30,4 @@ class CommentsViewModel(
             )
         }
     }
-
-    fun likeOrDislikeComment(comment: CommentEntity) {
-        viewModelScope.launch {
-
-        }
-    }
 }

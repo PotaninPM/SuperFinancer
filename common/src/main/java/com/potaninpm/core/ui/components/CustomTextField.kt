@@ -1,5 +1,6 @@
 package com.potaninpm.core.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,10 @@ fun CustomTextField(
     maxLines: Int = 1,
     enabled: Boolean = true,
     isError: Boolean = false,
-    error: String?,
-    onValueChange: (String) -> Unit
+    error: String? = null,
+    onValueChange: (String) -> Unit,
+    borderColor: Color? = null,
+    onClick: () -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
@@ -49,18 +52,20 @@ fun CustomTextField(
                     color = when {
                         isError -> MaterialTheme.colorScheme.error
                         isFocused -> MaterialTheme.colorScheme.primary
+                        borderColor != null -> borderColor
                         else -> Color.Gray
                     },
                     shape = MaterialTheme.shapes.medium
                 ).clickable(
                     onClick = {
-
+                        onClick()
                     }
                 )
                 .focusRequester(focusRequester)
                 .onFocusChanged { focusState ->
                     isFocused = focusState.isFocused
                 },
+            enabled = enabled,
             singleLine = maxLines == 1,
             maxLines = maxLines,
             isError = isError,
@@ -77,7 +82,10 @@ fun CustomTextField(
                 unfocusedContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent,
                 cursorColor = MaterialTheme.colorScheme.primary,
-                disabledTextColor = MaterialTheme.colorScheme.primary
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurface
             )
         )
 

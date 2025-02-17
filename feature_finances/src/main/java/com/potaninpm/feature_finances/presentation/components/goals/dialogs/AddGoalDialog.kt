@@ -1,5 +1,6 @@
 package com.potaninpm.feature_finances.presentation.components.goals.dialogs
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import com.potaninpm.feature_finances.presentation.components.DatePicker
 import com.potaninpm.feature_finances.R
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun AddGoalDialog(
@@ -30,14 +32,15 @@ fun AddGoalDialog(
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var targetSum by rememberSaveable { mutableStateOf("") }
-    var selectedCurrency by rememberSaveable { mutableStateOf("₽") }
+    val selectedCurrency by rememberSaveable { mutableStateOf("₽") }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var showDatePicker by remember { mutableStateOf(false) }
 
     var nameError by rememberSaveable { mutableStateOf<String?>(null) }
     var targetSumError by rememberSaveable { mutableStateOf<String?>(null) }
 
-    val dateFormatter = remember { java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy") }
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy") }
+
     val currencyOptions = listOf("₽", "$", "€", "£", "¥")
 
     if (showDatePicker) {
@@ -96,7 +99,10 @@ fun AddGoalDialog(
                     enabled = false,
                     isError = false,
                     error = null,
-                    onValueChange = {}
+                    onValueChange = {},
+                    onClick = {
+                        showDatePicker = true
+                    }
                 )
             }
         },

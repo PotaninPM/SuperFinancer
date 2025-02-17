@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.domain.model
+package com.potaninpm.feature_finances.domain
 
 data class Operation(
     val date: Long,

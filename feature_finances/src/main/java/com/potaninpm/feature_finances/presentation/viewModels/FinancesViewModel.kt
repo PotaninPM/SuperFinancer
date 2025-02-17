@@ -7,7 +7,8 @@ import com.potaninpm.feature_finances.data.local.entities.OperationEntity
 import com.potaninpm.feature_finances.data.mappers.toDomain
 import com.potaninpm.feature_finances.data.repository.GoalsRepository
 import com.potaninpm.feature_finances.data.repository.OperationsRepository
-import com.potaninpm.feature_finances.domain.model.Operation
+import com.potaninpm.feature_finances.domain.Operation
+import com.potaninpm.feature_finances.domain.OperationType
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -39,7 +40,7 @@ class FinancesViewModel(
 
     val averageMonthlyInflow: StateFlow<Double> =
         operations.map { ops ->
-            val deposits = ops.filter { it.amount > 0 }
+            val deposits = ops.filter { it.amount > 0 && it.type == OperationType.DEPOSIT.type }
             val groups: Map<Int, List<Operation>> = deposits.groupBy { op ->
                 val date = Instant.ofEpochMilli(op.date)
                     .atZone(ZoneId.systemDefault())
@@ -70,22 +71,13 @@ class FinancesViewModel(
             operationRepository.addOperation(
                 OperationEntity(
                     goalId = sourceGoal.id,
-                    type = "transfer_out",
+                    type = OperationType.TRANSFER.type,
                     currency = sourceGoal.currency,
-                    amount = -amount.toDouble(),
-                    comment = "Перевод на ${targetGoal.title}: ${comment.orEmpty()}"
+                    amount = amount.toDouble(),
+                    comment = "Перевод с ${sourceGoal.title} на ${targetGoal.title} ${if (comment!!.isEmpty()) "" else "\n$comment"}"
                 )
             )
 
-            operationRepository.addOperation(
-                OperationEntity(
-                    goalId = targetGoal.id,
-                    type = "transfer_in",
-                    currency = targetGoal.currency,
-                    amount = amount.toDouble(),
-                    comment = "Получено переводом из ${sourceGoal.title}: ${comment.orEmpty()}"
-                )
-            )
             val updatedSource = sourceGoal.copy(currentAmount = sourceGoal.currentAmount - amount)
             goalRepository.updateGoal(updatedSource)
 
@@ -101,7 +93,7 @@ class FinancesViewModel(
                 operationRepository.addOperation(
                     OperationEntity(
                         goalId = goal.id,
-                        type = "withdrawal",
+                        type = OperationType.WITHDRAWAL.type,
                         currency = goal.currency,
                         amount = -goal.currentAmount.toDouble(),
                         comment = "Цель удалена"
@@ -121,7 +113,7 @@ class FinancesViewModel(
             operationRepository.addOperation(
                 OperationEntity(
                     goalId = goal.id,
-                    type = "deposit",
+                    type = OperationType.DEPOSIT.type,
                     currency = goal.currency,
                     amount = amount.toDouble(),
                     comment = comment
@@ -142,7 +134,7 @@ class FinancesViewModel(
             operationRepository.addOperation(
                 OperationEntity(
                     goalId = goal.id,
-                    type = "withdrawal",
+                    type = OperationType.WITHDRAWAL.type,
                     currency = goal.currency,
                     amount = -amount.toDouble(),
                     comment = comment
