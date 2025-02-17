@@ -382,7 +382,7 @@ fun CommentsSection(
                 )
 
                 Text(
-                    text = "Коментарии",
+                    text = stringResource(R.string.comments),
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
                     fontWeight = FontWeight.Medium,
                 )
@@ -390,7 +390,7 @@ fun CommentsSection(
 
             Icon(
                 painter = painterResource(id = R.drawable.arrow_right_24px),
-                contentDescription = "Show Comments",
+                contentDescription = stringResource(R.string.show_comments),
                 modifier = Modifier
                     .size(20.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -398,8 +398,4 @@ fun CommentsSection(
         }
         Spacer(modifier = Modifier.height(4.dp))
     }
-}
-
-private fun String.lineCount(): Int {
-    return this.split("\n").size
 }

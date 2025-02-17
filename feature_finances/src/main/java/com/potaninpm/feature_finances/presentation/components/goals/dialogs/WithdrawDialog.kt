@@ -17,8 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
 @Composable
@@ -28,13 +31,14 @@ fun WithdrawDialog(
     onConfirm: (Long, String?) -> Unit,
     onDeleteGoal: () -> Unit
 ) {
+    val context = LocalContext.current
     var amountText by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
     var errorText by rememberSaveable { mutableStateOf<String?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Снять деньги") },
+        title = { Text(stringResource(R.string.withdraw_money)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
@@ -43,16 +47,21 @@ fun WithdrawDialog(
                         amountText = it
 
                         val amount = amountText.toLongOrNull() ?: 0L
-                        when {
+                        errorText = when {
                             amount > goal.currentAmount -> {
-                                errorText = "Сумма превышает доступный баланс (${goal.currentAmount} ${goal.currency})"
+                                context.getString(
+                                    R.string.sum_is_bigger_than_balance,
+                                    goal.currentAmount.toString(),
+                                    goal.currency
+                                )
                             }
+
                             else -> {
-                                errorText = null
+                                null
                             }
                         }
                     },
-                    label = { Text("Сумма для снятия") },
+                    label = { Text(stringResource(R.string.sum_to_withdraw)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     isError = errorText != null,
@@ -69,7 +78,7 @@ fun WithdrawDialog(
                 OutlinedTextField(
                     value = comment,
                     onValueChange = { comment = it },
-                    label = { Text("Комментарий (опционально)") },
+                    label = { Text(stringResource(R.string.comments_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -79,7 +88,16 @@ fun WithdrawDialog(
                 val amount = amountText.toLongOrNull() ?: 0L
                 when {
                     amount > goal.currentAmount -> {
-                        errorText = "Сумма превышает доступный баланс (${goal.currentAmount} ${goal.currency})"
+                        context.getString(
+                            R.string.sum_is_bigger_than_balance,
+                            goal.currentAmount.toString(),
+                            goal.currency
+                        )
+                        errorText = context.getString(
+                            R.string.sum_is_bigger_than_balance,
+                            goal.currentAmount.toString(),
+                            goal.currency
+                        )
                     }
                     amount == goal.currentAmount -> {
                         onDeleteGoal()
@@ -89,12 +107,12 @@ fun WithdrawDialog(
                     }
                 }
             }) {
-                Text("Снять")
+                Text(stringResource(R.string.withdraw))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

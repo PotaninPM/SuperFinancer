@@ -27,4 +27,25 @@
     <string name="before">До %1$s</string>
     <string name="transfer">Перевод</string>
     <string name="withdrawal">Снятие</string>
+    <string name="new_goal">Новая цель</string>
+    <string name="goal_name">Название цели</string>
+    <string name="choose_date">Выбрать дату</string>
+    <string name="approximate_time">Примерный срок</string>
+    <string name="sum_cannot_be_empty">Сумма не может быть пустой</string>
+    <string name="enter_valid_figure">Введите корректное число</string>
+    <string name="not_enough_money">Недостаточно средств (макс. %1$s)</string>
+    <string name="comments_optional">Комментарий (опционально)</string>
+    <string name="where_transfer">Куда перевести</string>
+    <string name="from_where_transfer">Откуда перевод</string>
+    <string name="transfer_money">Перевести деньги</string>
+    <string name="transaction_sum">Сумма перевода</string>
+    <string name="withdraw_money">Снять деньги</string>
+    <string name="sum_is_bigger_than_balance">Сумма превышает доступный баланс (%1$s %2$s)</string>
+    <string name="sum_to_withdraw">Сумма для снятия</string>
+    <string name="out_of">%1$s %2$s из %3$s %4$s</string>
+    <string name="extra_actions">Дополнительные действия</string>
+    <string name="operation_sum">Сумма операции (%1$s)</string>
+    <string name="sum_is_bigger_than_goal">Сумма пополнения больше цели, максимум %1$s</string>
+    <string name="add">Добавить</string>
+    <string name="ok">OK</string>
 </resources>

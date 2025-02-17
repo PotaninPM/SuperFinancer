@@ -18,7 +18,7 @@
     <string name="attached_article">Прикрепленная статья</string>
     <string name="show_article">Show Article</string>
     <string name="hide">Скрыть</string>
-    <string name="three_dots">"... "</string>
+    <string name="three_dots">"… "</string>
     <string name="back">Назад</string>
     <string name="business">Бизнес</string>
     <string name="finances">Финансы</string>
@@ -32,4 +32,5 @@
     <string name="all_posts">Все посты</string>
     <string name="favorite">Любимые</string>
     <string name="my">Мои</string>
+    <string name="show_comments">Show Comments</string>
 </resources>

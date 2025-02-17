@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.potaninpm.feature_finances.R
 
 @Composable
@@ -26,7 +27,7 @@ fun GoalActionMenu(
     Box {
          Icon(
              painter = painterResource(id = R.drawable.more_vert_24px),
-             contentDescription = "Дополнительные действия",
+             contentDescription = stringResource(R.string.extra_actions),
              modifier = Modifier.clickable { expanded = true }
          )
 
@@ -40,7 +41,7 @@ fun GoalActionMenu(
                     onDelete()
                 },
                 text = {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
             )
             DropdownMenuItem(
@@ -49,7 +50,7 @@ fun GoalActionMenu(
                     onWithdraw()
                 },
                 text = {
-                    Text("Снять")
+                    Text(stringResource(R.string.withdraw))
                 }
             )
             DropdownMenuItem(
@@ -58,7 +59,7 @@ fun GoalActionMenu(
                     onTransfer()
                 },
                 text = {
-                    Text("Перевести")
+                    Text(stringResource(R.string.transfer))
                 }
             )
         }

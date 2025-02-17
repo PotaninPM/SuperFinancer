@@ -37,7 +37,13 @@ fun GoalTextInfo(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "$formattedCurrentAmount $currency из $formattedTargetAmount $currency",
+                text = stringResource(
+                    R.string.out_of,
+                    formattedCurrentAmount,
+                    currency,
+                    formattedTargetAmount,
+                    currency
+                ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )

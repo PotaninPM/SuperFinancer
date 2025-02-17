@@ -40,8 +40,6 @@ fun AddGoalDialog(
 
     val dateFormatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy") }
 
-    val currencyOptions = listOf("₽", "$", "€", "£", "¥")
-
     if (showDatePicker) {
         DatePicker(
             onDateSelected = { date ->
@@ -58,7 +56,7 @@ fun AddGoalDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Новая цель") },
+        title = { Text(stringResource(R.string.new_goal)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -66,7 +64,7 @@ fun AddGoalDialog(
             ) {
                 CustomTextField(
                     value = name,
-                    hint = "Название цели",
+                    hint = stringResource(R.string.goal_name),
                     isError = nameError != null,
                     error = nameError,
                     onValueChange = {
@@ -93,8 +91,8 @@ fun AddGoalDialog(
                 )
 
                 CustomTextField(
-                    value = selectedDate?.format(dateFormatter) ?: "Выбрать дату",
-                    hint = "Дата",
+                    value = selectedDate?.format(dateFormatter) ?: stringResource(R.string.choose_date),
+                    hint = stringResource(R.string.approximate_time),
                     enabled = false,
                     isError = false,
                     error = null,

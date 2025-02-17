@@ -194,32 +194,6 @@ fun FeedScreen(
                 selectedUrl = null
             }
         )
-//        Scaffold(
-//            topBar = {
-//                TopAppBar(
-//                    title = { Text("Статья") },
-//                    navigationIcon = {
-//                        IconButton(onClick = { selectedUrl = null }) {
-//                            Icon(
-//                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                                contentDescription = "Назад"
-//                            )
-//                        }
-//                    }
-//                )
-//            }
-//        ) { innerPadding ->
-//            AndroidView(
-//                modifier = Modifier.padding(innerPadding),
-//                factory = { context ->
-//                    WebView(context).apply {
-//                        webViewClient = WebViewClient()
-//                        settings.javaScriptEnabled = true
-//                        loadUrl(selectedUrl!!)
-//                    }
-//                }
-//            )
-//        }
     }
 }
 

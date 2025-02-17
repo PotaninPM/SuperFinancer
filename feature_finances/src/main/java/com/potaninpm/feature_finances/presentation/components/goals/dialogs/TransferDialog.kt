@@ -17,8 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.ui.components.CustomTextField
+import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
 @Composable
@@ -28,6 +31,8 @@ fun TransferDialog(
     onDismiss: () -> Unit,
     onConfirm: (Long, Long, Long, String?) -> Unit
 ) {
+    val context = LocalContext.current
+
     var selectedTarget by remember { mutableStateOf(if (availableTargetGoals.isNotEmpty()) availableTargetGoals.first() else null) }
     var amountText by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
@@ -35,21 +40,16 @@ fun TransferDialog(
 
     val amountValue = amountText.toLongOrNull()
 
-    val amountError = when {
-        amountText.isEmpty() -> "Сумма не может быть пустой"
-        amountValue == null -> "Введите корректное число"
-        amountValue > fromGoal.currentAmount -> "Недостаточно средств (макс. ${fromGoal.currentAmount})"
-        else -> null
-    }
+    var amountError by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Перевести деньги") },
+        title = { Text(stringResource(R.string.transfer_money)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 CustomTextField(
                     value = fromGoal.title,
-                    hint = "Откуда перевод",
+                    hint = stringResource(R.string.from_where_transfer),
                     type = "text",
                     enabled = false,
                     isError = false,
@@ -62,7 +62,7 @@ fun TransferDialog(
                 Box {
                     CustomTextField(
                         value = selectedTarget?.title.orEmpty(),
-                        hint = "Куда перевести",
+                        hint = stringResource(R.string.where_transfer),
                         type = "text",
                         enabled = false,
                         isError = false,
@@ -92,19 +92,30 @@ fun TransferDialog(
 
                 CustomTextField(
                     value = amountText,
-                    hint = "Сумма перевода",
+                    hint = stringResource(R.string.transaction_sum),
                     type = "number",
                     enabled = true,
-                    isError = amountError != null,
+                    isError = amountError.isEmpty(),
                     error = amountError,
-                    onValueChange = { amountText = it },
+                    onValueChange = {
+                        amountText = it
+                        amountError = when {
+                            amountText.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
+                            amountValue == null -> context.getString(R.string.enter_valid_figure)
+                            amountValue > fromGoal.currentAmount -> context.getString(
+                                R.string.not_enough_money,
+                                fromGoal.currentAmount.toString()
+                            )
+                            else -> ""
+                        }
+                    },
                     borderColor = null,
                     onClick = {}
                 )
 
                 CustomTextField(
                     value = comment,
-                    hint = "Комментарий (опционально)",
+                    hint = stringResource(R.string.comments_optional),
                     type = "text",
                     enabled = true,
                     isError = false,
@@ -123,14 +134,14 @@ fun TransferDialog(
                         onConfirm(fromGoal.id, selectedTarget!!.id, amount, comment.takeIf { it.isNotBlank() })
                     }
                 },
-                enabled = amountError == null && amountText.isNotEmpty() && selectedTarget != null
+                enabled = amountError == "" && amountText.isNotEmpty() && selectedTarget != null
             ) {
-                Text("Перевести")
+                Text(stringResource(R.string.transfer))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.potaninpm.core.ui.components.CustomTextField
@@ -28,6 +29,8 @@ fun AddOperationDialog(
     onDismiss: () -> Unit,
     onAddOperation: (Long, Long, String?) -> Unit
 ) {
+    val context = LocalContext.current
+
     var selectedGoal by remember { mutableStateOf(if (goals.isNotEmpty()) goals.first() else null) }
     var amountText by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
@@ -78,16 +81,21 @@ fun AddOperationDialog(
 
                 CustomTextField(
                     value = amountText,
-                    hint = "Сумма операции (${goals.firstOrNull { it.id == selectedGoal?.id }?.currency ?: "₽"})",
+                    hint = stringResource(
+                        R.string.operation_sum,
+                        goals.firstOrNull { it.id == selectedGoal?.id }?.currency ?: "₽"
+                    ),
                     type = "number",
                     isError = amountError != null,
                     error = amountError,
                     onValueChange = {
                         amountText = it
                         amountError = when {
-                            it.isEmpty() -> "Сумма не может быть пустой"
-                            it.toLongOrNull() == null -> "Введите корректное число"
-                            it.toLong() + selectedGoal?.currentAmount!! > maxAmount -> "Сумма пополнения больше цели, максимум ${maxAmount}"
+                            it.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
+                            it.toLongOrNull() == null -> context.getString(R.string.enter_valid_figure)
+                            it.toLong() + selectedGoal?.currentAmount!! > maxAmount -> context.getString(
+                                R.string.sum_is_bigger_than_goal, maxAmount.toString()
+                            )
                             else -> null
                         }
                     }
@@ -95,7 +103,7 @@ fun AddOperationDialog(
 
                 CustomTextField(
                     value = comment,
-                    hint = "Комментарий (опционально)",
+                    hint = stringResource(R.string.comments_optional),
                     isError = false,
                     error = null,
                     onValueChange = { comment = it }
@@ -111,7 +119,7 @@ fun AddOperationDialog(
                 },
                 enabled = amountError == null && amountText.isNotEmpty()
             ) {
-                Text("Добавить")
+                Text(stringResource(R.string.add))
             }
         },
         dismissButton = {
