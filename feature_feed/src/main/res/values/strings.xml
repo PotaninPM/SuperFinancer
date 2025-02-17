@@ -3,4 +3,6 @@
     <string name="write_comment">Write a comment</string>
     <string name="more">More</string>
     <string name="post_created">Post created</string>
+    <string name="add_photo">Добавить фото</string>
+    <string name="attach_photos">Прикрепите фото</string>
 </resources>

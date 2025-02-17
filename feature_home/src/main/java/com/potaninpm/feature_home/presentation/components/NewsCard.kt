@@ -31,13 +31,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.R
 
 @Composable
 fun NewsCard(
     article: NewsArticle,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onImageClicked: (String) -> Unit = {}
 ) {
 
     OutlinedCard(
@@ -53,7 +55,12 @@ fun NewsCard(
         Column(
             modifier = Modifier.padding(14.dp)
         ) {
-            NewsImage(article)
+            NewsImage(
+                article,
+                onImageClicked = { imageUrl ->
+                    onImageClicked(imageUrl)
+                }
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -108,7 +115,8 @@ fun NewsCard(
 
 @Composable
 fun NewsImage(
-    article: NewsArticle
+    article: NewsArticle,
+    onImageClicked: (String) -> Unit = {}
 ) {
     if (article.imageUrl.isNullOrEmpty()) {
         Column(
@@ -143,6 +151,9 @@ fun NewsImage(
                 .fillMaxWidth()
                 .height(150.dp)
                 .clip(RoundedCornerShape(8.dp))
+                .clickable {
+                    onImageClicked(article.imageUrl)
+                }
         )
     }
 }

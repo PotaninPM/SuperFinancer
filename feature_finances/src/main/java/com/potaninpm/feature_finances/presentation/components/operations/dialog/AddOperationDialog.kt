@@ -102,7 +102,6 @@ fun AddOperationDialog(
                 CustomTextField(
                     value = comment,
                     hint = "Комментарий (опционально)",
-                    type = null,
                     isError = false,
                     error = null,
                     onValueChange = { comment = it }

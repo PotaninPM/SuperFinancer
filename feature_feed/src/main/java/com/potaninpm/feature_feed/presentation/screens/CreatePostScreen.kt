@@ -43,10 +43,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.potaninpm.core.ui.FullScreenImageDialog
+import com.potaninpm.core.ui.components.AddButton
+import com.potaninpm.core.ui.components.CustomTextField
+import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -129,11 +133,21 @@ fun CreatePostScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize()
         ) {
-            OutlinedTextField(
+//            OutlinedTextField(
+//                value = postText,
+//                maxLines = 5,
+//                onValueChange = { postText = it },
+//                label = { Text("Текст поста") },
+//                modifier = Modifier.fillMaxWidth()
+//            )
+            CustomTextField(
                 value = postText,
                 onValueChange = { postText = it },
-                label = { Text("Текст поста") },
-                modifier = Modifier.fillMaxWidth()
+                enabled = true,
+                isError = false,
+                maxLines = 5,
+                error = null,
+                hint = "Введите текст поста"
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -161,7 +175,7 @@ fun CreatePostScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("Прикрепите фото")
+            Text(stringResource(R.string.attach_photos))
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -183,13 +197,12 @@ fun CreatePostScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
-                onClick = {
+            AddButton(
+                onAddClick = {
                     imagePickerLauncher.launch("image/*")
-                }
-            ) {
-                Text("Добавить фото")
-            }
+                },
+                title = R.string.add_photo
+            )
         }
     }
 }

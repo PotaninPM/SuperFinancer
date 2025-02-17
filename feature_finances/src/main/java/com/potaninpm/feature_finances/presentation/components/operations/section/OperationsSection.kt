@@ -12,8 +12,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.domain.model.Operation
-import com.potaninpm.feature_finances.presentation.screens.AddButton
 import com.potaninpm.feature_finances.presentation.screens.groupOperationsByDate
 import com.potaninpm.feature_finances.R
 

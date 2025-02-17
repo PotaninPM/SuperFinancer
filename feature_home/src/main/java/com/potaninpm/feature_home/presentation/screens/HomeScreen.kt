@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_feed.presentation.screens.ArticleWebView
@@ -161,7 +162,14 @@ private fun HomeScreenContent(
     val listState = rememberScrollState()
 
     var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
+    var imageClicked by remember { mutableStateOf("") }
 
+    if (imageClicked.isNotEmpty()) {
+         FullScreenImageDialog(
+             imageUrl = imageClicked,
+             onDismiss = { imageClicked = "" }
+         )
+    }
     if (selectedUrl == null) {
         Scaffold(
             topBar = {
@@ -218,6 +226,9 @@ private fun HomeScreenContent(
                     },
                     onNewsRefreshClick = {
                         onNewsRefreshClick()
+                    },
+                    onImageClicked = { imageUrl ->
+                        imageClicked = imageUrl
                     }
                 )
             }
@@ -237,7 +248,8 @@ private fun HomeScreenContent(
 fun NewsList(
     newsState: List<NewsArticle>,
     onClick: (String) -> Unit,
-    onNewsRefreshClick: () -> Unit
+    onNewsRefreshClick: () -> Unit,
+    onImageClicked: (String) -> Unit
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
 
@@ -284,6 +296,9 @@ fun NewsList(
                     article = article,
                     onClick = {
                         onClick(article.webUrl)
+                    },
+                    onImageClicked = { imageUrl ->
+                        onImageClicked(imageUrl)
                     }
                 )
             }

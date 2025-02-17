@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.model.Operation
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.AddGoalDialog
@@ -250,47 +251,13 @@ private fun FinancesScreenContent(
                 onAddGoalClick = onAddGoalClick
             )
 
-            HorizontalDivider(
-                modifier = Modifier
-            )
+            HorizontalDivider()
 
             OperationsSection(
                 operations = operations,
                 onAddOperationClick = onAddOperationClick
             )
         }
-    }
-}
-
-@Composable
-fun AddButton(
-    onAddClick: () -> Unit,
-    @StringRes title: Int,
-) {
-    Row(
-        modifier = Modifier
-            .padding(vertical = 10.dp)
-            .clickable {
-                onAddClick()
-            },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            modifier = Modifier
-                .size(32.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(modifier = Modifier.width(4.dp))
-
-        Text(
-            stringResource(title),
-            fontSize = 17.sp,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.SemiBold
-        )
     }
 }
 

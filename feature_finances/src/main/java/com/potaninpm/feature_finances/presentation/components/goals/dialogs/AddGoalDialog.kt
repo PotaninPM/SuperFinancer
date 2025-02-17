@@ -65,7 +65,6 @@ fun AddGoalDialog(
                 CustomTextField(
                     value = name,
                     hint = "Название цели",
-                    type = null,
                     isError = nameError != null,
                     error = nameError,
                     onValueChange = {
@@ -94,7 +93,6 @@ fun AddGoalDialog(
                 CustomTextField(
                     value = selectedDate?.format(dateFormatter) ?: "Выбрать дату",
                     hint = "Дата",
-                    type = null,
                     enabled = false,
                     isError = false,
                     error = null,
