@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -45,6 +46,9 @@ import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
 import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.core.ui.components.CustomElevatedCard
+import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
+import com.potaninpm.core.ui.components.shimmerCards.ShimmerSearchTicker
+import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -129,6 +133,8 @@ private fun SearchScreenContent(
 
     val state = rememberScrollState()
 
+    val pagerState = rememberPagerState(initialPage = 0) { categories.size }
+
     Scaffold(
         topBar = {
 
@@ -186,17 +192,18 @@ private fun SearchScreenContent(
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
             ) {
-                when (selectedCategory) {
-                    R.string.tickers -> {
-                        TickersListSearch(
-                            tickers = results.tickers
-                        )
-                    }
-                    R.string.news -> {
-                        NewsListSearch(
-                            news = results.news,
-                            //onClick = { url ->  }
-                        )
+                if (query.isNotEmpty()) {
+                    when (selectedCategory) {
+                        R.string.tickers -> {
+                            TickersListSearch(
+                                tickers = results.tickers
+                            )
+                        }
+                        R.string.news -> {
+                            NewsListSearch(
+                                news = results.news,
+                            )
+                        }
                     }
                 }
             }
@@ -221,6 +228,8 @@ fun NewsListSearch(news: List<NewsArticle>) {
             )
             Spacer(modifier = Modifier.height(12.dp))
         }
+    } else {
+        ShimmerNewsCard()
     }
 }
 
@@ -259,6 +268,8 @@ fun TickersListSearch(
 
             Spacer(modifier = Modifier.height(40.dp))
         }
+    } else {
+        ShimmerSearchTicker()
     }
 }
 
