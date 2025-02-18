@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 
@@ -41,12 +42,17 @@ fun WithdrawDialog(
         title = { Text(stringResource(R.string.withdraw_money)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
+                CustomTextField(
                     value = amountText,
-                    onValueChange = {
-                        amountText = it
+                    hint = stringResource(R.string.sum_to_withdraw),
+                    type = "number",
+                    isError = errorText != null,
+                    error = errorText,
+                    onValueChange = { text ->
+                        amountText = text
 
                         val amount = amountText.toLongOrNull() ?: 0L
+
                         errorText = when {
                             amount > goal.currentAmount -> {
                                 context.getString(
@@ -55,31 +61,21 @@ fun WithdrawDialog(
                                     goal.currency
                                 )
                             }
-
+                            !amountText.all { it.isDigit() } -> context.getString(R.string.enter_valid_figure)
+                            amountText.isNotEmpty() && amountText[0] == '0' -> {
+                                context.getString(R.string.enter_valid_figure)
+                            }
                             else -> {
                                 null
                             }
                         }
-                    },
-                    label = { Text(stringResource(R.string.sum_to_withdraw)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = errorText != null,
+                    }
                 )
-                if (errorText != null) {
-                    Text(
-                        text = errorText!!,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                    )
-                }
 
-                OutlinedTextField(
+                CustomTextField(
                     value = comment,
-                    onValueChange = { comment = it },
-                    label = { Text(stringResource(R.string.comments_optional)) },
-                    modifier = Modifier.fillMaxWidth()
+                    hint = stringResource(R.string.comments_optional),
+                    onValueChange = { comment = it }
                 )
             }
         },
@@ -88,11 +84,6 @@ fun WithdrawDialog(
                 val amount = amountText.toLongOrNull() ?: 0L
                 when {
                     amount > goal.currentAmount -> {
-                        context.getString(
-                            R.string.sum_is_bigger_than_balance,
-                            goal.currentAmount.toString(),
-                            goal.currency
-                        )
                         errorText = context.getString(
                             R.string.sum_is_bigger_than_balance,
                             goal.currentAmount.toString(),

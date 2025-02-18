@@ -104,6 +104,9 @@ fun TransferDialog(
                                 R.string.not_enough_money,
                                 fromGoal.currentAmount.toString()
                             )
+                            amountText.isNotEmpty() && amountText[0] == '0' -> {
+                                context.getString(R.string.enter_valid_figure)
+                            }
                             else -> ""
                         }
                     },
