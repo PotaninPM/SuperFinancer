@@ -49,4 +49,7 @@
     <string name="add">Добавить</string>
     <string name="ok">OK</string>
     <string name="goal_deleted">Цель удалена: %1$s</string>
+    <string name="deleted">Удалено: %1$s</string>
+    <string name="from">С: %1$s</string>
+    <string name="to">На: %1$s</string>
 </resources>

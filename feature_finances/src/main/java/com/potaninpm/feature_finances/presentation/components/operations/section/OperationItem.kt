@@ -56,10 +56,10 @@ fun OperationItem(
     val signed = operation.type != OperationType.TRANSFER.type
 
     val title = when (operation.type) {
-        OperationType.DEPOSIT.type -> "На: ${operation.title}"
-        OperationType.WITHDRAWAL.type -> "С: ${operation.title}"
+        OperationType.DEPOSIT.type -> stringResource(R.string.to, operation.title)
+        OperationType.WITHDRAWAL.type -> stringResource(R.string.from, operation.title)
         OperationType.TRANSFER.type -> operation.title
-        OperationType.DELETE.type -> "Удалено: ${operation.title}"
+        OperationType.DELETE.type -> stringResource(R.string.deleted, operation.title)
         else -> ""
     }
     Row(
