@@ -48,7 +48,6 @@ import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerSearchTicker
-import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -132,8 +131,6 @@ private fun SearchScreenContent(
     var selectedCategory by remember { mutableIntStateOf(categories.first()) }
 
     val state = rememberScrollState()
-
-    val pagerState = rememberPagerState(initialPage = 0) { categories.size }
 
     Scaffold(
         topBar = {

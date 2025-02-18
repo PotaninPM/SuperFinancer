@@ -1,8 +1,11 @@
 package com.potaninpm.feature_feed.presentation.components
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -58,6 +61,7 @@ import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PostCard(
     post: PostEntity,
@@ -76,12 +80,14 @@ fun PostCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = { onLongPostClick(post) }
-                )
-            }
-            .clickable { onPostClick(post) }
+            .combinedClickable(
+                onClick = {
+                    onPostClick(post)
+                },
+                onLongClick = {
+                    onLongPostClick(post)
+                },
+            )
     ) {
         Column(
             modifier = Modifier
