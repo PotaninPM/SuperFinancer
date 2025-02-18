@@ -1,4 +1,4 @@
-package com.potaninpm.core.ui
+package com.potaninpm.core.ui.screens
 
 import android.webkit.WebView
 import android.webkit.WebViewClient

@@ -42,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
-import com.potaninpm.core.ui.FullScreenImageDialog
+import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.feature_home.R

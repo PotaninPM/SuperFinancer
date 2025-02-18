@@ -43,7 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
-import com.potaninpm.core.ui.FullScreenImageDialog
+import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_feed.R

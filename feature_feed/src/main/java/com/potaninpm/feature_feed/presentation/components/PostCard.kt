@@ -54,7 +54,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
-import com.potaninpm.core.ui.FullScreenImageDialog
+import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
@@ -180,34 +180,72 @@ fun PostImagesSection(post: PostEntity) {
     }
 
     if (post.imageData.isNotEmpty()) {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(post.imageData) { imageBytes ->
+        when (post.imageData.size) {
+            1 -> {
                 Image(
-                    painter = rememberAsyncImagePainter(model = imageBytes),
+                    painter = rememberAsyncImagePainter(model = post.imageData.first()),
                     contentDescription = stringResource(R.string.post_image),
                     modifier = Modifier
-                        .size(100.dp)
+                        .fillMaxWidth()
+                        .height(150.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(Color.Gray)
                         .clickable {
                             openImage = true
-                            imageInBytes = imageBytes
+                            imageInBytes = post.imageData.first()
                         },
                     contentScale = ContentScale.Crop
                 )
             }
+
+            2 -> {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    post.imageData.forEach { imageBytes ->
+                        Image(
+                            painter = rememberAsyncImagePainter(model = imageBytes),
+                            contentDescription = stringResource(R.string.post_image),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Gray)
+                                .clickable {
+                                    openImage = true
+                                    imageInBytes = imageBytes
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
+
+            else -> {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(post.imageData) { imageBytes ->
+                        Image(
+                            painter = rememberAsyncImagePainter(model = imageBytes),
+                            contentDescription = stringResource(R.string.post_image),
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Gray)
+                                .clickable {
+                                    openImage = true
+                                    imageInBytes = imageBytes
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
         }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.Gray)
-        )
     }
 }
 

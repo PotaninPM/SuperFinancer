@@ -20,7 +20,7 @@ import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.feature_home.presentation.screens.SearchScreen
-import com.potaninpm.core.ui.ArticleWebView
+import com.potaninpm.core.ui.screens.ArticleWebView
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
