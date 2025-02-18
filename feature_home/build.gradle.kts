@@ -41,7 +41,6 @@ android {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":feature_feed"))
 
     // Room
     ksp(libs.androidx.room.compiler)

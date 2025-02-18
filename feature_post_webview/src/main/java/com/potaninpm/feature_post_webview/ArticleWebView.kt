@@ -1,4 +1,4 @@
-package com.potaninpm.feature_feed.presentation.screens
+package com.potaninpm.feature_post_webview
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -17,17 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
-import com.potaninpm.core.R
+import androidx.navigation.NavHostController
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleWebView(
     selectedUrl: String,
-    rootNavController: NavController,
-    onCreateClick: () -> Unit = {},
-    onBackClick: () -> Unit = {}
+    rootNavController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -37,10 +34,8 @@ fun ArticleWebView(
                     Button(
                         onClick = {
                             val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
-
-                            onCreateClick()
                             rootNavController.navigate("create_post/$encodedUrl")
-                                  },
+                        },
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Text(stringResource(R.string.create))
@@ -48,11 +43,13 @@ fun ArticleWebView(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { onBackClick() }
+                        onClick = {
+                            rootNavController.popBackStack()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(com.potaninpm.feature_feed.R.string.back)
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }

@@ -18,6 +18,7 @@ import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.feature_home.presentation.screens.SearchScreen
+import com.potaninpm.feature_post_webview.ArticleWebView
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
@@ -96,12 +97,24 @@ fun RootNavigation() {
                 val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
                 val url = URLDecoder.decode(encodedUrl, "UTF-8")
 
-                CreatePostScreen(rootNavController, url)
+                CreatePostScreen(
+                    navController = rootNavController,
+                    selectedUrl = url
+                )
             }
 
-//            composable(RootNavDestinations.ArticleWebView.route) {
-//                ArticleWebView()
-//            }
+            composable(
+                "${RootNavDestinations.ArticleWebView.route}/{url}",
+                arguments = listOf(navArgument("url") { type = NavType.StringType})
+            ) { backStackEntry ->
+                val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
+                val url = URLDecoder.decode(encodedUrl, "UTF-8")
+
+                ArticleWebView(
+                    selectedUrl = url,
+                    rootNavController = rootNavController
+                )
+            }
         }
     }
 

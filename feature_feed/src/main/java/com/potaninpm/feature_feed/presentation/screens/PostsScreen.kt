@@ -45,6 +45,7 @@ import com.potaninpm.feature_feed.presentation.components.PostCard
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -184,16 +185,8 @@ fun FeedScreen(
             }
         }
     } else {
-        ArticleWebView(
-            selectedUrl = selectedUrl!!,
-            onCreateClick = {
-
-            },
-            rootNavController = rootNavController,
-            onBackClick = {
-                selectedUrl = null
-            }
-        )
+        val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
+        rootNavController.navigate("article_web_view/$encodedUrl")
     }
 }
 

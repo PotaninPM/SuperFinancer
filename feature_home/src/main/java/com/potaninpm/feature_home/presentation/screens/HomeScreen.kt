@@ -45,7 +45,6 @@ import com.google.gson.Gson
 import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
-import com.potaninpm.feature_feed.presentation.screens.ArticleWebView
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
@@ -58,6 +57,7 @@ import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.HomeViewModel
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
 
 @Composable
 fun HomeScreen(
@@ -242,13 +242,10 @@ private fun HomeScreenContent(
             }
         }
     } else {
-        ArticleWebView(
-            selectedUrl = selectedUrl!!,
-            onBackClick = {
-                selectedUrl = null
-            },
-            rootNavController = rootNavController
-        )
+        val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
+        rootNavController.navigate("article_web_view/$encodedUrl")
+
+        selectedUrl = null
     }
 }
 
