@@ -52,4 +52,8 @@
     <string name="deleted">Deleted: %1$s</string>
     <string name="from">From: %1$s</string>
     <string name="to">To: %1$s</string>
+    <string name="where_to_deposit">Where to deposit</string>
+    <string name="deposit">Deposit</string>
+    <string name="add_money_to_goal">Top up the balance</string>
+    <string name="deposit_amount">Deposit amount</string>
 </resources>

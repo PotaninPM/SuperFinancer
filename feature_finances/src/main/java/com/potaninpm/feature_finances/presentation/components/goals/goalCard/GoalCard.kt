@@ -18,7 +18,8 @@ fun GoalCard(
     currency: String,
     onDeleteClick: () -> Unit,
     onWithdrawClick: () -> Unit,
-    onTransferClick: () -> Unit
+    onTransferClick: () -> Unit,
+    onDepositClick: () -> Unit
 ) {
     CustomElevatedCard(
         modifier = Modifier
@@ -45,7 +46,8 @@ fun GoalCard(
                 targetAmount = targetAmount,
                 onDeleteClick = onDeleteClick,
                 onWithdrawClick = onWithdrawClick,
-                onTransferClick = onTransferClick
+                onTransferClick = onTransferClick,
+                onDepositClick = onDepositClick
             )
         }
     }

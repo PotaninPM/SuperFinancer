@@ -19,7 +19,8 @@ fun GoalStatAndAction(
     targetAmount: Long,
     onWithdrawClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    onTransferClick: () -> Unit
+    onTransferClick: () -> Unit,
+    onDepositClick: () -> Unit
 ) {
     val progress =  if (targetAmount > 0) {
         currentAmount.toFloat() / targetAmount.toFloat()
@@ -42,7 +43,8 @@ fun GoalStatAndAction(
         GoalActionMenu(
             onDelete = onDeleteClick,
             onWithdraw = onWithdrawClick,
-            onTransfer = onTransferClick
+            onTransfer = onTransferClick,
+            onDeposit = onDepositClick
         )
 
         GoalProgress(

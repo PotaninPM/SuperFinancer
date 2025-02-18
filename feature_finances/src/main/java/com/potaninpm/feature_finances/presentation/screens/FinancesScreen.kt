@@ -37,6 +37,7 @@ import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.Operation
 import com.potaninpm.feature_finances.presentation.components.financesCard.FinancesCard
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.AddGoalDialog
+import com.potaninpm.feature_finances.presentation.components.goals.dialogs.DepositMoneyDialog
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.TransferDialog
 import com.potaninpm.feature_finances.presentation.components.goals.dialogs.WithdrawDialog
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalCard
@@ -177,6 +178,18 @@ private fun FinancesScreenContent(
                     }
                 )
             }
+
+            "deposit" -> {
+                DepositMoneyDialog(
+                    goal = fromGoal!!,
+                    onDismiss = { fromGoal = null; actionType = null },
+                    onConfirm = { goal, amount, comment ->
+                        viewModel.addDeposit(goal, amount, comment?.trim())
+                        fromGoal = null
+                        actionType = null
+                    }
+                )
+            }
         }
     }
 
@@ -241,6 +254,10 @@ private fun FinancesScreenContent(
                                 onTransferClick = {
                                     fromGoal = goal
                                     actionType = "transfer"
+                                },
+                                onDepositClick = {
+                                    fromGoal = goal
+                                    actionType = "deposit"
                                 }
                             )
                             Spacer(modifier = Modifier.height(12.dp))

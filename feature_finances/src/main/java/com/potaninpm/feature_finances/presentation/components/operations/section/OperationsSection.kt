@@ -3,6 +3,8 @@ package com.potaninpm.feature_finances.presentation.components.operations.sectio
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -77,7 +79,7 @@ fun OperationsSection(
                                 }
                                 OperationType.TRANSFER.type -> {
                                     Icon(
-                                        painter = painterResource(R.drawable.transfer_24px),
+                                        imageVector = Icons.AutoMirrored.Filled.Send,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onPrimary,
                                         modifier = Modifier

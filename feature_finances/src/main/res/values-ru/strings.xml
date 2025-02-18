@@ -52,4 +52,8 @@
     <string name="deleted">Удалено: %1$s</string>
     <string name="from">С: %1$s</string>
     <string name="to">На: %1$s</string>
+    <string name="where_to_deposit">Что пополнить</string>
+    <string name="deposit">Пополнить</string>
+    <string name="add_money_to_goal">Пополнить цель</string>
+    <string name="deposit_amount">Сумма пополнения</string>
 </resources>
