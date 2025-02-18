@@ -1,6 +1,7 @@
 package com.potaninpm.feature_feed.presentation.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,7 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -74,6 +80,13 @@ fun FeedScreen(
         )
     }
 
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .collect { page ->
+                currentTab = page
+            }
+    }
+
     val allHeaders = listOf(
         stringResource(R.string.all_posts),
         stringResource(R.string.favorite),
@@ -85,33 +98,39 @@ fun FeedScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Row(
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
                         ) {
-                            allHeaders.forEachIndexed { index, title ->
+                            item {
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            items(allHeaders) { header ->
+                                val index = allHeaders.indexOf(header)
                                 Text(
-                                    text = title,
+                                    text = header,
                                     modifier = Modifier
                                         .clickable {
                                             currentTab = index
-                                            scope.launch { pagerState.animateScrollToPage(index) }
-                                        },
-                                    color = if (currentTab == index) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurface
+                                            scope.launch { pagerState.animateScrollToPage(index)
+                                        }
                                     },
-                                    fontWeight = if (currentTab == index) {
-                                        FontWeight.Bold
+                                    style = if (currentTab == index) {
+                                        MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
                                     } else {
-                                        FontWeight.Normal
-                                    },
+                                        MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.Normal,
+                                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                            color = Color.Gray
+                                        )
+                                    }
                                 )
-
-                                Spacer(modifier = Modifier.width(8.dp))
                             }
-
                         }
                     },
                     actions = {

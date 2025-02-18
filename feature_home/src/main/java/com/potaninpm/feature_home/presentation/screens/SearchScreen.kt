@@ -104,7 +104,7 @@ fun SearchScreen(
         onMicClick = onMicClick,
         onClear = {
             searchViewModel.clearAll()
-            navController.navigate(RootNavDestinations.Home.route)
+            navController.popBackStack()
         }
     )
 }
