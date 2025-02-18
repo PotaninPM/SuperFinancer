@@ -165,6 +165,7 @@ fun FeedScreen(
                         },
                         onArticleClick = {
                             selectedUrl = it
+                            selectedUrl = null
                         }
                     )
 
@@ -179,6 +180,7 @@ fun FeedScreen(
                         },
                         onArticleClick = {
                             selectedUrl = it
+                            selectedUrl = null
                         }
                     )
                 }
@@ -187,6 +189,8 @@ fun FeedScreen(
     } else {
         val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
         rootNavController.navigate("article_web_view/$encodedUrl")
+
+        selectedUrl = null
     }
 }
 
