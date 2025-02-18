@@ -16,10 +16,12 @@ import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.domain.Operation
 import com.potaninpm.feature_finances.presentation.screens.groupOperationsByDate
 import com.potaninpm.feature_finances.R
+import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.OperationType
 
 @Composable
 fun OperationsSection(
+    goalQuantity: Int,
     operations: List<Operation>,
     onAddOperationClick: () -> Unit
 ) {
@@ -33,6 +35,7 @@ fun OperationsSection(
             .padding(vertical = 8.dp)
     ) {
         AddButton(
+            enabled = goalQuantity > 0,
             onAddClick = onAddOperationClick,
             title = R.string.add_operation
         )
@@ -53,30 +56,43 @@ fun OperationsSection(
                     OperationItem(
                         operation = operation,
                         icon = {
-                            if (operation.type == OperationType.DEPOSIT.type) {
-                                Icon(
-                                    painter = painterResource(R.drawable.add_24px),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                )
-                            } else if (operation.type == OperationType.WITHDRAWAL.type) {
-                                Icon(
-                                    painter = painterResource(R.drawable.remove_24px),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                )
-                            } else {
-                                Icon(
-                                    painter = painterResource(R.drawable.transfer_24px),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                )
+                            when (operation.type) {
+                                OperationType.DEPOSIT.type -> {
+                                    Icon(
+                                        painter = painterResource(R.drawable.add_24px),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                    )
+                                }
+                                OperationType.WITHDRAWAL.type -> {
+                                    Icon(
+                                        painter = painterResource(R.drawable.remove_24px),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                    )
+                                }
+                                OperationType.TRANSFER.type -> {
+                                    Icon(
+                                        painter = painterResource(R.drawable.transfer_24px),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                    )
+                                }
+                                OperationType.DELETE.type -> {
+                                    Icon(
+                                        painter = painterResource(R.drawable.delete_24px),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                    )
+                                }
                             }
                         }
                     )

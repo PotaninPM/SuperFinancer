@@ -75,7 +75,7 @@ fun FinancesScreen(
         AddGoalDialog(
             onDismiss = { showAddGoalDialog = false },
             onAddGoal = { title, targetAmount, currency, dueDate ->
-                viewModel.addGoal(title, targetAmount, currency, dueDate)
+                viewModel.addGoal(title.trim(), targetAmount, currency, dueDate)
                 showAddGoalDialog = false
             }
         )
@@ -90,9 +90,9 @@ fun FinancesScreen(
             onAddOperation = { goalId, amount, comment ->
                 val goal = goals.find { it.id == goalId } ?: return@AddOperationDialog
                 if (amount >= 0) {
-                    viewModel.addDeposit(goal, amount, comment)
+                    viewModel.addDeposit(goal, amount, comment?.trim())
                 } else {
-                    viewModel.addWithdrawal(goal, -amount, comment)
+                    viewModel.addWithdrawal(goal, -amount, comment?.trim())
                 }
                 showAddOperationDialog = false
             }
@@ -126,7 +126,7 @@ private fun FinancesScreenContent(
     val averageMonthlyInflow by viewModel.averageMonthlyInflow.collectAsState()
 
     var fromGoal by remember { mutableStateOf<GoalEntity?>(null) }
-    var actionType by remember { mutableStateOf<String?>(null) } // "delete", "withdraw", "transfer"
+    var actionType by remember { mutableStateOf<String?>(null) }
 
     val monthsToAchieve = if (averageMonthlyInflow == 0.0) -1.0 else (totalTarget - totalSavings) / averageMonthlyInflow
     val overallProgress = totalSavings.toFloat() / totalTarget.toFloat()
@@ -150,7 +150,7 @@ private fun FinancesScreenContent(
                         goal = fromGoal!!,
                         onDismiss = { fromGoal = null; actionType = null },
                         onConfirm = { amount, comment ->
-                            viewModel.addWithdrawal(fromGoal!!, amount, comment)
+                            viewModel.addWithdrawal(fromGoal!!, amount, comment?.trim())
                             fromGoal = null
                             actionType = null
                         },
@@ -170,7 +170,7 @@ private fun FinancesScreenContent(
                     onConfirm = { _, toId, amount, comment ->
                         val targetGoal = goals.find { it.id == toId }
                         if (targetGoal != null) {
-                            viewModel.transferMoney(fromGoal!!, targetGoal, amount, comment)
+                            viewModel.transferMoney(fromGoal!!, targetGoal, amount, comment?.trim())
                         }
                         fromGoal = null
                         actionType = null
@@ -254,7 +254,8 @@ private fun FinancesScreenContent(
 
             OperationsSection(
                 operations = operations,
-                onAddOperationClick = onAddOperationClick
+                onAddOperationClick = onAddOperationClick,
+                goalQuantity = goals.size
             )
         }
     }

@@ -6,8 +6,7 @@ import com.potaninpm.feature_finances.domain.Operation
 fun OperationEntity.toDomain(): Operation {
     return Operation(
         date = this.date,
-        title = "Операция #$id",
-        subtitle = "Цель: $goalId",
+        title = this.title,
         amount = this.amount,
         type = this.type,
         currency = this.currency,

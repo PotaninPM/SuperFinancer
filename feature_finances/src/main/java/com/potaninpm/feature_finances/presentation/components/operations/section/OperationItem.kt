@@ -33,6 +33,7 @@ fun OperationItem(
         OperationType.DEPOSIT.type -> stringResource(R.string.income)
         OperationType.WITHDRAWAL.type -> stringResource(R.string.withdrawal)
         OperationType.TRANSFER.type -> stringResource(R.string.transfer)
+        OperationType.DELETE.type -> stringResource(R.string.delete)
         else -> ""
     }
 
@@ -40,6 +41,7 @@ fun OperationItem(
         OperationType.DEPOSIT.type -> MaterialTheme.colorScheme.primary
         OperationType.WITHDRAWAL.type -> MaterialTheme.colorScheme.error
         OperationType.TRANSFER.type -> MaterialTheme.colorScheme.primary
+        OperationType.DELETE.type -> MaterialTheme.colorScheme.error
         else -> Color.Gray
     }
 
@@ -47,11 +49,19 @@ fun OperationItem(
         OperationType.DEPOSIT.type -> Color(0xFF059300)
         OperationType.WITHDRAWAL.type -> MaterialTheme.colorScheme.error
         OperationType.TRANSFER.type -> Color.Gray
+        OperationType.DELETE.type -> MaterialTheme.colorScheme.error
         else -> Color.Gray
     }
 
     val signed = operation.type != OperationType.TRANSFER.type
 
+    val title = when (operation.type) {
+        OperationType.DEPOSIT.type -> "На: ${operation.title}"
+        OperationType.WITHDRAWAL.type -> "С: ${operation.title}"
+        OperationType.TRANSFER.type -> operation.title
+        OperationType.DELETE.type -> "Удалено: ${operation.title}"
+        else -> ""
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,7 +89,7 @@ fun OperationItem(
             )
 
             Text(
-                text = operation.subtitle,
+                text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -91,6 +101,17 @@ fun OperationItem(
             color = amountColor
         )
     }
-    operation.comment?.let { CommentSection(comment = it) }
+
+    operation.comment?.let {
+        when (operation.type) {
+            OperationType.DELETE.type -> CommentSection(comment = stringResource(R.string.goal_deleted))
+
+            OperationType.TRANSFER.type -> CommentSection(comment = it)
+
+            OperationType.WITHDRAWAL.type -> CommentSection(comment = it)
+
+            OperationType.DEPOSIT.type -> CommentSection(comment = it)
+        }
+    }
 }
 

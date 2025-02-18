@@ -57,7 +57,7 @@ class FinancesViewModel(
         viewModelScope.launch {
             goalRepository.addGoal(
                 GoalEntity(
-                    title = title,
+                    title = title.trim(),
                     targetAmount = targetAmount,
                     currency = currency,
                     dueDate = dueDate
@@ -70,11 +70,12 @@ class FinancesViewModel(
         viewModelScope.launch {
             operationRepository.addOperation(
                 OperationEntity(
+                    title = sourceGoal.title + " -> " + targetGoal.title,
                     goalId = sourceGoal.id,
                     type = OperationType.TRANSFER.type,
                     currency = sourceGoal.currency,
                     amount = amount.toDouble(),
-                    comment = "Перевод с ${sourceGoal.title} на ${targetGoal.title} ${if (comment!!.isEmpty()) "" else "\n$comment"}"
+                    comment = comment
                 )
             )
 
@@ -92,11 +93,12 @@ class FinancesViewModel(
             if (goal.currentAmount > 0) {
                 operationRepository.addOperation(
                     OperationEntity(
+                        title = goal.title,
                         goalId = goal.id,
-                        type = OperationType.WITHDRAWAL.type,
+                        type = OperationType.DELETE.type,
                         currency = goal.currency,
                         amount = -goal.currentAmount.toDouble(),
-                        comment = "Цель удалена"
+                        comment = goal.title
                     )
                 )
             }
@@ -112,6 +114,7 @@ class FinancesViewModel(
         viewModelScope.launch {
             operationRepository.addOperation(
                 OperationEntity(
+                    title = goal.title,
                     goalId = goal.id,
                     type = OperationType.DEPOSIT.type,
                     currency = goal.currency,
@@ -133,6 +136,7 @@ class FinancesViewModel(
         viewModelScope.launch {
             operationRepository.addOperation(
                 OperationEntity(
+                    title = goal.title,
                     goalId = goal.id,
                     type = OperationType.WITHDRAWAL.type,
                     currency = goal.currency,

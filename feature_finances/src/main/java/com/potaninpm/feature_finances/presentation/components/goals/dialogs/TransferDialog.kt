@@ -38,8 +38,6 @@ fun TransferDialog(
     var comment by rememberSaveable { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
-    val amountValue = amountText.toLongOrNull()
-
     var amountError by remember { mutableStateOf("") }
 
     AlertDialog(

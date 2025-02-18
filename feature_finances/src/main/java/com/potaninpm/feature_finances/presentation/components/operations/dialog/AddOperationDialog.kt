@@ -90,6 +90,7 @@ fun AddOperationDialog(
                     error = amountError,
                     onValueChange = {
                         amountText = it
+
                         amountError = when {
                             it.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
                             it.toLongOrNull() == null -> context.getString(R.string.enter_valid_figure)

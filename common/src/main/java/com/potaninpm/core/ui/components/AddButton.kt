@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,14 +23,20 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AddButton(
+    enabled: Boolean = true,
     onAddClick: () -> Unit,
-    @StringRes title: Int,
+    @StringRes title: Int
 ) {
+    val iconTintColor = if (enabled) MaterialTheme.colorScheme.primary else Color.Gray
+    val textColor = if (enabled) MaterialTheme.colorScheme.primary else Color.Gray
+
     Row(
         modifier = Modifier
             .padding(vertical = 10.dp)
             .clickable {
-                onAddClick()
+                if (enabled) {
+                    onAddClick()
+                }
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -38,7 +45,7 @@ fun AddButton(
             contentDescription = null,
             modifier = Modifier
                 .size(32.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = iconTintColor
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -46,7 +53,7 @@ fun AddButton(
         Text(
             stringResource(title),
             fontSize = 17.sp,
-            color = MaterialTheme.colorScheme.primary,
+            color = textColor,
             fontWeight = FontWeight.SemiBold
         )
     }

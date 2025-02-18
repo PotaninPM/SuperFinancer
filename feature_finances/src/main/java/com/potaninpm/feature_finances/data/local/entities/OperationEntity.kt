@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class OperationEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val goalId: Long,
+    val title: String,
     val type: String,
     val amount: Double,
     val currency: String,
