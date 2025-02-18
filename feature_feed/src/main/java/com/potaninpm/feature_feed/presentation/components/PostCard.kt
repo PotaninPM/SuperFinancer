@@ -54,6 +54,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
@@ -134,6 +135,7 @@ fun PostHeader(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
+
         Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -162,6 +164,21 @@ fun PostHeader(
 
 @Composable
 fun PostImagesSection(post: PostEntity) {
+    var openImage by remember { mutableStateOf(false) }
+    var imageInBytes by remember { mutableStateOf(post.imageData.firstOrNull()) }
+
+    if (openImage) {
+        imageInBytes?.let {
+            FullScreenImageDialog(
+                imageBytes = it,
+                onDismiss = {
+                    openImage = false
+                    imageInBytes = null
+                }
+            )
+        }
+    }
+
     if (post.imageData.isNotEmpty()) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -174,7 +191,11 @@ fun PostImagesSection(post: PostEntity) {
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Gray),
+                        .background(Color.Gray)
+                        .clickable {
+                            openImage = true
+                            imageInBytes = imageBytes
+                        },
                     contentScale = ContentScale.Crop
                 )
             }

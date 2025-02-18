@@ -1,6 +1,7 @@
 package com.potaninpm.feature_feed.presentation.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -70,6 +71,8 @@ fun CreatePostScreen(
         TagTypes(stringResource(id = R.string.news), "news")
     )
 
+    val postCreated = stringResource(R.string.post_created)
+
     var fullScreenImage by remember { mutableStateOf<ByteArray?>(null) }
 
     val context = LocalContext.current
@@ -123,6 +126,7 @@ fun CreatePostScreen(
                             imageData = photoBytesList,
                             tags = tagsSelected
                         )
+                        Toast.makeText(context, postCreated, Toast.LENGTH_SHORT).show()
                         onPostCreated(postText)
                         navController.popBackStack()
                     }
