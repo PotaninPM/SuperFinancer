@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -38,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -189,9 +192,15 @@ fun CreatePostScreen(
                         painter = rememberAsyncImagePainter(model = bytes),
                         contentDescription = stringResource(R.string.photo),
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(140.dp)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .clickable { fullScreenImage = bytes }
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
@@ -207,4 +216,3 @@ fun CreatePostScreen(
         }
     }
 }
-

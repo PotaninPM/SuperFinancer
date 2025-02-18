@@ -58,6 +58,7 @@ import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
+import com.potaninpm.feature_feed.domain.model.TagTypes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -69,6 +70,7 @@ fun PostCard(
     onFavorite: (PostEntity) -> Unit,
     onShowComments: (PostEntity) -> Unit
 ) {
+
     OutlinedCard(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -253,6 +255,16 @@ fun PostImagesSection(post: PostEntity) {
 fun PostTagsSection(
     post: PostEntity
 ) {
+    val allTags = listOf(
+        TagTypes(stringResource(id = R.string.business), "business"),
+        TagTypes(stringResource(id = R.string.finances), "finances"),
+        TagTypes(stringResource(id = R.string.entertainment), "entertainment"),
+        TagTypes(stringResource(id = R.string.investments), "investments"),
+        TagTypes(stringResource(id = R.string.news), "news")
+    )
+
+    val tagMap = allTags.associate { it.tagType to it.tagName }
+
     if (post.tags.isNotEmpty()) {
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -262,7 +274,7 @@ fun PostTagsSection(
                 TagChip(
                     tagText = {
                         Text(
-                            text = stringResource(R.string.tag, tag),
+                            text = stringResource(R.string.tag, tagMap[tag]!!),
                             modifier = Modifier
                                 .padding(horizontal = 8.dp, vertical = 3.dp),
                             fontWeight = FontWeight.W500,
@@ -433,6 +445,7 @@ fun CommentsSection(
                 .fillMaxWidth()
                 .clickable { onShowComments(post) }
                 .padding(vertical = 11.dp)
+                .padding(start = 4.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)

@@ -140,7 +140,8 @@ fun FeedScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.add_circle_24px),
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }

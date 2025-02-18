@@ -1,4 +1,4 @@
-package com.potaninpm.feature_finances.presentation.components.financesCard
+package com.potaninpm.feature_finances.presentation.components.statisticsCard
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

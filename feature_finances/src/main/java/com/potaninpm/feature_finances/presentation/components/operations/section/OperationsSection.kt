@@ -18,7 +18,6 @@ import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.domain.Operation
 import com.potaninpm.feature_finances.presentation.screens.groupOperationsByDate
 import com.potaninpm.feature_finances.R
-import com.potaninpm.feature_finances.data.local.entities.GoalEntity
 import com.potaninpm.feature_finances.domain.OperationType
 
 @Composable
