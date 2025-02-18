@@ -95,14 +95,14 @@ fun TransferDialog(
                     hint = stringResource(R.string.transaction_sum),
                     type = "number",
                     enabled = true,
-                    isError = amountError.isEmpty(),
+                    isError = amountError != "",
                     error = amountError,
-                    onValueChange = {
-                        amountText = it
+                    onValueChange = { text ->
+                        amountText = text
                         amountError = when {
-                            amountText.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
-                            amountValue == null -> context.getString(R.string.enter_valid_figure)
-                            amountValue > fromGoal.currentAmount -> context.getString(
+                            text.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
+                            !text.all { it.isDigit() } -> context.getString(R.string.enter_valid_figure)
+                            text.toLong() > fromGoal.currentAmount -> context.getString(
                                 R.string.not_enough_money,
                                 fromGoal.currentAmount.toString()
                             )

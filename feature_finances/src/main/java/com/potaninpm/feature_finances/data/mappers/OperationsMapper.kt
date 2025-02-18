@@ -14,14 +14,3 @@ fun OperationEntity.toDomain(): Operation {
         comment = this.comment,
     )
 }
-
-fun Operation.toEntity(goalId: Long, type: String): OperationEntity {
-    return OperationEntity(
-        goalId = goalId,
-        type = type,
-        amount = this.amount,
-        currency = this.currency,
-        comment = this.comment,
-        date = this.date
-    )
-}

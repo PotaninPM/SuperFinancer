@@ -54,7 +54,6 @@ import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
-import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
