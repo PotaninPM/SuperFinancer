@@ -26,28 +26,19 @@ class HomeViewModel(
     private val _newTickerDataLoaded = MutableStateFlow(false)
     val newTickerDataLoaded: StateFlow<Boolean> = _newTickerDataLoaded
 
-    init {
-        loadData()
-    }
-
-    private fun loadData() {
+    fun loadTickersData(tickerSymbols: List<String>) {
 
         viewModelScope.launch {
-            val tickerSymbols = listOf("AAPL", "GOOG", "MSFT", "TSLA")
-
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
             val newsDeferred = async { newsRepository.getLatestNews() }
 
             _tickers.value = tickersDeferred.await()
             _news.value = newsDeferred.await()
-            Log.i("INFOG", _tickers.value.toString())
-            Log.i("INFOG", _news.value.toString())
         }
     }
 
-    fun refreshTickersData() {
+    fun refreshTickersData(tickerSymbols: List<String>) {
         viewModelScope.launch {
-            val tickerSymbols = listOf("AAPL", "GOOG", "MSFT", "TSLA")
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
 
             _tickers.value = tickersDeferred.await()

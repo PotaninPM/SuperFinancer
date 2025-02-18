@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.potaninpm.core.ui.FullScreenImageDialog
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
@@ -48,6 +49,7 @@ import com.potaninpm.feature_feed.presentation.screens.ArticleWebView
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
+import com.potaninpm.feature_home.domain.model.TickerSymbolsResponse
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.TickerCard
 import com.potaninpm.feature_home.presentation.components.TickerSettingsDialog
@@ -64,6 +66,8 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
 
+    val tickerSymbols = remember { loadTickerSymbols(context) }
+
     val tickersState by viewModel.tickers.collectAsState()
     val newsState by viewModel.news.collectAsState()
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
@@ -79,11 +83,15 @@ fun HomeScreen(
 
     var remainingTime by remember { mutableIntStateOf(updateInterval.toInt()) }
 
+    LaunchedEffect(tickerSymbols) {
+        viewModel.loadTickersData(tickerSymbols)
+    }
+
     LaunchedEffect(autoUpdateEnabled) {
         if (autoUpdateEnabled) {
             while (true) {
                 remainingTime = 0
-                viewModel.refreshTickersData()
+                viewModel.refreshTickersData(tickerSymbols)
 
 
                 while (!newTickerDataLoaded) {
@@ -114,7 +122,7 @@ fun HomeScreen(
         },
         remainingTime = remainingTime,
         onTickerRefreshClick = {
-            viewModel.refreshTickersData()
+            viewModel.refreshTickersData(tickerSymbols)
         },
         onNewsRefreshClick = {
             viewModel.refreshNewsData()
@@ -392,4 +400,10 @@ fun TickersList(
             }
         }
     }
+}
+
+fun loadTickerSymbols(context: Context): List<String> {
+    val input = context.resources.openRawResource(R.raw.tickers)
+    val jsonString = input.bufferedReader().use { it.readText() }
+    return Gson().fromJson(jsonString, TickerSymbolsResponse::class.java).tickerSymbols
 }
