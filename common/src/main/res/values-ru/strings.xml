@@ -2,4 +2,5 @@
 <resources>
     <string name="create">Создать</string>
     <string name="article">Статья</string>
+    <string name="back">Назад</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.potaninpm.feature_post_webview
+package com.potaninpm.core.ui
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import com.potaninpm.core.R
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)

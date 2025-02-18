@@ -2,9 +2,11 @@ package com.potaninpm.finaltour.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavType
@@ -18,7 +20,7 @@ import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.feature_home.presentation.screens.SearchScreen
-import com.potaninpm.feature_post_webview.ArticleWebView
+import com.potaninpm.core.ui.ArticleWebView
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
@@ -75,7 +77,10 @@ fun RootNavigation() {
             popExitTransition = { ExitTransition.None }
         ) {
             composable(RootNavDestinations.Home.route) {
-                HomeScreen(rootNavController)
+                HomeScreen(
+                    rootNavController = rootNavController,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
 
             composable(RootNavDestinations.Finances.route) {

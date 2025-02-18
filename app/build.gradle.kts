@@ -47,7 +47,6 @@ dependencies {
     implementation(project(":feature_home"))
     implementation(project(":feature_finances"))
     implementation(project(":feature_feed"))
-    implementation(project(":feature_article_webview"))
 
     // Room
     ksp(libs.androidx.room.compiler)
