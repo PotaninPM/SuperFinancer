@@ -1,5 +1,6 @@
 package com.potaninpm.finaltour.di
 
+import com.potaninpm.finaltour.di.modules.chatModule
 import com.potaninpm.finaltour.di.modules.commonModule
 import com.potaninpm.finaltour.di.modules.financeRoomModule
 import com.potaninpm.finaltour.di.modules.networkModule
@@ -17,6 +18,7 @@ val coreModules = listOf(
     newsRoomModule,
     postsNetworkModule,
     postsRoomModule,
+    chatModule,
     repositoryModule,
     useCaseModule,
     viewModelModule,

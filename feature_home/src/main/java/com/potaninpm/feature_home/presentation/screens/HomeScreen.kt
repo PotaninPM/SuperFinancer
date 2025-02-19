@@ -82,6 +82,16 @@ fun HomeScreen(
 
     var remainingTime by remember { mutableIntStateOf(updateInterval.toInt()) }
 
+    var aiBottomSheet by remember { mutableStateOf(false) }
+
+    var chosenTickerCompany by remember { mutableStateOf("") }
+
+    if (aiBottomSheet) {
+        ChatAiBottomSheet(
+            companyName = chosenTickerCompany,
+            onDismiss = { aiBottomSheet = false }
+        )
+    }
     LaunchedEffect(Unit) {
         viewModel.loadTickersData()
     }
@@ -131,7 +141,11 @@ fun HomeScreen(
 
             }
         },
-        rootNavController = rootNavController
+        rootNavController = rootNavController,
+        onTickerClick = { ticker ->
+            chosenTickerCompany = ticker
+            aiBottomSheet = true
+        }
     )
 
     if (showSettingsDialog) {
@@ -164,7 +178,8 @@ private fun HomeScreenContent(
     onSettingsClick: () -> Unit,
     onNewsRefreshClick: () -> Unit,
     onTickerRefreshClick: () -> Unit,
-    onFakeSearchClick: () -> Unit
+    onFakeSearchClick: () -> Unit,
+    onTickerClick: (String) -> Unit
 ) {
     val listState = rememberScrollState()
 
@@ -222,9 +237,11 @@ private fun HomeScreenContent(
                     remainingTime = remainingTime,
                     onRefreshClick = {
                         onTickerRefreshClick()
+                    },
+                    onTickerClick = { ticker ->
+                        onTickerClick(ticker)
                     }
                 )
-
 
                 NewsList(
                     newsState,
@@ -319,7 +336,8 @@ fun TickersList(
     tickers: List<Ticker>,
     autoUpdateEnabled: Boolean,
     remainingTime: Int,
-    onRefreshClick: () -> Unit
+    onRefreshClick: () -> Unit,
+    onTickerClick: (String) -> Unit
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
 
@@ -391,7 +409,12 @@ fun TickersList(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(tickers) { ticker ->
-                    TickerCard(ticker = ticker)
+                    TickerCard(
+                        ticker = ticker,
+                        onTickerClick = {
+                            ticker.companyName?.let { onTickerClick(it) }
+                        }
+                    )
                 }
             }
         }

@@ -5,7 +5,6 @@ import com.potaninpm.feature_home.data.local.dao.NewsArticleDao
 import com.potaninpm.feature_home.data.mappers.toDomainNews
 import com.potaninpm.feature_home.data.mappers.toEntity
 import com.potaninpm.feature_home.data.remote.api.NYTimesApi
-import com.potaninpm.feature_home.data.remote.mappers.toDomainNews
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers

@@ -1,6 +1,7 @@
 package com.potaninpm.feature_home.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import com.potaninpm.feature_home.domain.model.Ticker
 @Composable
 fun TickerCard(
     ticker: Ticker,
+    onTickerClick: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val priceColor = if (ticker.change >= 0) Color(0xFF05B000) else Color.Red
@@ -41,7 +43,10 @@ fun TickerCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp),
+            .height(70.dp)
+            .clickable {
+                onTickerClick(ticker.companyName)
+            },
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(

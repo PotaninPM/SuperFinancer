@@ -19,4 +19,6 @@
     <string name="will_update_02d_02d">Will update in %02d:%02d</string>
     <string name="_2f">%.2f</string>
     <string name="load_more">Load more</string>
+    <string name="ai_is_thinking">ИИ думает...</string>
+    <string name="approximate_time_waiting">Примерное время ожидания: %1$s секунд</string>
 </resources>
