@@ -13,7 +13,6 @@ import org.koin.dsl.module
 
 val financeRoomModule = module {
     single {
-        Log.d("KOIN", "Создаем ROOOM")
         Room.databaseBuilder(
             androidApplication(),
             FinanceDatabase::class.java,
@@ -29,8 +28,6 @@ val financeRoomModule = module {
     single {
         get<FinanceDatabase>().operationDao()
     }
-
-
 }
 
 val postsRoomModule = module {

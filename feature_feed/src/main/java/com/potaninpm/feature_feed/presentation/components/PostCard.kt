@@ -337,7 +337,15 @@ fun AttachedArticleSection(
                         .size(25.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(Color.LightGray)
-                )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.attach_file_24px),
+                        contentDescription = null,
+                        tint = Color.Blue,
+                        modifier = Modifier
+                            .padding(2.dp)
+                    )
+                }
 
                 Text(
                     text = stringResource(R.string.attached_article),

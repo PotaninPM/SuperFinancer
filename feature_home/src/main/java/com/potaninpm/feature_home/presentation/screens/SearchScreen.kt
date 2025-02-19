@@ -56,6 +56,7 @@ import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
 
 @Composable
 fun SearchScreen(
@@ -104,6 +105,10 @@ fun SearchScreen(
         onClear = {
             searchViewModel.clearAll()
             navController.popBackStack()
+        },
+        onArticleClick = { new ->
+            val encodedUrl = URLEncoder.encode(new.webUrl, "UTF-8")
+            navController.navigate("article_web_view/$encodedUrl")
         }
     )
 }
@@ -115,7 +120,8 @@ private fun SearchScreenContent(
     onClear: () -> Unit,
     onMicClick: () -> Unit,
     results: SearchResults,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
+    onArticleClick: (NewsArticle) -> Unit
 ) {
     val categories by remember {
         mutableStateOf(
@@ -197,6 +203,9 @@ private fun SearchScreenContent(
                         R.string.news -> {
                             NewsListSearch(
                                 news = results.news,
+                                onClick = { new ->
+                                    onArticleClick(new)
+                                }
                             )
                         }
                     }
@@ -207,7 +216,10 @@ private fun SearchScreenContent(
 }
 
 @Composable
-fun NewsListSearch(news: List<NewsArticle>) {
+fun NewsListSearch(
+    news: List<NewsArticle>,
+    onClick: (NewsArticle) -> Unit
+) {
     if (news.isNotEmpty()) {
         Text(
             text = stringResource(R.string.news),
@@ -218,7 +230,7 @@ fun NewsListSearch(news: List<NewsArticle>) {
             NewsCard(
                 article = new,
                 onClick = {
-
+                    onClick(new)
                 }
             )
             Spacer(modifier = Modifier.height(12.dp))
