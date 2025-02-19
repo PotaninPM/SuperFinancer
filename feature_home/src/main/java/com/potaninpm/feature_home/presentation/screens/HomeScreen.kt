@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -36,19 +37,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.gson.Gson
-import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
+import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
-import com.potaninpm.feature_home.domain.model.TickerSymbolsResponse
 import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.TickerCard
 import com.potaninpm.feature_home.presentation.components.TickerSettingsDialog
@@ -89,7 +89,9 @@ fun HomeScreen(
     if (aiBottomSheet) {
         ChatAiBottomSheet(
             companyName = chosenTickerCompany,
-            onDismiss = { aiBottomSheet = false }
+            onDismiss = {
+                aiBottomSheet = false
+            }
         )
     }
     LaunchedEffect(Unit) {
@@ -192,6 +194,7 @@ private fun HomeScreenContent(
              onDismiss = { imageClicked = "" }
          )
     }
+
     if (selectedUrl == null) {
         Scaffold(
             topBar = {
@@ -406,7 +409,9 @@ fun TickersList(
         } else {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
             ) {
                 items(tickers) { ticker ->
                     TickerCard(

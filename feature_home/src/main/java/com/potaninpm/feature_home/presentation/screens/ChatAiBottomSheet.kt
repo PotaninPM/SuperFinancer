@@ -80,7 +80,7 @@ fun ChatAiBottomSheet(
         ) {
             if (chatAnswer == null) {
                 Text(
-                    text = "Что ИИ думает на счёт $companyName?",
+                    text = stringResource(R.string.what_ai_thinks, companyName),
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -123,12 +123,12 @@ fun ChatAiBottomSheet(
                             }
                         }
                     ) {
-                        Text("Анализ компании")
+                        Text(stringResource(R.string.company_analyse))
                     }
                 }
             } else {
                 Text(
-                    text = "Ответ ИИ:",
+                    text = stringResource(R.string.ai_answer),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
 
