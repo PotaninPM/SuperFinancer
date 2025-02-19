@@ -11,7 +11,7 @@ import com.potaninpm.feature_home.domain.repository.TickerRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<TickerRepository> { TickerRepositoryImpl(get()) }
+    single<TickerRepository> { TickerRepositoryImpl(get(), get()) }
     single<NewsRepository> { NewsRepositoryImpl(get(), get(), get()) }
 
     single<GoalsRepository> { GoalsRepository(get()) }

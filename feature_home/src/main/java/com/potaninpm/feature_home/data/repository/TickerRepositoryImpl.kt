@@ -1,19 +1,31 @@
 package com.potaninpm.feature_home.data.repository
 
 import com.potaninpm.feature_home.data.remote.api.FinnhubApi
+import com.potaninpm.feature_home.data.remote.api.SupabaseTickersApi
+import com.potaninpm.feature_home.data.remote.dto.TickerDto
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.domain.repository.TickerRepository
 
 class TickerRepositoryImpl(
+    private val tickerApi: SupabaseTickersApi,
     private val finnhubApi: FinnhubApi
 ) : TickerRepository {
 
+    override suspend fun getTickers(): List<TickerDto> {
+        return try {
+            tickerApi.getTickers()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
     override suspend fun getTickerInfo(symbol: String): Ticker {
-        try {
+        return try {
             val quote = finnhubApi.getQuote(symbol)
             val profile = finnhubApi.getProfile(symbol)
 
-            return Ticker(
+            Ticker(
                 symbol = symbol,
                 companyName = profile.name,
                 currentPrice = quote.currentPrice,
@@ -24,7 +36,7 @@ class TickerRepositoryImpl(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            return Ticker(
+            Ticker(
                 symbol = symbol,
                 companyName = "",
                 currentPrice = 0.0f,
@@ -35,6 +47,7 @@ class TickerRepositoryImpl(
             )
         }
     }
+
 
     override suspend fun getTickersInfo(symbols: List<String>): List<Ticker> {
         val tickers = symbols.map { getTickerInfo(it) }

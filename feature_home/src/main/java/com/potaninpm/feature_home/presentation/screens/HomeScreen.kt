@@ -67,8 +67,6 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
 
-    val tickerSymbols = remember { loadTickerSymbols(context) }
-
     val tickersState by viewModel.tickers.collectAsState()
     val newsState by viewModel.news.collectAsState()
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
@@ -84,15 +82,15 @@ fun HomeScreen(
 
     var remainingTime by remember { mutableIntStateOf(updateInterval.toInt()) }
 
-    LaunchedEffect(tickerSymbols) {
-        viewModel.loadTickersData(tickerSymbols)
+    LaunchedEffect(Unit) {
+        viewModel.loadTickersData()
     }
 
     LaunchedEffect(autoUpdateEnabled) {
         if (autoUpdateEnabled) {
             while (true) {
                 remainingTime = 0
-                viewModel.refreshTickersData(tickerSymbols)
+                viewModel.refreshTickersData()
 
 
                 while (!newTickerDataLoaded) {
@@ -123,7 +121,7 @@ fun HomeScreen(
         },
         remainingTime = remainingTime,
         onTickerRefreshClick = {
-            viewModel.refreshTickersData(tickerSymbols)
+            viewModel.refreshTickersData()
         },
         onNewsRefreshClick = {
             viewModel.refreshNewsData()
@@ -398,10 +396,4 @@ fun TickersList(
             }
         }
     }
-}
-
-fun loadTickerSymbols(context: Context): List<String> {
-    val input = context.resources.openRawResource(R.raw.tickers)
-    val jsonString = input.bufferedReader().use { it.readText() }
-    return Gson().fromJson(jsonString, TickerSymbolsResponse::class.java).tickerSymbols
 }

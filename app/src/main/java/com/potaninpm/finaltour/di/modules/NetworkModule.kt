@@ -1,7 +1,9 @@
 package com.potaninpm.finaltour.di.modules
 
+import com.potaninpm.core.ApiConstants
 import com.potaninpm.feature_home.data.remote.api.FinnhubApi
 import com.potaninpm.feature_home.data.remote.api.NYTimesApi
+import com.potaninpm.feature_home.data.remote.api.SupabaseTickersApi
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -38,4 +40,29 @@ val networkModule = module {
 
     single<NYTimesApi> { get<Retrofit>(named("nytimesRetrofit")).create(NYTimesApi::class.java) }
 
+}
+
+val postsNetworkModule = module {
+
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("apikey", ApiConstants.SUPABASE_API_KEY)
+                    .addHeader("Authorization", "Bearer ${ApiConstants.SUPABASE_API_KEY}")
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+    }
+
+    single {
+        Retrofit.Builder()
+            .baseUrl(ApiConstants.BASE_URL)
+            .client(get())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    single<SupabaseTickersApi> { get<Retrofit>().create(SupabaseTickersApi::class.java) }
 }
