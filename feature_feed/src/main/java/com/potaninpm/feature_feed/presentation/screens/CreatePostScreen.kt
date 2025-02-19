@@ -5,9 +5,11 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +19,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilterChip
@@ -38,8 +43,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -189,20 +196,15 @@ fun CreatePostScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(photoBytesList) { bytes ->
-                    Image(
-                        painter = rememberAsyncImagePainter(model = bytes),
-                        contentDescription = stringResource(R.string.photo),
-                        modifier = Modifier
-                            .size(140.dp)
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable { fullScreenImage = bytes }
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                itemsIndexed(photoBytesList) { index, bytes ->
+                    PhotoItem(
+                        photoBytes = bytes,
+                        onDeleteClick = {
+                            photoBytesList = photoBytesList.toMutableList().apply { removeAt(index) }
+                        },
+                        onPhotoClick = {
+                            fullScreenImage = bytes
+                        }
                     )
                 }
             }
@@ -214,6 +216,48 @@ fun CreatePostScreen(
                     imagePickerLauncher.launch("image/*")
                 },
                 title = R.string.add_photo
+            )
+        }
+    }
+}
+
+@Composable
+fun PhotoItem(
+    photoBytes: ByteArray,
+    onDeleteClick: () -> Unit,
+    onPhotoClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier.size(140.dp)
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(model = photoBytes),
+            contentDescription = stringResource(R.string.photo),
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable { onPhotoClick() }
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+        IconButton(
+            onClick = onDeleteClick,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .background(
+                    color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                    shape = CircleShape
+                )
+
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(R.string.hide),
+                tint = Color.Red
             )
         }
     }
