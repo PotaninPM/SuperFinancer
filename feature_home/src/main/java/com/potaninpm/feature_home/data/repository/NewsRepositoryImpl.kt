@@ -46,9 +46,9 @@ class NewsRepositoryImpl(
         }
     }
 
-    override suspend fun searchNews(query: String): List<NewsArticle> {
+    override suspend fun searchNews(query: String, page: Int): List<NewsArticle> {
         try {
-            val response = nyTimesApi.getArticles(query = query)
+            val response = nyTimesApi.getArticles(query = query, page = page)
             val articles = response.response.docs.map { dto ->
                 dto.toDomainNews()
             }

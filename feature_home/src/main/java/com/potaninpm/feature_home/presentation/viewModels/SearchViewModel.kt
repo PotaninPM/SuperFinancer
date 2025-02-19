@@ -24,6 +24,11 @@ class SearchViewModel(
     private val _searchResults = MutableStateFlow(SearchResults(emptyList(), emptyList()))
     val searchResults: StateFlow<SearchResults> = _searchResults
 
+    private val _currentPage = MutableStateFlow(0)
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _query
@@ -32,17 +37,53 @@ class SearchViewModel(
                 .collect { q ->
                     if (q.isBlank()) {
                         _searchResults.value = SearchResults(emptyList(), emptyList())
+                        _currentPage.value = 0
                     } else {
                         try {
-                            val news = newsRepository.searchNews(q)
-                            val tickers = tickerRepository.searchTickers(q).take(10)
-                            _searchResults.value = SearchResults(news, tickers)
+                            searchNews(q, resetPage = true)
                         } catch (e: Exception) {
                             e.printStackTrace()
+
                             _searchResults.value = SearchResults(emptyList(), emptyList())
                         }
                     }
                 }
+        }
+    }
+
+    fun loadMore() {
+        val query = _query.value
+        if (query.isNotBlank() && !_isLoading.value) {
+            searchNews(query, resetPage = false)
+        }
+    }
+
+    private fun searchNews(query: String, resetPage: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+            val nextPage = if (resetPage) 0 else _currentPage.value + 1
+
+            try {
+                val news = newsRepository.searchNews(query, nextPage)
+                val tickers = if (resetPage) {
+                    tickerRepository.searchTickers(query).take(10)
+                } else {
+                    _searchResults.value.tickers
+                }
+
+                val newArticles = if (resetPage) {
+                    news
+                } else {
+                    _searchResults.value.news + news
+                }
+
+                _searchResults.value = SearchResults(newArticles, tickers)
+                _currentPage.value = nextPage
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

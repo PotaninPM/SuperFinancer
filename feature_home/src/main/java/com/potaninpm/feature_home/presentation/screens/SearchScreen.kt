@@ -4,6 +4,7 @@ import android.speech.SpeechRecognizer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -73,6 +76,8 @@ fun SearchScreen(
 
     val results by searchViewModel.searchResults.collectAsState()
 
+    val isLoading by searchViewModel.isLoading.collectAsState()
+
     val onMicClick = {
         startVoiceRecognition(
             context,
@@ -109,8 +114,12 @@ fun SearchScreen(
         onArticleClick = { new ->
             val encodedUrl = URLEncoder.encode(new.webUrl, "UTF-8")
             navController.navigate("article_web_view/$encodedUrl")
+        },
+        onLoadMore = {
+            searchViewModel.loadMore()
         }
     )
+
 }
 
 @Composable
@@ -121,7 +130,8 @@ private fun SearchScreenContent(
     onMicClick: () -> Unit,
     results: SearchResults,
     focusRequester: FocusRequester,
-    onArticleClick: (NewsArticle) -> Unit
+    onArticleClick: (NewsArticle) -> Unit,
+    onLoadMore: () -> Unit
 ) {
     val categories by remember {
         mutableStateOf(
@@ -205,6 +215,9 @@ private fun SearchScreenContent(
                                 news = results.news,
                                 onClick = { new ->
                                     onArticleClick(new)
+                                },
+                                onLoadMore = {
+                                    onLoadMore()
                                 }
                             )
                         }
@@ -218,7 +231,8 @@ private fun SearchScreenContent(
 @Composable
 fun NewsListSearch(
     news: List<NewsArticle>,
-    onClick: (NewsArticle) -> Unit
+    onClick: (NewsArticle) -> Unit,
+    onLoadMore: () -> Unit
 ) {
     if (news.isNotEmpty()) {
         Text(
@@ -235,6 +249,18 @@ fun NewsListSearch(
             )
             Spacer(modifier = Modifier.height(12.dp))
         }
+
+        Text(
+            "Загрузить еще",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clickable {
+                    onLoadMore()
+                },
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
     } else {
         ShimmerNewsCard()
     }
