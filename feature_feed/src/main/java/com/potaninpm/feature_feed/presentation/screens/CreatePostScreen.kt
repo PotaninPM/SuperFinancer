@@ -86,8 +86,10 @@ fun CreatePostScreen(
             val stream = context.contentResolver.openInputStream(it)
             val bytes = stream?.readBytes()
             stream?.close()
-            if (bytes != null) {
+            if (bytes != null && photoBytesList.size < 2) {
                 photoBytesList = photoBytesList + bytes
+            } else {
+                Toast.makeText(context, context.getString(R.string.max_photos), Toast.LENGTH_SHORT).show()
             }
         }
     }

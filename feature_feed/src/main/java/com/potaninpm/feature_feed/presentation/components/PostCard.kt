@@ -59,6 +59,9 @@ import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import com.potaninpm.feature_feed.domain.model.TagTypes
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -114,7 +117,6 @@ fun PostCard(
             Spacer(modifier = Modifier.height(12.dp))
             PostTextSection(post, onPostClick)
 
-            Spacer(modifier = Modifier.height(12.dp))
             CommentsSection(post, onShowComments)
         }
     }
@@ -361,13 +363,31 @@ fun PostTextSection(
     post: PostEntity,
     onPostClick: (PostEntity) -> Unit
 ) {
-    ExpandableText(
-        text = post.text,
-        minimizedMaxLines = 3,
-        readMoreText = stringResource(R.string.more),
-        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal)
+    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy '|' HH:mm").withZone(ZoneId.systemDefault())
+    val date = formatter.format(Instant.ofEpochMilli(post.date))
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        onPostClick(post)
+        ExpandableText(
+            text = post.text,
+            minimizedMaxLines = 3,
+            readMoreText = stringResource(R.string.more),
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal)
+        ) {
+            onPostClick(post)
+        }
+
+        Text(
+            text = date,
+            color = Color.Gray,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .clickable {
+                    onPostClick(post)
+                }
+                .align(Alignment.End)
+        )
     }
 }
 
