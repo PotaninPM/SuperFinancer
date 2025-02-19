@@ -18,4 +18,5 @@
     <string name="main">Main</string>
     <string name="will_update_02d_02d">Will update in %02d:%02d</string>
     <string name="_2f">%.2f</string>
+    <string name="load_more">Load more</string>
 </resources>

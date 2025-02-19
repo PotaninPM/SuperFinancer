@@ -58,8 +58,10 @@ import com.potaninpm.feature_home.presentation.components.NewsCard
 import com.potaninpm.feature_home.presentation.components.SearchCategoriesCard
 import com.potaninpm.feature_home.presentation.components.searchBar.SearchBar
 import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
+import kotlin.concurrent.thread
 
 @Composable
 fun SearchScreen(
@@ -234,33 +236,61 @@ fun NewsListSearch(
     onClick: (NewsArticle) -> Unit,
     onLoadMore: () -> Unit
 ) {
-    if (news.isNotEmpty()) {
-        Text(
-            text = stringResource(R.string.news),
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
-        )
+    var isLoading by remember { mutableStateOf(false) }
 
-        news.forEach { new ->
-            NewsCard(
-                article = new,
-                onClick = {
-                    onClick(new)
-                }
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            delay(1000)
+            isLoading = false
+        }
+    }
+
+    if (news.isNotEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.news),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                modifier = Modifier
+                    .align(Alignment.Start)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+
+            news.forEach { new ->
+                NewsCard(
+                    article = new,
+                    onClick = {
+                        onClick(new)
+                    }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            Button(
+                modifier = Modifier
+                    .padding(bottom = 16.dp),
+                onClick = {
+                    onLoadMore()
+                    isLoading = true
+                },
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.surface
+                    )
+                } else {
+                    Text(
+                        stringResource(R.string.load_more),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
 
-        Text(
-            "Загрузить еще",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .clickable {
-                    onLoadMore()
-                },
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
     } else {
         ShimmerNewsCard()
     }
@@ -347,6 +377,7 @@ fun TickerInfoSearch(ticker: Ticker) {
                     contentDescription = null,
                 )
             }
+
             ticker.companyName?.let {
                 Text(
                     modifier = Modifier
