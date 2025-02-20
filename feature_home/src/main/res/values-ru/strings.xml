@@ -24,4 +24,5 @@
     <string name="what_ai_thinks">Что ИИ думает на счёт %1$s?</string>
     <string name="company_analyse">Анализ компании</string>
     <string name="ai_answer">Ответ ИИ:</string>
+    <string name="copied_buff">Cкопировано в буфер обмена</string>
 </resources>

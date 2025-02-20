@@ -4,7 +4,6 @@ import android.speech.SpeechRecognizer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +60,6 @@ import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
-import kotlin.concurrent.thread
 
 @Composable
 fun SearchScreen(

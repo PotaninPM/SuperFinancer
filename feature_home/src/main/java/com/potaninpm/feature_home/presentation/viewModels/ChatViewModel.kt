@@ -3,6 +3,7 @@ package com.potaninpm.feature_home.presentation.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_home.data.repository.ChatRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class ChatViewModel(
     val isThinking: StateFlow<Boolean> = _isThinking
 
     fun getChatAnswer(question: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _isThinking.value = true
 
@@ -30,5 +31,10 @@ class ChatViewModel(
                 _chatAns.value = "error: ${e.message}"
             }
         }
+    }
+
+    fun reset() {
+        _chatAns.value = null
+        _isThinking.value = false
     }
 }

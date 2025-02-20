@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
-import com.potaninpm.core.ui.components.shimmerCards.ShimmerSearchTicker
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.feature_home.R
@@ -68,8 +67,9 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
 
-    val tickersState by viewModel.tickers.collectAsState()
-    val newsState by viewModel.news.collectAsState()
+    val tickersState by viewModel.tickers.collectAsState(initial = emptyList())
+    val newsState by viewModel.news.collectAsState(initial = emptyList())
+
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
 
     val prefs = context.getSharedPreferences("ticker_settings", Context.MODE_PRIVATE)
@@ -95,6 +95,7 @@ fun HomeScreen(
             }
         )
     }
+
     LaunchedEffect(Unit) {
         viewModel.loadTickersData()
     }

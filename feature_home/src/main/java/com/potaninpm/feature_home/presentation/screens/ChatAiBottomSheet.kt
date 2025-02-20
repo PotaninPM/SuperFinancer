@@ -1,5 +1,9 @@
 package com.potaninpm.feature_home.presentation.screens
 
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,17 +31,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.functions.markdownToString
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.presentation.viewModels.ChatViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ChatAiBottomSheet(
     companyName: String,
@@ -54,9 +62,12 @@ fun ChatAiBottomSheet(
 
     var countdown by remember { mutableIntStateOf(50) }
 
+    val clipboard = LocalClipboardManager.current
+    val context = LocalContext.current
+
     LaunchedEffect(isThinking) {
         if (isThinking) {
-            countdown = 50
+            countdown = 55
 
             while (countdown > 0) {
                 delay(1000)
@@ -66,7 +77,10 @@ fun ChatAiBottomSheet(
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            onDismiss()
+            chatViewModel.reset()
+        },
         sheetState = sheetState,
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.systemBars)
@@ -136,7 +150,18 @@ fun ChatAiBottomSheet(
 
                 Text(
                     text = chatAnswer!!,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+
+                            },
+                            onLongClick = {
+                                clipboard.setText(markdownToString(chatAnswer!!))
+                                Toast.makeText(context,
+                                    context.getString(R.string.copied_buff), Toast.LENGTH_SHORT).show()
+                            }
+                        )
                 )
             }
         }

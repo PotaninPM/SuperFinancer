@@ -6,6 +6,7 @@ import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.Ticker
 import com.potaninpm.feature_home.domain.repository.NewsRepository
 import com.potaninpm.feature_home.domain.repository.TickerRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,19 +27,22 @@ class HomeViewModel(
     val newTickerDataLoaded: StateFlow<Boolean> = _newTickerDataLoaded
 
     fun loadTickersData() {
-        viewModelScope.launch {
-            val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
+                val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
+                val newsDeferred = async { newsRepository.getLatestNews() }
 
-            val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
-            val newsDeferred = async { newsRepository.getLatestNews() }
-
-            _tickers.value = tickersDeferred.await()
-            _news.value = newsDeferred.await()
+                _tickers.value = tickersDeferred.await()
+                _news.value = newsDeferred.await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     fun refreshTickersData() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
 
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
@@ -49,7 +53,7 @@ class HomeViewModel(
     }
 
     fun refreshNewsData() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val newsDeferred = async { newsRepository.getLatestNews() }
             _news.value = newsDeferred.await()
         }
