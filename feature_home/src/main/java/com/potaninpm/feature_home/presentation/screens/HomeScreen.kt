@@ -24,6 +24,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,6 +35,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,9 +60,11 @@ import com.potaninpm.feature_home.presentation.components.searchBar.FakeSearchBa
 import com.potaninpm.feature_home.presentation.navigation.RootNavDestinations
 import com.potaninpm.feature_home.presentation.viewModels.HomeViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     rootNavController: NavHostController,
@@ -69,6 +75,7 @@ fun HomeScreen(
 
     val tickersState by viewModel.tickers.collectAsState(initial = emptyList())
     val newsState by viewModel.news.collectAsState(initial = emptyList())
+    val isLoading by viewModel.isLoading.collectAsState()
 
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
 
@@ -126,31 +133,65 @@ fun HomeScreen(
         }
     }
 
-    HomeScreenContent(
-        newsState = newsState,
-        tickersState = tickersState,
-        autoUpdateEnabled = autoUpdateEnabled,
-        onSettingsClick = {
-            showSettingsDialog = true
-        },
-        remainingTime = remainingTime,
-        onTickerRefreshClick = {
-            viewModel.refreshTickersData()
-        },
-        onNewsRefreshClick = {
-            viewModel.refreshNewsData()
-        },
-        onFakeSearchClick = {
-            rootNavController.navigate(RootNavDestinations.Search.route) {
+    val state = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
 
+    val coroutineScope = rememberCoroutineScope()
+    val onRefresh: () -> Unit = {
+        isRefreshing = true
+        coroutineScope.launch {
+            viewModel.refreshTickersData()
+            viewModel.refreshNewsData()
+        }
+    }
+
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        state = state,
+        indicator = {
+            Indicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                isRefreshing = isRefreshing,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                state = state
+            )
+
+            LaunchedEffect(isRefreshing) {
+                if (isRefreshing) {
+                    delay(1000)
+                    isRefreshing = isLoading
+                }
             }
         },
-        rootNavController = rootNavController,
-        onTickerClick = { ticker ->
-            chosenTickerCompany = ticker
-            aiBottomSheet = true
-        }
-    )
+    ) {
+        HomeScreenContent(
+            newsState = newsState,
+            tickersState = tickersState,
+            autoUpdateEnabled = autoUpdateEnabled,
+            onSettingsClick = {
+                showSettingsDialog = true
+            },
+            remainingTime = remainingTime,
+            onTickerRefreshClick = {
+                viewModel.refreshTickersData()
+            },
+            onNewsRefreshClick = {
+                viewModel.refreshNewsData()
+            },
+            onFakeSearchClick = {
+                rootNavController.navigate(RootNavDestinations.Search.route) {
+
+                }
+            },
+            rootNavController = rootNavController,
+            onTickerClick = { ticker ->
+                chosenTickerCompany = ticker
+                aiBottomSheet = true
+            }
+        )
+    }
 
     if (showSettingsDialog) {
         TickerSettingsDialog(

@@ -163,7 +163,7 @@ fun CreatePostScreen(
                 hint = stringResource(R.string.enter_post_text)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(stringResource(R.string.choose_tags))
 

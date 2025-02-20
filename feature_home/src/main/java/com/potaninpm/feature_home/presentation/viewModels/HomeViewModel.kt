@@ -26,15 +26,22 @@ class HomeViewModel(
     private val _newTickerDataLoaded = MutableStateFlow(false)
     val newTickerDataLoaded: StateFlow<Boolean> = _newTickerDataLoaded
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     fun loadTickersData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                _isLoading.value = true
+
                 val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
                 val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
                 val newsDeferred = async { newsRepository.getLatestNews() }
 
                 _tickers.value = tickersDeferred.await()
                 _news.value = newsDeferred.await()
+
+                _isLoading.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -43,19 +50,27 @@ class HomeViewModel(
 
     fun refreshTickersData() {
         viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+
             val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
 
             val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
 
             _tickers.value = tickersDeferred.await()
             _newTickerDataLoaded.value = true
+
+            _isLoading.value = false
         }
     }
 
     fun refreshNewsData() {
         viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+
             val newsDeferred = async { newsRepository.getLatestNews() }
             _news.value = newsDeferred.await()
+
+            _isLoading.value = false
         }
     }
 }
