@@ -160,7 +160,7 @@ fun HomeScreen(
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
                     delay(1000)
-                    isRefreshing = isLoading
+                    isRefreshing = false
                 }
             }
         },
