@@ -18,12 +18,21 @@ class PostsViewModel(
     val favoritePostsFlow: StateFlow<List<PostEntity>> = repository.getFavoritePostsFlow().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     val myPostsFlow: StateFlow<List<PostEntity>> = repository.getMyPostsFlow(currentUser).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    fun addPost(webUrl: String = "", text: String, imagePaths: List<String>, tags: List<String>) {
+    fun addPost(
+        webUrl: String = "",
+        webTitle: String = "",
+        webImageUrl: String = "",
+        text: String,
+        imagePaths: List<String>,
+        tags: List<String>
+    ) {
         viewModelScope.launch {
             repository.addPost(
                 PostEntity(
                     webUrl = webUrl,
                     text = text,
+                    webTitle = webTitle,
+                    webImageUrl = webImageUrl,
                     imagePaths = imagePaths,
                     tags = tags,
                     author = currentUser

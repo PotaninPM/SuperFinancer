@@ -1,5 +1,6 @@
 package com.potaninpm.feature_feed.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -69,7 +70,7 @@ import java.time.format.DateTimeFormatter
 fun PostCard(
     post: PostEntity,
     onPostClick: (PostEntity) -> Unit,
-    onArticleClick: (String) -> Unit,
+    onArticleClick: (PostEntity) -> Unit,
     onLongPostClick: (PostEntity) -> Unit,
     onFavorite: (PostEntity) -> Unit,
     onShowComments: (PostEntity) -> Unit
@@ -110,8 +111,10 @@ fun PostCard(
                 Spacer(modifier = Modifier.height(12.dp))
                 AttachedArticleSection(
                     onArticleClick = {
-                        onArticleClick(post.webUrl)
-                    }
+                        onArticleClick(post)
+                    },
+                    webTitle = post.webTitle,
+                    webImageUrl = post.webImageUrl
                 )
             }
 
@@ -318,7 +321,9 @@ fun TagChip(
 
 @Composable
 fun AttachedArticleSection(
-    onArticleClick: () -> Unit
+    onArticleClick: () -> Unit,
+    webTitle: String,
+    webImageUrl: String
 ) {
     Card(
         modifier = Modifier
@@ -337,26 +342,24 @@ fun AttachedArticleSection(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Box(
+                Image(
+                    painter = rememberAsyncImagePainter(model = webImageUrl),
+                    contentDescription = null,
                     modifier = Modifier
                         .size(25.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.LightGray)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.attach_file_24px),
-                        contentDescription = null,
-                        tint = Color.Blue,
-                        modifier = Modifier
-                            .padding(2.dp)
-                    )
-                }
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
 
                 Text(
-                    text = stringResource(R.string.attached_article),
+                    text = webTitle,
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 14.sp,
+                    maxLines = 1,
                     fontWeight = FontWeight.Medium,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .width(230.dp)
                 )
             }
 

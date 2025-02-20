@@ -1,5 +1,6 @@
 package com.potaninpm.core.ui.screens
 
+import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,8 @@ import java.net.URLEncoder
 @Composable
 fun ArticleWebView(
     selectedUrl: String,
+    title: String,
+    webImageUrl: String,
     rootNavController: NavHostController
 ) {
     Scaffold(
@@ -35,7 +38,9 @@ fun ArticleWebView(
                     Button(
                         onClick = {
                             val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
-                            rootNavController.navigate("create_post/$encodedUrl")
+                            val encodedImageUrl = URLEncoder.encode(webImageUrl, "UTF-8")
+
+                            rootNavController.navigate("create_post/$encodedUrl/$title/$encodedImageUrl")
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     ) {

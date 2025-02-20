@@ -10,6 +10,8 @@ data class PostEntity(
     val imagePaths: List<String>,
     val tags: List<String>,
     val webUrl: String = "",
+    val webTitle: String = "",
+    val webImageUrl: String = "",
     val isFavorite: Boolean = false,
     val author: String,
     val date: Long = System.currentTimeMillis(),

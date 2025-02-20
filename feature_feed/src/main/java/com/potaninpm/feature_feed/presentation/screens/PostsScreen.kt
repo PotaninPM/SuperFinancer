@@ -69,7 +69,8 @@ fun FeedScreen(
         pageCount = { 3 }
     )
 
-    var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedPostAttached by rememberSaveable { mutableStateOf<PostEntity?>(null) }
+
     var selectedPost by remember { mutableStateOf<PostEntity?>(null) }
 
     if (selectedPost != null) {
@@ -92,7 +93,7 @@ fun FeedScreen(
         stringResource(R.string.my)
     )
 
-    if (selectedUrl == null) {
+    if (selectedPostAttached == null) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -135,7 +136,7 @@ fun FeedScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                rootNavController.navigate("create_post/${""}")
+                                rootNavController.navigate("create_post/${""}/${""}/${""}")
                             }
                         ) {
                             Icon(
@@ -167,7 +168,7 @@ fun FeedScreen(
                             selectedPost = it
                         },
                         onArticleClick = {
-                            selectedUrl = it
+                            selectedPostAttached = it
                         }
                     )
 
@@ -183,8 +184,7 @@ fun FeedScreen(
                             selectedPost = it
                         },
                         onArticleClick = {
-                            selectedUrl = it
-                            selectedUrl = null
+                            selectedPostAttached = it
                         }
                     )
 
@@ -198,18 +198,20 @@ fun FeedScreen(
                             selectedPost = it
                         },
                         onArticleClick = {
-                            selectedUrl = it
-                            selectedUrl = null
+                            selectedPostAttached = it
                         }
                     )
                 }
             }
         }
     } else {
-        val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
-        rootNavController.navigate("article_web_view/$encodedUrl")
+        val encodedUrl = URLEncoder.encode(selectedPostAttached!!.webUrl, "UTF-8")
+        val encodedImageUrl = URLEncoder.encode(selectedPostAttached!!.webImageUrl, "UTF-8")
 
-        selectedUrl = null
+
+        rootNavController.navigate("article_web_view/$encodedUrl/${selectedPostAttached!!.webTitle}/${encodedImageUrl}")
+
+        selectedPostAttached = null
     }
 }
 
@@ -217,7 +219,7 @@ fun FeedScreen(
 fun PostList(
     posts: List<PostEntity>,
     onPostClick: (PostEntity) -> Unit,
-    onArticleClick: (String) -> Unit,
+    onArticleClick: (PostEntity) -> Unit,
     onShowComments: (PostEntity) -> Unit,
     onLongClickFavorite: (PostEntity) -> Unit
 ) {

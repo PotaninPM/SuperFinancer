@@ -98,27 +98,49 @@ fun RootNavigation() {
             }
 
             composable(
-                "${RootNavDestinations.CreatePost.route}/{url}",
-                arguments = listOf(navArgument("url") { type = NavType.StringType })
+                "${RootNavDestinations.CreatePost.route}/{url}/{title}/{webImageUrl}",
+                arguments = listOf(
+                    navArgument("url") { type = NavType.StringType },
+                    navArgument("title") { type = NavType.StringType },
+                    navArgument("webImageUrl") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
                 val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
-                val url = URLDecoder.decode(encodedUrl, "UTF-8")
+                val webUrl = URLDecoder.decode(encodedUrl, "UTF-8")
+
+                val encodedImageUrl = backStackEntry.arguments?.getString("webImageUrl") ?: ""
+                val webImageUrl = URLDecoder.decode(encodedImageUrl, "UTF-8")
+
+                val title = backStackEntry.arguments?.getString("title") ?: ""
 
                 CreatePostScreen(
                     navController = rootNavController,
-                    selectedUrl = url
+                    selectedUrl = webUrl,
+                    title = title,
+                    webImageUrl = webImageUrl
                 )
             }
 
             composable(
-                "${RootNavDestinations.ArticleWebView.route}/{url}",
-                arguments = listOf(navArgument("url") { type = NavType.StringType})
+                "${RootNavDestinations.ArticleWebView.route}/{url}/{title}/{webImageUrl}",
+                arguments = listOf(
+                    navArgument("url") { type = NavType.StringType},
+                    navArgument("title") { type = NavType.StringType },
+                    navArgument("webImageUrl") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
                 val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
                 val url = URLDecoder.decode(encodedUrl, "UTF-8")
 
+                val title = backStackEntry.arguments?.getString("title") ?: ""
+
+                val encodedImageUrl = backStackEntry.arguments?.getString("webImageUrl") ?: ""
+                val webImageUrl = URLDecoder.decode(encodedImageUrl, "UTF-8")
+
                 ArticleWebView(
                     selectedUrl = url,
+                    title = title,
+                    webImageUrl = webImageUrl,
                     rootNavController = rootNavController
                 )
             }

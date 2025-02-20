@@ -72,6 +72,8 @@ import java.util.UUID
 fun CreatePostScreen(
     navController: NavHostController,
     selectedUrl: String = "",
+    title: String = "",
+    webImageUrl: String = "",
     onPostCreated: (String) -> Unit = {},
     viewModel: PostsViewModel = koinViewModel()
 ) {
@@ -94,10 +96,6 @@ fun CreatePostScreen(
 
     val photosUri = remember { mutableStateListOf<Uri>() }
     val photosPaths = remember { mutableListOf<String>() }
-
-    LaunchedEffect(photosUri) {
-        Log.d("INFOG", "CreatePostScreen: $photosUri")
-    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -164,9 +162,12 @@ fun CreatePostScreen(
                         viewModel.addPost(
                             webUrl = selectedUrl,
                             text = postText,
+                            webTitle = title,
+                            webImageUrl = webImageUrl,
                             imagePaths = photosPaths,
                             tags = tagsSelected
                         )
+
                         Toast.makeText(context, postCreated, Toast.LENGTH_SHORT).show()
                         onPostCreated(postText)
                         navController.popBackStack()

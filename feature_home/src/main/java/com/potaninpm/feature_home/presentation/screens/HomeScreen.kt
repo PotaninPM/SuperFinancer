@@ -227,7 +227,7 @@ private fun HomeScreenContent(
 ) {
     val listState = rememberScrollState()
 
-    var selectedUrl by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedNew by remember { mutableStateOf<NewsArticle?>(null) }
     var imageClicked by remember { mutableStateOf("") }
 
     if (imageClicked.isNotEmpty()) {
@@ -237,7 +237,7 @@ private fun HomeScreenContent(
          )
     }
 
-    if (selectedUrl == null) {
+    if (selectedNew == null) {
         Scaffold(
             topBar = {
                 Column {
@@ -290,8 +290,8 @@ private fun HomeScreenContent(
 
                 NewsList(
                     newsState,
-                    onClick = {
-                        selectedUrl = it
+                    onArticleClick = {
+                        selectedNew = it
                     },
                     onNewsRefreshClick = {
                         onNewsRefreshClick()
@@ -303,17 +303,19 @@ private fun HomeScreenContent(
             }
         }
     } else {
-        val encodedUrl = URLEncoder.encode(selectedUrl, "UTF-8")
-        rootNavController.navigate("article_web_view/$encodedUrl")
+        val encodedUrl = URLEncoder.encode(selectedNew!!.webUrl, "UTF-8")
+        val encodedImageUrl = URLEncoder.encode(selectedNew!!.imageUrl, "UTF-8")
 
-        selectedUrl = null
+        rootNavController.navigate("article_web_view/$encodedUrl/${selectedNew!!.title}/${encodedImageUrl}")
+
+        selectedNew = null
     }
 }
 
 @Composable
 fun NewsList(
     newsState: List<NewsArticle>,
-    onClick: (String) -> Unit,
+    onArticleClick: (NewsArticle) -> Unit,
     onNewsRefreshClick: () -> Unit,
     onImageClicked: (String) -> Unit
 ) {
@@ -361,7 +363,7 @@ fun NewsList(
                 NewsCard(
                     article = article,
                     onArticleClick = {
-                        onClick(article.webUrl)
+                        onArticleClick(article)
                     },
                     onImageClicked = { imageUrl ->
                         onImageClicked(imageUrl)

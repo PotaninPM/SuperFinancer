@@ -113,7 +113,9 @@ fun SearchScreen(
         },
         onArticleClick = { new ->
             val encodedUrl = URLEncoder.encode(new.webUrl, "UTF-8")
-            navController.navigate("article_web_view/$encodedUrl")
+            val encodedImageUrl = URLEncoder.encode(new.imageUrl, "UTF-8")
+
+            navController.navigate("article_web_view/$encodedUrl/${new.title}/${encodedImageUrl}")
         },
         onLoadMore = {
             searchViewModel.loadMore()

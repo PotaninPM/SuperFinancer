@@ -10,7 +10,7 @@ import com.potaninpm.feature_feed.data.local.dao.PostDao
 import com.potaninpm.feature_feed.data.local.entities.CommentEntity
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 
-@Database(entities = [PostEntity::class, CommentEntity::class], version = 1)
+@Database(entities = [PostEntity::class, CommentEntity::class], version = 2)
 @TypeConverters(ListStringConverter::class, ByteArrayListConverter::class)
 abstract class PostDatabase : RoomDatabase() {
     abstract fun postDao(): PostDao
