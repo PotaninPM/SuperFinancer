@@ -59,8 +59,10 @@ fun groupOperationsByDate(operations: List<Operation>): Map<LocalDate, List<Oper
 
 @Composable
 fun FinancesScreen(
+    modifier: Modifier = Modifier,
     viewModel: FinancesViewModel = koinViewModel()
 ) {
+    modifier.fillMaxSize()
     var showAddGoalDialog by rememberSaveable { mutableStateOf(false) }
     var showAddOperationDialog by rememberSaveable { mutableStateOf(false) }
 

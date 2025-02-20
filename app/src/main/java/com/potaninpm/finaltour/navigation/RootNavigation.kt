@@ -15,12 +15,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.potaninpm.core.ui.screens.ArticleWebView
 import com.potaninpm.feature_feed.presentation.screens.CreatePostScreen
 import com.potaninpm.feature_feed.presentation.screens.FeedScreen
 import com.potaninpm.feature_finances.presentation.screens.FinancesScreen
 import com.potaninpm.feature_home.presentation.screens.HomeScreen
 import com.potaninpm.feature_home.presentation.screens.SearchScreen
-import com.potaninpm.core.ui.screens.ArticleWebView
 import com.potaninpm.finaltour.R
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavBar
 import com.potaninpm.finaltour.navigation.bottomNav.BottomNavItem
@@ -79,12 +79,14 @@ fun RootNavigation() {
             composable(RootNavDestinations.Home.route) {
                 HomeScreen(
                     rootNavController = rootNavController,
-                    modifier = Modifier.padding(innerPadding)
                 )
             }
 
             composable(RootNavDestinations.Finances.route) {
-                FinancesScreen()
+                FinancesScreen(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                )
             }
 
             composable(RootNavDestinations.Search.route) {

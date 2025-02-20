@@ -68,7 +68,6 @@ import java.net.URLEncoder
 @Composable
 fun HomeScreen(
     rootNavController: NavHostController,
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
