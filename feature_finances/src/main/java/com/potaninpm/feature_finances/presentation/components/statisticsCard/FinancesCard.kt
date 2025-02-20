@@ -21,6 +21,7 @@ import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.functions.formatMoneyUnsigned
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.presentation.components.goals.goalCard.GoalProgress
+import kotlin.math.round
 
 @Composable
 fun FinancesCard(
@@ -176,7 +177,7 @@ fun formatDuration(months: Double): String {
             stringResource(R.string.days, days)
         }
     } else if (months in 1.0..12.0) {
-        val formattedMonths = String.format("%.1f", months)
+        val formattedMonths = round(months).toInt()
         stringResource(R.string.month_left, formattedMonths)
     } else {
         val years = (months / 12).toInt()

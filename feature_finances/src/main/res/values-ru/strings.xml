@@ -17,7 +17,7 @@
     <string name="no_idea">Неизвестно</string>
     <string name="days">%1$s дней</string>
     <string name="years_month_left">%1$s лет %2$s месяцев</string>
-    <string name="month_left">%1$s месяцев</string>
+    <string name="month_left">Через %1$s месяцев</string>
     <string name="target">Цель</string>
     <string name="near_days">В ближайшее дни</string>
     <string name="all_goals_done">Все цели выполнены!</string>

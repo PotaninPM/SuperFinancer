@@ -17,7 +17,7 @@
     <string name="no_idea">Unknown</string>
     <string name="days">%1$s days</string>
     <string name="years_month_left">%1$s years %2$s months</string>
-    <string name="month_left">%1$s months</string>
+    <string name="month_left">After %1$s months</string>
     <string name="target">Target</string>
     <string name="near_days">In the coming days</string>
     <string name="all_goals_done">All goals completed!</string>
