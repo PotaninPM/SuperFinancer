@@ -93,7 +93,9 @@ fun ChatAiBottomSheet(
             if (chatAnswer == null) {
                 Text(
                     text = stringResource(R.string.what_ai_thinks, companyName),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

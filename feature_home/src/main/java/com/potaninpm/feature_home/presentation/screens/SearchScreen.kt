@@ -4,6 +4,7 @@ import android.speech.SpeechRecognizer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -296,6 +298,17 @@ fun NewsListSearch(
 fun TickersListSearch(
     tickers: List<Ticker>
 ) {
+    var tickerClicked by remember { mutableStateOf<Ticker?>(null) }
+
+    if (tickerClicked != null) {
+        ChatAiBottomSheet(
+            companyName = tickerClicked?.companyName ?: "",
+            onDismiss = {
+                tickerClicked = null
+            }
+        )
+    }
+
     if (tickers.isNotEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -317,7 +330,10 @@ fun TickersListSearch(
                 tickers.forEach { ticker ->
                     if (ticker.currentPrice != 0.0f) {
                         TickerInfoSearch(
-                            ticker = ticker
+                            ticker = ticker,
+                            onTickerClick = { it ->
+                                tickerClicked = it
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -333,7 +349,10 @@ fun TickersListSearch(
 }
 
 @Composable
-fun TickerInfoSearch(ticker: Ticker) {
+fun TickerInfoSearch(
+    ticker: Ticker,
+    onTickerClick: (Ticker) -> Unit
+) {
     val priceColor = if (ticker.change >= 0) Color(0xFF05B000) else Color.Red
 
     val painter = if (ticker.logoUrl.isNullOrEmpty()) {
@@ -345,7 +364,10 @@ fun TickerInfoSearch(ticker: Ticker) {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 18.dp),
+            .padding(horizontal = 18.dp)
+            .clickable {
+                onTickerClick(ticker)
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
