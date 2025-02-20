@@ -33,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +50,7 @@ import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerSearchTicker
+import com.potaninpm.core.ui.screens.FullScreenImageDialog
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.domain.model.NewsArticle
 import com.potaninpm.feature_home.domain.model.SearchResults
@@ -213,7 +213,7 @@ private fun SearchScreenContent(
                         R.string.news -> {
                             NewsListSearch(
                                 news = results.news,
-                                onClick = { new ->
+                                onArticleClick = { new ->
                                     onArticleClick(new)
                                 },
                                 onLoadMore = {
@@ -231,7 +231,7 @@ private fun SearchScreenContent(
 @Composable
 fun NewsListSearch(
     news: List<NewsArticle>,
-    onClick: (NewsArticle) -> Unit,
+    onArticleClick: (NewsArticle) -> Unit,
     onLoadMore: () -> Unit
 ) {
     var isLoading by remember { mutableStateOf(false) }
@@ -241,6 +241,17 @@ fun NewsListSearch(
             delay(1000)
             isLoading = false
         }
+    }
+
+    var openImage by remember { mutableStateOf<String?>(null) }
+
+    if (openImage != null) {
+        FullScreenImageDialog(
+            imageUrl = openImage!!,
+            onDismiss = {
+                openImage = null
+            }
+        )
     }
 
     if (news.isNotEmpty()) {
@@ -258,8 +269,11 @@ fun NewsListSearch(
             news.forEach { new ->
                 NewsCard(
                     article = new,
-                    onClick = {
-                        onClick(new)
+                    onArticleClick = {
+                        onArticleClick(new)
+                    },
+                    onImageClicked = { image ->
+                        openImage = image
                     }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -331,7 +345,7 @@ fun TickersListSearch(
                     if (ticker.currentPrice != 0.0f) {
                         TickerInfoSearch(
                             ticker = ticker,
-                            onTickerClick = { it ->
+                            onTickerClick = {
                                 tickerClicked = it
                             }
                         )

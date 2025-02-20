@@ -361,7 +361,7 @@ fun NewsList(
             newsState.forEach { article ->
                 NewsCard(
                     article = article,
-                    onClick = {
+                    onArticleClick = {
                         onClick(article.webUrl)
                     },
                     onImageClicked = { imageUrl ->

@@ -12,7 +12,7 @@
     <string name="percent_goals">Goal achievement percentage</string>
     <string name="left_to_save">Left to save</string>
     <string name="all_saved">Total saved</string>
-    <string name="month_income">Monthly income</string>
+    <string name="month_income">Average monthly income</string>
     <string name="when_end_up_saving">When you finish saving</string>
     <string name="no_idea">Unknown</string>
     <string name="days">%1$s days</string>
@@ -56,4 +56,7 @@
     <string name="deposit">Deposit</string>
     <string name="add_money_to_goal">Top up the balance</string>
     <string name="deposit_amount">Deposit amount</string>
+    <string name="title_cannot_be_empty">The title cannot be empty</string>
+    <string name="target_sum">Required amount (₽)</string>
+    <string name="sum_cannot_be_more_that">The amount cannot exceed 100 million</string>
 </resources>

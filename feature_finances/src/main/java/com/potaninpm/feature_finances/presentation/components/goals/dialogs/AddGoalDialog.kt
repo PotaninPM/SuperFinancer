@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,8 @@ fun AddGoalDialog(
     onDismiss: () -> Unit,
     onAddGoal: (String, Long, String, Long?) -> Unit
 ) {
+    val context = LocalContext.current
+    
     var name by rememberSaveable { mutableStateOf("") }
     var targetSum by rememberSaveable { mutableStateOf("") }
     val selectedCurrency by rememberSaveable { mutableStateOf("₽") }
@@ -69,22 +72,22 @@ fun AddGoalDialog(
                     error = nameError,
                     onValueChange = {
                         name = it
-                        nameError = if (it.isEmpty()) "Название не может быть пустым" else null
+                        nameError = if (it.isEmpty()) context.getString(R.string.title_cannot_be_empty) else null
                     }
                 )
 
                 CustomTextField(
                     value = targetSum,
-                    hint = "Требуемая сумма (₽)",
+                    hint = stringResource(R.string.target_sum),
                     type = "number",
                     isError = targetSumError != null,
                     error = targetSumError,
                     onValueChange = {
                         targetSum = it
                         targetSumError = when {
-                            it.isEmpty() -> "Сумма не может быть пустой"
-                            it.toLongOrNull() == null -> "Введите корректное число"
-                            it.toLong() > 100_000_000_000 -> "Сумма не может превышать 100 миллионов"
+                            it.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
+                            it.toLongOrNull() == null -> context.getString(R.string.enter_valid_figure)
+                            it.toLong() > 100_000_000_000 -> context.getString(R.string.sum_cannot_be_more_that)
                             else -> null
                         }
                     }

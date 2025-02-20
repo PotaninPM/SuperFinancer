@@ -29,7 +29,7 @@ class SearchViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _query
-                .debounce(500)
+                .debounce(700)
                 .distinctUntilChanged()
                 .collect { q ->
                     if (q.isBlank()) {

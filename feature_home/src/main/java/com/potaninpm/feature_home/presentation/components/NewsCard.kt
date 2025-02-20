@@ -37,8 +37,8 @@ import com.potaninpm.feature_home.domain.model.NewsArticle
 @Composable
 fun NewsCard(
     article: NewsArticle,
-    onClick: () -> Unit,
-    onImageClicked: (String) -> Unit = {}
+    onArticleClick: () -> Unit,
+    onImageClicked: (String) -> Unit
 ) {
 
     OutlinedCard(
@@ -48,7 +48,7 @@ fun NewsCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                onClick()
+                onArticleClick()
             }
     ) {
         Column(
@@ -95,7 +95,7 @@ fun NewsCard(
                 Button(
                     modifier = Modifier,
                     onClick = {
-                        onClick()
+                        onArticleClick()
                     }
                 ) {
                     Text(

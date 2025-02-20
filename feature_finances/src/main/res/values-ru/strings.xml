@@ -12,7 +12,7 @@
     <string name="percent_goals">Процент достижения целей</string>
     <string name="left_to_save">Осталось накопить</string>
     <string name="all_saved">Всего накоплено</string>
-    <string name="month_income">Ежемесячный доход</string>
+    <string name="month_income">Средний ежемесячный доход</string>
     <string name="when_end_up_saving">Когда накопите</string>
     <string name="no_idea">Неизвестно</string>
     <string name="days">%1$s дней</string>
@@ -56,4 +56,7 @@
     <string name="deposit">Пополнить</string>
     <string name="add_money_to_goal">Пополнить цель</string>
     <string name="deposit_amount">Сумма пополнения</string>
+    <string name="title_cannot_be_empty">Название не может быть пустым</string>
+    <string name="target_sum">Требуемая сумма (₽)</string>
+    <string name="sum_cannot_be_more_that">Сумма не может превышать 100 миллионов</string>
 </resources>
