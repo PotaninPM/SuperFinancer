@@ -74,7 +74,6 @@ fun HomeScreen(
 
     val tickersState by viewModel.tickers.collectAsState(initial = emptyList())
     val newsState by viewModel.news.collectAsState(initial = emptyList())
-    val isLoading by viewModel.isLoading.collectAsState()
 
     val newTickerDataLoaded by viewModel.newTickerDataLoaded.collectAsState()
 

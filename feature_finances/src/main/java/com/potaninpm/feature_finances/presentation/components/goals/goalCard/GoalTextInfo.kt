@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,14 +62,37 @@ fun GoalTextInfo(
 
             if (dateOfReaching != "null") {
                 val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.systemDefault())
-                val dateOfReach =  formatter.format(Instant.ofEpochMilli(dateOfReaching.toLong()))
+                val dateOfReachMillis = dateOfReaching.toLong()
+                val currentMillis = System.currentTimeMillis()
 
-                Text(
-                    text = stringResource(R.string.before, dateOfReach),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                when {
+                    dateOfReachMillis < currentMillis -> {
+                        val formattedDate = formatter.format(Instant.ofEpochMilli(dateOfReachMillis))
+                        Text(
+                            text = stringResource(R.string.past, formattedDate),
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    dateOfReachMillis < currentMillis + 24 * 60 * 60 * 1000 -> {
+                        Text(
+                            text = stringResource(R.string.until_tomorrow),
+                            color = Color(217, 148, 0),
+                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    else -> {
+                        val formattedDate = formatter.format(Instant.ofEpochMilli(dateOfReachMillis))
+                        Text(
+                            text = stringResource(R.string.before, formattedDate),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
             } else {
                 Text(
                     text = stringResource(R.string.without_date),

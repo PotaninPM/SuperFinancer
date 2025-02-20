@@ -59,4 +59,6 @@
     <string name="title_cannot_be_empty">Название не может быть пустым</string>
     <string name="target_sum">Требуемая сумма (₽)</string>
     <string name="sum_cannot_be_more_that">Сумма не может превышать 100 миллионов</string>
+    <string name="past">Прошло %1$s</string>
+    <string name="until_tomorrow">До завтра</string>
 </resources>
