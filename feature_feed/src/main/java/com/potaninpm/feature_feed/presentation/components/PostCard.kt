@@ -59,6 +59,7 @@ import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import com.potaninpm.feature_feed.domain.model.TagTypes
+import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -167,27 +168,31 @@ fun PostHeader(
 }
 
 @Composable
-fun PostImagesSection(post: PostEntity) {
+fun PostImagesSection(
+    post: PostEntity
+) {
     var openImage by remember { mutableStateOf(false) }
-    var imageInBytes by remember { mutableStateOf(post.imageData.firstOrNull()) }
+    var imagePath by remember { mutableStateOf("") }
 
     if (openImage) {
-        imageInBytes?.let {
+        if (imagePath.isNotEmpty()) {
             FullScreenImageDialog(
-                imageBytes = it,
+                imagePath = imagePath,
                 onDismiss = {
                     openImage = false
-                    imageInBytes = null
+                    imagePath = ""
                 }
             )
         }
     }
 
-    if (post.imageData.isNotEmpty()) {
-        when (post.imageData.size) {
+    if (post.imagePaths.isNotEmpty()) {
+        when (post.imagePaths.size) {
             1 -> {
                 Image(
-                    painter = rememberAsyncImagePainter(model = post.imageData.first()),
+                    painter = rememberAsyncImagePainter(
+                        File(post.imagePaths.first())
+                    ),
                     contentDescription = stringResource(R.string.post_image),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -196,7 +201,7 @@ fun PostImagesSection(post: PostEntity) {
                         .background(Color.Gray)
                         .clickable {
                             openImage = true
-                            imageInBytes = post.imageData.first()
+                            imagePath = post.imagePaths.first()
                         },
                     contentScale = ContentScale.Crop
                 )
@@ -208,9 +213,9 @@ fun PostImagesSection(post: PostEntity) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    post.imageData.forEach { imageBytes ->
+                    post.imagePaths.forEach { image ->
                         Image(
-                            painter = rememberAsyncImagePainter(model = imageBytes),
+                            painter = rememberAsyncImagePainter(model = File(imagePath)),
                             contentDescription = stringResource(R.string.post_image),
                             modifier = Modifier
                                 .weight(1f)
@@ -219,7 +224,7 @@ fun PostImagesSection(post: PostEntity) {
                                 .background(Color.Gray)
                                 .clickable {
                                     openImage = true
-                                    imageInBytes = imageBytes
+                                    imagePath = image
                                 },
                             contentScale = ContentScale.Crop
                         )
@@ -232,9 +237,9 @@ fun PostImagesSection(post: PostEntity) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(post.imageData) { imageBytes ->
+                    items(post.imagePaths) { image ->
                         Image(
-                            painter = rememberAsyncImagePainter(model = imageBytes),
+                            painter = rememberAsyncImagePainter(model = File(image)),
                             contentDescription = stringResource(R.string.post_image),
                             modifier = Modifier
                                 .size(100.dp)
@@ -242,7 +247,7 @@ fun PostImagesSection(post: PostEntity) {
                                 .background(Color.Gray)
                                 .clickable {
                                     openImage = true
-                                    imageInBytes = imageBytes
+                                    imagePath = image
                                 },
                             contentScale = ContentScale.Crop
                         )

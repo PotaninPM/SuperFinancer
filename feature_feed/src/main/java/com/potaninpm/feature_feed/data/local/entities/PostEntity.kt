@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class PostEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val text: String,
-    val imageData: List<ByteArray>,
+    val imagePaths: List<String>,
     val tags: List<String>,
     val webUrl: String = "",
     val isFavorite: Boolean = false,

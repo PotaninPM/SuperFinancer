@@ -1,6 +1,7 @@
 package com.potaninpm.feature_feed.presentation.screens
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,7 +39,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -60,6 +63,9 @@ import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.domain.model.TagTypes
 import com.potaninpm.feature_feed.presentation.viewModels.PostsViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +77,6 @@ fun CreatePostScreen(
 ) {
     var postText by rememberSaveable { mutableStateOf("") }
     var tagsSelected by remember { mutableStateOf<List<String>>(emptyList()) }
-    var photoBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
 
     val allTags = listOf(
         TagTypes(stringResource(id = R.string.business), "business"),
@@ -83,27 +88,28 @@ fun CreatePostScreen(
 
     val postCreated = stringResource(R.string.post_created)
 
-    var fullScreenImage by remember { mutableStateOf<ByteArray?>(null) }
+    var fullScreenImage by remember { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
+
+    val photosUri = remember { mutableStateListOf<Uri>() }
+    val photosPaths = remember { mutableListOf<String>() }
+
+    LaunchedEffect(photosUri) {
+        Log.d("INFOG", "CreatePostScreen: $photosUri")
+    }
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            val stream = context.contentResolver.openInputStream(it)
-            val bytes = stream?.readBytes()
-            stream?.close()
-            if (bytes != null && photoBytesList.size < 2) {
-                photoBytesList = photoBytesList + bytes
-            } else {
-                Toast.makeText(context, context.getString(R.string.max_photos), Toast.LENGTH_SHORT).show()
-            }
+            photosUri.add(it)
         }
     }
 
     if (fullScreenImage != null) {
         FullScreenImageDialog(
-            imageBytes = fullScreenImage!!,
+            imageUri = fullScreenImage!!,
             onDismiss = { fullScreenImage = null }
         )
     }
@@ -132,16 +138,40 @@ fun CreatePostScreen(
                 },
                 onClick = {
                     if (postText.isNotBlank() && tagsSelected.isNotEmpty()) {
+                        photosPaths.clear()
+
+                        photosUri.forEach { uri ->
+                            val fileName = "${UUID.randomUUID()}.jpg"
+
+                            val photoDir = File(context.filesDir, "photos")
+                            if (!photoDir.exists()) {
+                                photoDir.mkdirs()
+                            }
+
+                            val file = File(photoDir, fileName)
+                            try {
+                                context.contentResolver.openInputStream(uri)?.use { input ->
+                                    FileOutputStream(file).use { output ->
+                                        input.copyTo(output)
+                                    }
+                                }
+                                photosPaths.add(file.absolutePath)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
                         viewModel.addPost(
                             webUrl = selectedUrl,
                             text = postText,
-                            imageData = photoBytesList,
+                            imagePaths = photosPaths,
                             tags = tagsSelected
                         )
                         Toast.makeText(context, postCreated, Toast.LENGTH_SHORT).show()
                         onPostCreated(postText)
                         navController.popBackStack()
                     }
+
                 }
             )
         }
@@ -196,14 +226,14 @@ fun CreatePostScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                itemsIndexed(photoBytesList) { index, bytes ->
+                itemsIndexed(photosUri) { index, uri ->
                     PhotoItem(
-                        photoBytes = bytes,
+                        photoUri = uri,
                         onDeleteClick = {
-                            photoBytesList = photoBytesList.toMutableList().apply { removeAt(index) }
+                            photosUri.removeAt(index)
                         },
                         onPhotoClick = {
-                            fullScreenImage = bytes
+                            fullScreenImage = uri
                         }
                     )
                 }
@@ -223,15 +253,20 @@ fun CreatePostScreen(
 
 @Composable
 fun PhotoItem(
-    photoBytes: ByteArray,
+    photoUri: Uri,
     onDeleteClick: () -> Unit,
     onPhotoClick: () -> Unit
 ) {
+    Log.d("INFOG", "PhotoItem: $photoUri")
+    val painter = rememberAsyncImagePainter(
+        model = photoUri
+    )
+
     Box(
         modifier = Modifier.size(140.dp)
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = photoBytes),
+            painter = painter,
             contentDescription = stringResource(R.string.photo),
             modifier = Modifier
                 .fillMaxSize()

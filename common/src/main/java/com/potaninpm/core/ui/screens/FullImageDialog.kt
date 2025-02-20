@@ -1,5 +1,6 @@
 package com.potaninpm.core.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,8 @@ import coil3.compose.rememberAsyncImagePainter
 
 @Composable
 fun FullScreenImageDialog(
+    imagePath: String = "",
+    imageUri: Uri = Uri.EMPTY,
     imageBytes: ByteArray = ByteArray(0),
     imageUrl: String = "",
     onDismiss: () -> Unit
@@ -74,6 +77,10 @@ fun FullScreenImageDialog(
             ) {
                 val painter = if (imageBytes.isNotEmpty()) {
                     rememberAsyncImagePainter(model = imageBytes)
+                } else if (imageUri != Uri.EMPTY) {
+                    rememberAsyncImagePainter(model = imageUri)
+                } else if (imagePath.isNotEmpty()) {
+                    rememberAsyncImagePainter(model = imagePath)
                 } else {
                     rememberAsyncImagePainter(model = imageUrl)
                 }
