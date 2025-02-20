@@ -217,7 +217,7 @@ fun PostImagesSection(
                 ) {
                     post.imagePaths.forEach { image ->
                         Image(
-                            painter = rememberAsyncImagePainter(model = File(imagePath)),
+                            painter = rememberAsyncImagePainter(model = File(image)),
                             contentDescription = stringResource(R.string.post_image),
                             modifier = Modifier
                                 .weight(1f)
