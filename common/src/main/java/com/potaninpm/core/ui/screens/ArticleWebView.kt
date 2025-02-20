@@ -1,6 +1,5 @@
 package com.potaninpm.core.ui.screens
 
-import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.padding
