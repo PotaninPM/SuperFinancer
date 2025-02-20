@@ -234,6 +234,102 @@ fun PostImagesSection(
                 }
             }
 
+            3 -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = File(post.imagePaths.first())),
+                        contentDescription = stringResource(R.string.post_image),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.Gray)
+                            .clickable {
+                                openImage = true
+                                imagePath = post.imagePaths.first()
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        post.imagePaths.drop(1).forEach { image ->
+                            Image(
+                                painter = rememberAsyncImagePainter(model = File(image)),
+                                contentDescription = stringResource(R.string.post_image),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(75.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Gray)
+                                    .clickable {
+                                        openImage = true
+                                        imagePath = image
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
+            }
+
+            4 -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        post.imagePaths.take(2).forEach { image ->
+                            Image(
+                                painter = rememberAsyncImagePainter(model = File(image)),
+                                contentDescription = stringResource(R.string.post_image),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(75.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Gray)
+                                    .clickable {
+                                        openImage = true
+                                        imagePath = image
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        post.imagePaths.drop(2).forEach { image ->
+                            Image(
+                                painter = rememberAsyncImagePainter(model = File(image)),
+                                contentDescription = stringResource(R.string.post_image),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(75.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Gray)
+                                    .clickable {
+                                        openImage = true
+                                        imagePath = image
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
+            }
             else -> {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
