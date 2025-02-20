@@ -58,14 +58,14 @@ fun ChatAiBottomSheet(
     val isThinking by chatViewModel.isThinking.collectAsState()
     val state = rememberScrollState()
 
-    var countdown by remember { mutableIntStateOf(50) }
+    var countdown by remember { mutableIntStateOf(90) }
 
     val clipboard = LocalClipboardManager.current
     val context = LocalContext.current
 
     LaunchedEffect(isThinking) {
         if (isThinking) {
-            countdown = 55
+            countdown = 90
 
             while (countdown > 0) {
                 delay(1000)
