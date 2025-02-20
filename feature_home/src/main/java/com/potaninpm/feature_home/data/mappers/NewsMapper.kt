@@ -1,4 +1,4 @@
-package com.potaninpm.feature_home.data.remote.mappers
+package com.potaninpm.feature_home.data.mappers
 
 import com.potaninpm.feature_home.data.remote.dto.nytDto.NYTimesArticleDto
 import com.potaninpm.feature_home.domain.model.NewsArticle

@@ -19,4 +19,9 @@
     <string name="will_update_02d_02d">Обновится через %02d:%02d</string>
     <string name="_2f">%.2f</string>
     <string name="load_more">Загрузить еще</string>
+    <string name="ai_is_thinking">ИИ думает…</string>
+    <string name="approximate_time_waiting">Примерное время ожидания: %1$s секунд</string>
+    <string name="what_ai_thinks">Что ИИ думает на счёт %1$s?</string>
+    <string name="company_analyse">Анализ компании</string>
+    <string name="ai_answer">Ответ ИИ:</string>
 </resources>
