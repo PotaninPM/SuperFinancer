@@ -19,7 +19,7 @@
     <string name="will_update_02d_02d">Will update in %02d:%02d</string>
     <string name="_2f">%.2f</string>
     <string name="load_more">Load more</string>
-    <string name="ai_is_thinking">AI is thinking...</string>
+    <string name="ai_is_thinking">AI is thinking…</string>
     <string name="approximate_time_waiting">Approximate waiting time: %1$s seconds</string>
     <string name="what_ai_thinks">What does AI think about %1$s?</string>
     <string name="company_analyse">Company analysis</string>

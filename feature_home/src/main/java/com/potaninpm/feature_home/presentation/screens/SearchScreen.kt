@@ -78,8 +78,6 @@ fun SearchScreen(
 
     val results by searchViewModel.searchResults.collectAsState()
 
-    val isLoading by searchViewModel.isLoading.collectAsState()
-
     val onMicClick = {
         startVoiceRecognition(
             context,

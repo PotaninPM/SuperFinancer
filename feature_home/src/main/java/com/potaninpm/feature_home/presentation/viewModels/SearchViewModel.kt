@@ -26,9 +26,6 @@ class SearchViewModel(
 
     private val _currentPage = MutableStateFlow(0)
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _query
@@ -53,14 +50,13 @@ class SearchViewModel(
 
     fun loadMore() {
         val query = _query.value
-        if (query.isNotBlank() && !_isLoading.value) {
+        if (query.isNotBlank()) {
             searchNews(query, resetPage = false)
         }
     }
 
     private fun searchNews(query: String, resetPage: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
             val nextPage = if (resetPage) 0 else _currentPage.value + 1
 
             try {
@@ -81,8 +77,6 @@ class SearchViewModel(
                 _currentPage.value = nextPage
             } catch (e: Exception) {
                 e.printStackTrace()
-            } finally {
-                _isLoading.value = false
             }
         }
     }
