@@ -61,4 +61,5 @@
     <string name="sum_cannot_be_more_that">The amount cannot exceed 100 million</string>
     <string name="past">Past %1$s</string>
     <string name="until_tomorrow">Until tomorrow</string>
+    <string name="not_enough_space">Not enough space. Available %1$s</string>
 </resources>
