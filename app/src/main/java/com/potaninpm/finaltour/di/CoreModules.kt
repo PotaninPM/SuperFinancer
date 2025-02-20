@@ -1,7 +1,6 @@
 package com.potaninpm.finaltour.di
 
 import com.potaninpm.finaltour.di.modules.chatModule
-import com.potaninpm.finaltour.di.modules.commonModule
 import com.potaninpm.finaltour.di.modules.financesRepositoryModule
 import com.potaninpm.finaltour.di.modules.financeRoomModule
 import com.potaninpm.finaltour.di.modules.financesViewModelModule
@@ -30,7 +29,5 @@ val coreModules = listOf(
 
     homeViewModelModule,
     financesViewModelModule,
-    postsViewModelModule,
-
-    commonModule
+    postsViewModelModule
 )

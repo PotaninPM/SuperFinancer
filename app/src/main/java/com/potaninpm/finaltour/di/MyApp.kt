@@ -1,7 +1,6 @@
-package com.potaninpm.finaltour
+package com.potaninpm.finaltour.di
 
 import android.app.Application
-import com.potaninpm.finaltour.di.coreModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
