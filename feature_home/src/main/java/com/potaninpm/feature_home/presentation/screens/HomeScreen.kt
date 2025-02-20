@@ -304,9 +304,13 @@ private fun HomeScreenContent(
         }
     } else {
         val encodedUrl = URLEncoder.encode(selectedNew!!.webUrl, "UTF-8")
-        val encodedImageUrl = URLEncoder.encode(selectedNew!!.imageUrl, "UTF-8")
 
-        rootNavController.navigate("article_web_view/$encodedUrl/${selectedNew!!.title}/${encodedImageUrl}")
+        if (selectedNew?.imageUrl != null) {
+            val encodedImageUrl = URLEncoder.encode(selectedNew!!.imageUrl, "UTF-8")
+            rootNavController.navigate("article_web_view/$encodedUrl/${selectedNew!!.title}/${encodedImageUrl}")
+        } else {
+            rootNavController.navigate("article_web_view/$encodedUrl/${selectedNew!!.title}/${""}")
+        }
 
         selectedNew = null
     }

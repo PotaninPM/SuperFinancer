@@ -346,7 +346,8 @@ fun AttachedArticleSection(
                     contentDescription = null,
                     modifier = Modifier
                         .size(25.dp)
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.Gray),
                     contentScale = ContentScale.Crop
                 )
 

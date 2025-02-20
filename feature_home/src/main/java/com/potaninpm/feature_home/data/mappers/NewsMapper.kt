@@ -21,7 +21,7 @@ fun NYTimesArticleDto.toDomainNews(): NewsArticle {
         abstract = abstract ?: "",
         webUrl = webUrl,
         imageUrl = imageUrl?.let { "https://www.nytimes.com/$it" },
-        source = source,
+        source = source ?: "",
         publishedAt = formattedDate
     )
 }
