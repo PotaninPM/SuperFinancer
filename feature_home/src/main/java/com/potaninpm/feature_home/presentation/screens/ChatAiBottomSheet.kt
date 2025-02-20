@@ -147,7 +147,7 @@ fun ChatAiBottomSheet(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = chatAnswer!!,
+                    text = markdownToString(chatAnswer!!),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .combinedClickable(

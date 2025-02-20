@@ -226,7 +226,7 @@ fun PostList(
             .fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
-        items(posts, key = { it.id }) { post ->
+        items(posts, key = { post -> post.id }) { post ->
             PostCard(
                 post = post,
                 onPostClick = onPostClick,
