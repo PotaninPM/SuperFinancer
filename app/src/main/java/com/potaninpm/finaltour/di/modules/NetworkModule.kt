@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-val networkModule = module {
+val homeNetworkModule = module {
     single {
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)

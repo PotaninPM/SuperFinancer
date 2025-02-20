@@ -8,10 +8,16 @@ import com.potaninpm.feature_home.presentation.viewModels.SearchViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
+val homeViewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
-    single { FinancesViewModel(get(), get()) }
     viewModel { SearchViewModel(get(), get()) }
+}
+
+val financesViewModelModule = module {
+    single { FinancesViewModel(get(), get()) }
+}
+
+val postsViewModelModule = module {
     viewModel { PostsViewModel(get()) }
 
     viewModel { (postId: Long) ->
