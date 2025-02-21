@@ -1,5 +1,6 @@
 # Обоснование принятых решений
 
+
 ### Использование библиотек:
 
 1. Jetpack Compose был выбран как один из наиболее рекомендуемых подходов от Google. Наше приложение планирует развиваться, мы не хотим отставать от времени, поэтому решили сразу писать на самых современных технологиях. В будущем переписывать проект с View на Compose будет сложнее, дольше и дороже.
@@ -22,8 +23,10 @@
 # Реализованные фичи:
 
 ### Главная страница:
-<img src="/screenshots/home_dark.jpg" alt="drawing" style="width:300px;"/>
-<img src="/screenshots/home_light.jpg" alt="drawing" style="width:300px;"/>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <img src="screenshots/home_dark.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+    <img src="screenshots/home_light.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+</div>
 
 1. PullToRefresh на главной странице
 2. Шиммер во время загрузки главной, поиска
@@ -33,22 +36,28 @@
 6. Обновление тикеров кнопкой либо настройка автообновления раз в N секунд
 7. Голосовой ввод в поиске
 ### Финансы:
-<img src="/screenshots/finances_stat.jpg" alt="drawing" style="width:300px;"/>
-<img src="/screenshots/finances_operations.jpg" alt="drawing" style="width:300px;"/>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <img src="screenshots/finances_stat.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+    <img src="screenshots/finances_operations.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+</div>
 
 1. Менеджер счетов (переводы между счетами, снятие со счетов)
 2. Отображается дополнительно: Сколько осталось времени до достижения всех целей, средние поступления за месяц, сколько осталось копить (денег).
 3. Если цель уже прошла или до нее остался 1 день то появляется определенный текст в дате и она окрашивается в другой цвет
 ### Лента:
-<img src="/screenshots/posts_main.jpg" alt="drawing" style="width:300px;"/>
-<img src="/screenshots/post_comments.jpg" alt="drawing" style="width:300px;"/>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <img src="screenshots/posts_main.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+    <img src="screenshots/post_comments.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+</div>
 
 1. Функциональность профиля и отображения авторов постов. Плюс сюда же функицонал с комментариями под постами(все локально)
 2. Система отображения фотографий(до 4 включая в особом виде, дальше как горизонтальный список)
 3. Текст ограничен 3мя строками. Если текст больше, то появляется кнопка "Еще" и раскрывает весь пост, а также появляется кнопка "скрыть", которая обратно возвращает состояние текста
 ### Общие:
-<img src="/screenshots/ai_thinks.jpg" alt="drawing" style="width:300px;"/>
-<img src="/screenshots/big_image.jpg" alt="drawing" style="width:300px;"/>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <img src="screenshots/ai_thinks.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+    <img src="screenshots/big_image.jpg" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+</div>
 
 1. Добавлена нейросеть для анализа финасового состояния кампании (при нажатии на тикер bottom sheet появляется), так же если зажать текст который она выдала можно скопировать его в буфер обмена. (работает как на главной так и в поиске)
 2. Возможность открывать картинки в любом месте приложения в полный размер(при нажатии на них)
