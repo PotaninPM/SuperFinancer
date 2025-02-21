@@ -22,7 +22,7 @@
 # Реализованные фичи:
 
 ### Главная страница:
-![Image 1](screenshots/home_dark.jpg) ![Image 2](screenshots/home_light.jpg)
+![Image 1](screenshots/home_dark.jpg){: style="width: 30%; height: auto;"} ![Image 2](screenshots/home_light.jpg)
 1. PullToRefresh на главной странице
 2. Шиммер во время загрузки главной, поиска
 3. Пагинация в Поиске для новостей
