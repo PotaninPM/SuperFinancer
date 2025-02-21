@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.AnalyticsManager
 
 @Composable
 fun FullScreenImageDialog(
@@ -40,6 +41,11 @@ fun FullScreenImageDialog(
     imageUrl: String = "",
     onDismiss: () -> Unit
 ) {
+    AnalyticsManager.logEvent(
+        eventName = "full_image_screen_opened",
+        properties = mapOf("full_image_screen" to "opened")
+    )
+
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
 

@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
@@ -29,6 +30,11 @@ fun AddOperationDialog(
     onDismiss: () -> Unit,
     onAddOperation: (Long, Long, String?) -> Unit
 ) {
+    AnalyticsManager.logEvent(
+        eventName = "add_operation_dialog_opened",
+        properties = mapOf("add_operation_dialog" to "opened")
+    )
+
     val context = LocalContext.current
 
     var selectedGoal by remember { mutableStateOf(if (goals.isNotEmpty()) goals.first() else null) }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
@@ -31,6 +32,11 @@ fun TransferDialog(
     onDismiss: () -> Unit,
     onConfirm: (Long, Long, Long, String?) -> Unit
 ) {
+    AnalyticsManager.logEvent(
+        eventName = "transfer_money_dialog_opened",
+        properties = mapOf("transfer_money_dialog" to "opened")
+    )
+
     val context = LocalContext.current
 
     var selectedTarget by remember { mutableStateOf(if (availableTargetGoals.isNotEmpty()) availableTargetGoals.first() else null) }

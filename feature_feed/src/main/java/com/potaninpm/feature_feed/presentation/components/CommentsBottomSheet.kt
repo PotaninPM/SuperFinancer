@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.UserAvatar
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.CommentEntity
@@ -62,6 +63,11 @@ fun CommentsBottomSheet(
         parameters = { parametersOf(post.id) }, key = "CommentsViewModel_${post.id}"
     )
 ) {
+    AnalyticsManager.logEvent(
+        eventName = "comment_bottom_sheet_opened",
+        properties = mapOf("comment_bottom_sheet_opened" to "success")
+    )
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -103,6 +109,11 @@ fun CommentsBottomSheet(
 
             CommentInputSection { commentText ->
                 if (commentText.isNotBlank()) {
+                    AnalyticsManager.logEvent(
+                        eventName = "user_left_comment",
+                        properties = mapOf("user_left_comment" to "success")
+                    )
+
                     commentsViewModel.addComment(commentText)
                 }
             }

@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.feature_feed.R
 import com.potaninpm.feature_feed.data.local.entities.PostEntity
 import com.potaninpm.feature_feed.presentation.components.CommentsBottomSheet
@@ -136,6 +137,11 @@ fun FeedScreen(
                     actions = {
                         IconButton(
                             onClick = {
+                                AnalyticsManager.logEvent(
+                                    eventName = "create_post_button_clicked",
+                                    properties = mapOf("create_post_button" to "clicked")
+                                )
+
                                 rootNavController.navigate("create_post/${""}/${""}/${""}")
                             }
                         ) {

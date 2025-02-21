@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.functions.markdownToString
 import com.potaninpm.feature_home.R
 import com.potaninpm.feature_home.presentation.viewModels.ChatViewModel
@@ -50,6 +51,7 @@ fun ChatAiBottomSheet(
     chatViewModel: ChatViewModel = koinViewModel(),
     onDismiss: () -> Unit
 ) {
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
@@ -125,6 +127,11 @@ fun ChatAiBottomSheet(
                     Button(
                         onClick = {
                             scope.launch {
+                                AnalyticsManager.logEvent(
+                                    eventName = "ai_analyse_company_btn_click",
+                                    properties = mapOf("ai_analyse_company_btn" to "clicked")
+                                )
+
                                 val systemLanguage = Locale.current.language
                                 val request = if (systemLanguage == "ru") {
                                     "$companyName - краткое описание компании, включая ее основную деятельность и продукты. Рыночное положение: конкуренты - [перечислите основных конкурентов], доля рынка - [укажите долю рынка на соответствующем рынке], перспективы роста - [опишите ожидаемый рост рынка в ближайшие годы]. Риски и проблемы: скандалы - [упомяните о возможных скандалах или проблемах], регуляторные ограничения - [опишите регуляторные ограничения, с которыми может столкнуться компания], конкуренция - [обсудите уровень конкуренции на рынке], долговая нагрузка - [упомяните о долговой нагрузке компании]. Тренды и перспективы: [опишите текущие тренды и перспективы развития компании]. Оценка компании: P/E - [укажите P/E за последние годы], P/S - [укажите P/S за последние годы], EV/EBITDA - [укажите EV/EBITDA за последние годы], [добавьте комментарии аналитиков о переоцененности или недооцененности компании]. Мнение: [сформулируйте общее мнение о компании, учитывая ее потенциал роста, риски и финансовые показатели]."

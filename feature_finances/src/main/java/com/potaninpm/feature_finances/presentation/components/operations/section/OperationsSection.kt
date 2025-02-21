@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.domain.Operation
 import com.potaninpm.feature_finances.presentation.screens.groupOperationsByDate
@@ -37,7 +38,14 @@ fun OperationsSection(
     ) {
         AddButton(
             enabled = goalQuantity > 0,
-            onAddClick = onAddOperationClick,
+            onAddClick = {
+                AnalyticsManager.logEvent(
+                    eventName = "add_operation_btn_clicked",
+                    properties = mapOf("add_operation_btn" to "clicked")
+                )
+
+                onAddOperationClick()
+            },
             title = R.string.add_operation
         )
 

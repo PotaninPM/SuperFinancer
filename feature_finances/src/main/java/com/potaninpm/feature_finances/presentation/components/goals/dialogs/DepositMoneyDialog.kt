@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.CustomTextField
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
@@ -25,6 +26,11 @@ fun DepositMoneyDialog(
     onDismiss: () -> Unit,
     onConfirm: (GoalEntity, Long, String?) -> Unit
 ) {
+    AnalyticsManager.logEvent(
+        eventName = "deposit_money_dialog_opened",
+        properties = mapOf("deposit_money_dialog" to "opened")
+    )
+
     val context = LocalContext.current
 
     var amountText by rememberSaveable { mutableStateOf("") }

@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.AddButton
 import com.potaninpm.feature_finances.R
 import com.potaninpm.feature_finances.data.local.entities.GoalEntity
@@ -137,6 +138,11 @@ private fun FinancesScreenContent(
     if (fromGoal != null && actionType != null) {
         when (actionType) {
             "delete" -> {
+                AnalyticsManager.logEvent(
+                    eventName = "goal_deleted",
+                    properties = mapOf("goal_deleted_click" to "clicked")
+                )
+
                 LaunchedEffect(fromGoal) {
                     viewModel.deleteGoal(fromGoal!!)
                     fromGoal = null
@@ -144,6 +150,11 @@ private fun FinancesScreenContent(
                 }
             }
             "withdraw" -> {
+                AnalyticsManager.logEvent(
+                    eventName = "withdraw_btn_clicked",
+                    properties = mapOf("withdraw_btn" to "clicked")
+                )
+
                 if (fromGoal!!.currentAmount == 0L) {
                     viewModel.deleteGoal(fromGoal!!)
                     fromGoal = null
@@ -166,6 +177,11 @@ private fun FinancesScreenContent(
                 }
             }
             "transfer" -> {
+                AnalyticsManager.logEvent(
+                    eventName = "transfer_btn_clicked",
+                    properties = mapOf("transfer_btn" to "clicked")
+                )
+
                 TransferDialog(
                     fromGoal = fromGoal!!,
                     availableTargetGoals = goals.filter { it.id != fromGoal!!.id },
@@ -182,6 +198,11 @@ private fun FinancesScreenContent(
             }
 
             "deposit" -> {
+                AnalyticsManager.logEvent(
+                    eventName = "deposit_btn_clicked",
+                    properties = mapOf("deposit_btn" to "clicked")
+                )
+
                 DepositMoneyDialog(
                     goal = fromGoal!!,
                     onDismiss = { fromGoal = null; actionType = null },

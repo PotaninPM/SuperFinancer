@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.functions.startVoiceRecognition
 import com.potaninpm.core.ui.components.CustomElevatedCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
@@ -115,9 +116,18 @@ fun SearchScreen(
             val encodedUrl = URLEncoder.encode(new.webUrl, "UTF-8")
             val encodedImageUrl = URLEncoder.encode(new.imageUrl, "UTF-8")
 
+            AnalyticsManager.logEvent(
+                eventName = "article_in_search_click",
+                properties = mapOf("article_in_search_click" to "clicked")
+            )
+
             navController.navigate("article_web_view/$encodedUrl/${new.title}/${encodedImageUrl}")
         },
         onLoadMore = {
+            AnalyticsManager.logEvent(
+                eventName = "more_articles_in_search_click",
+                properties = mapOf("more_articles_in_search" to "clicked")
+            )
             searchViewModel.loadMore()
         }
     )

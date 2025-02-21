@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.potaninpm.core.AnalyticsManager
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerNewsCard
 import com.potaninpm.core.ui.components.shimmerCards.ShimmerTickerCard
 import com.potaninpm.core.ui.screens.FullScreenImageDialog
@@ -182,6 +183,11 @@ fun HomeScreen(
                 rootNavController.navigate(RootNavDestinations.Search.route) {
 
                 }
+
+                AnalyticsManager.logEvent(
+                    eventName = "search_click",
+                    properties = mapOf("search_click" to "clicked")
+                )
             },
             rootNavController = rootNavController,
             onTickerClick = { ticker ->
