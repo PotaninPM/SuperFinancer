@@ -22,7 +22,9 @@
 # Реализованные фичи:
 
 ### Главная страница:
-![Image 1](screenshots/home_dark.jpg){: style="width: 30%; height: auto;"} ![Image 2](screenshots/home_light.jpg)
+<img src="/screenshots/home_dark.jpg" alt="drawing" style="width:300px;"/>
+<img src="/screenshots/home_light.jpg" alt="drawing" style="width:300px;"/>
+
 1. PullToRefresh на главной странице
 2. Шиммер во время загрузки главной, поиска
 3. Пагинация в Поиске для новостей
@@ -31,17 +33,23 @@
 6. Обновление тикеров кнопкой либо настройка автообновления раз в N секунд
 7. Голосовой ввод в поиске
 ### Финансы:
-![Image 1](screenshots/finances_stat.jpg) ![Image 2](screenshots/finances_operations.jpg)
+<img src="/screenshots/finances_stat.jpg" alt="drawing" style="width:300px;"/>
+<img src="/screenshots/finances_operations.jpg" alt="drawing" style="width:300px;"/>
+
 1. Менеджер счетов (переводы между счетами, снятие со счетов)
 2. Отображается дополнительно: Сколько осталось времени до достижения всех целей, средние поступления за месяц, сколько осталось копить (денег).
 3. Если цель уже прошла или до нее остался 1 день то появляется определенный текст в дате и она окрашивается в другой цвет
 ### Лента:
-![Image 1](screenshots/posts_main.jpg) ![Image 2](screenshots/post_comments.jpg)
+<img src="/screenshots/posts_main.jpg" alt="drawing" style="width:300px;"/>
+<img src="/screenshots/post_comments.jpg" alt="drawing" style="width:300px;"/>
+
 1. Функциональность профиля и отображения авторов постов. Плюс сюда же функицонал с комментариями под постами(все локально)
 2. Система отображения фотографий(до 4 включая в особом виде, дальше как горизонтальный список)
 3. Текст ограничен 3мя строками. Если текст больше, то появляется кнопка "Еще" и раскрывает весь пост, а также появляется кнопка "скрыть", которая обратно возвращает состояние текста
 ### Общие:
-![Image 1](screenshots/ai_thinks.jpg) ![Image 2](screenshots/big_image.jpg)
+<img src="/screenshots/ai_thinks.jpg" alt="drawing" style="width:300px;"/>
+<img src="/screenshots/big_image.jpg" alt="drawing" style="width:300px;"/>
+
 1. Добавлена нейросеть для анализа финасового состояния кампании (при нажатии на тикер bottom sheet появляется), так же если зажать текст который она выдала можно скопировать его в буфер обмена. (работает как на главной так и в поиске)
 2. Возможность открывать картинки в любом месте приложения в полный размер(при нажатии на них)
 
