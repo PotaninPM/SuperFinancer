@@ -74,8 +74,8 @@ sdk.dir=/.../.../Android/Sdk
 
 ### Главная страница:
 <div style="display: flex; flex-wrap: wrap;">
-    <img src="screenshots/home_screen_dark.png" alt="drawing" width: "30%"/>
-    <img src="screenshots/home_screen_light.png" alt="drawing" width: "30%"/>
+    <img src="screenshots/home_screen_dark.png" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px;"/>
+    <img src="screenshots/home_screen_light.png" alt="drawing" style="width: 30%; height: auto; margin-bottom: 10px; margin-left: 10px"/>
 </div>
 
 1. PullToRefresh на главной странице.
