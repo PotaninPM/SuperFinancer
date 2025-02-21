@@ -1,5 +1,6 @@
 package com.potaninpm.feature_home.data.repository
 
+import com.potaninpm.core.ApiConstants
 import com.potaninpm.feature_home.data.mappers.toDomain
 import com.potaninpm.feature_home.data.remote.api.ChatApi
 import com.potaninpm.feature_home.data.remote.dto.chat.ChatMessageDto
@@ -11,10 +12,11 @@ class ChatRepositoryImpl(
     private val chatApi: ChatApi
 ): ChatRepository {
     override suspend fun getChatAnswer(question: String): ChatAnswer {
+
         val request = ChatRequest(
-            model = "meta-llama/llama-3.3-70b-instruct",
+            model = ApiConstants.AI_MODEL,
             messages = listOf(
-                ChatMessageDto("financial advisor", question)
+                ChatMessageDto(ApiConstants.AI_ROLE, question)
             )
         )
 

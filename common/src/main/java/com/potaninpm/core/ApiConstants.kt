@@ -10,4 +10,6 @@ object ApiConstants {
 
     const val AI_API_KEY = "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"
     const val AI_BASE_URL = "https://openrouter.ai/"
+    const val AI_MODEL = "meta-llama/llama-3.3-70b-instruct"
+    const val AI_ROLE = "financial advisor"
 }
