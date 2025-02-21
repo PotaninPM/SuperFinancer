@@ -100,7 +100,7 @@ fun AddOperationDialog(
                         amountError = when {
                             it.isEmpty() -> context.getString(R.string.sum_cannot_be_empty)
                             it.toLongOrNull() == null -> context.getString(R.string.enter_valid_figure)
-                            it.toLong() + selectedGoal?.currentAmount!! > maxAmount -> context.getString(
+                            it.toLong() > maxAmount -> context.getString(
                                 R.string.sum_is_bigger_than_goal, maxAmount.toString()
                             )
                             else -> null
