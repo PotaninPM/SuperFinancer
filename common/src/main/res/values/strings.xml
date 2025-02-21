@@ -3,4 +3,6 @@
     <string name="create">Create</string>
     <string name="article">Article</string>
     <string name="back">Back</string>
+    <string name="give_perm">To use voice input, enable microphone permission</string>
+    <string name="error_recognition">Recognition error</string>
 </resources>

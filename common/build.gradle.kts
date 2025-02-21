@@ -64,9 +64,7 @@ dependencies {
     // Kotlinx Serialization JSON
     api(libs.kotlinx.serialization.json)
 
-    // Navigation
     api(libs.androidx.navigation.compose)
-
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)
     api(libs.androidx.activity.compose)

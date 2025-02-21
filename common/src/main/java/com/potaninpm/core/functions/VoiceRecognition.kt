@@ -10,6 +10,7 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.potaninpm.core.R
 import java.util.Locale
 
 fun startVoiceRecognition(
@@ -19,7 +20,7 @@ fun startVoiceRecognition(
     onResult: (String) -> Unit
 ) {
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(context, "Чтобы использовать голосовой ввод включите разрешение на использование микрофона", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.give_perm), Toast.LENGTH_SHORT).show()
         return
     }
 
@@ -37,7 +38,8 @@ fun startVoiceRecognition(
         override fun onEndOfSpeech() {}
         override fun onError(error: Int) {
             onError("error")
-            //Toast.makeText(context, "Ошибка распознования", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                context.getString(R.string.error_recognition), Toast.LENGTH_SHORT).show()
         }
 
         override fun onResults(results: Bundle?) {
