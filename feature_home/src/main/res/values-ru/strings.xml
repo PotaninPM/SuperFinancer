@@ -25,4 +25,13 @@
     <string name="company_analyse">Анализ компании</string>
     <string name="ai_answer">Ответ ИИ:</string>
     <string name="copied_buff">Cкопировано в буфер обмена</string>
+    <string name="all">Все</string>
+    <string name="tech">Технологии</string>
+    <string name="finance">Финансы</string>
+    <string name="health">Здоровье</string>
+    <string name="science">Наука</string>
+    <string name="sports">Спорт</string>
+    <string name="entertainment">Развлечения</string>
+    <string name="business">Бизнес</string>
+    <string name="politics">Политика</string>
 </resources>

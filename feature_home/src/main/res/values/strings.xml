@@ -25,4 +25,13 @@
     <string name="company_analyse">Company analysis</string>
     <string name="ai_answer">AI\'s answer:</string>
     <string name="copied_buff">Copied to clipboard</string>
+    <string name="all">All</string>
+    <string name="tech">Tech</string>
+    <string name="finance">Finance</string>
+    <string name="health">Health</string>
+    <string name="science">Science</string>
+    <string name="sports">Sports</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="business">Business</string>
+    <string name="politics">Politics</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.potaninpm.feature_home.data.repository
+package com.potaninpm.feature_home.domain.repository
 
 import com.potaninpm.feature_home.domain.model.ChatAnswer
 

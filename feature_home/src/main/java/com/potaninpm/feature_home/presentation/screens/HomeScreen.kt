@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -103,7 +105,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadTickersData()
+        viewModel.loadData()
     }
 
     LaunchedEffect(autoUpdateEnabled) {
@@ -132,6 +134,10 @@ fun HomeScreen(
         }
     }
 
+    //category filter that you selected
+    var selectedTag by remember { mutableStateOf("All") }
+
+    //all for PullToRefresh
     val state = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
@@ -140,7 +146,11 @@ fun HomeScreen(
         isRefreshing = true
         coroutineScope.launch {
             viewModel.refreshTickersData()
-            viewModel.refreshNewsData()
+            if (selectedTag != "All") {
+                viewModel.loadNewsByCategory(selectedTag)
+            } else {
+                viewModel.refreshNewsData()
+            }
         }
     }
 
@@ -177,7 +187,11 @@ fun HomeScreen(
                 viewModel.refreshTickersData()
             },
             onNewsRefreshClick = {
-                viewModel.refreshNewsData()
+                if (selectedTag != "All") {
+                    viewModel.loadNewsByCategory(selectedTag)
+                } else {
+                    viewModel.refreshNewsData()
+                }
             },
             onFakeSearchClick = {
                 rootNavController.navigate(RootNavDestinations.Search.route) {
@@ -193,6 +207,14 @@ fun HomeScreen(
             onTickerClick = { ticker ->
                 chosenTickerCompany = ticker
                 aiBottomSheet = true
+            },
+            onTagClick = { tag ->
+                selectedTag = tag
+                if (tag == "All") {
+                    viewModel.refreshNewsData()
+                } else {
+                    viewModel.loadNewsByCategory(tag)
+                }
             }
         )
     }
@@ -228,7 +250,8 @@ private fun HomeScreenContent(
     onNewsRefreshClick: () -> Unit,
     onTickerRefreshClick: () -> Unit,
     onFakeSearchClick: () -> Unit,
-    onTickerClick: (String) -> Unit
+    onTickerClick: (String) -> Unit,
+    onTagClick: (String) -> Unit
 ) {
     val listState = rememberScrollState()
 
@@ -303,6 +326,9 @@ private fun HomeScreenContent(
                     },
                     onImageClicked = { imageUrl ->
                         imageClicked = imageUrl
+                    },
+                    onTagClick = { tag ->
+                        onTagClick(tag)
                     }
                 )
             }
@@ -326,9 +352,11 @@ fun NewsList(
     newsState: List<NewsArticle>,
     onArticleClick: (NewsArticle) -> Unit,
     onNewsRefreshClick: () -> Unit,
-    onImageClicked: (String) -> Unit
+    onImageClicked: (String) -> Unit,
+    onTagClick: (String) -> Unit
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
+    var isFilterClicked by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRefreshing) {
         delay(1000)
@@ -342,12 +370,34 @@ fun NewsList(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = stringResource(R.string.news),
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.news),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+            )
+
+            Icon(
+                painter = painterResource(R.drawable.filter_alt_24px),
+                contentDescription = null,
+                tint = if (isFilterClicked) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+                modifier = Modifier
+                    .clickable {
+                        isFilterClicked = !isFilterClicked
+
+                        if (!isFilterClicked) {
+                            onTagClick("All")
+                        }
+                    }
+            )
+        }
+
 
         Icon(
             imageVector = Icons.Default.Refresh,
@@ -359,6 +409,15 @@ fun NewsList(
                     isRefreshing = true
                     onNewsRefreshClick()
                 }
+        )
+    }
+
+    if (isFilterClicked) {
+        ChipsRow(
+            onTagClick = { tag ->
+                isRefreshing = true
+                onTagClick(tag)
+            }
         )
     }
 
@@ -478,3 +537,43 @@ fun TickersList(
         }
     }
 }
+
+@Composable
+fun ChipsRow(
+    onTagClick: (String) -> Unit
+) {
+    val tagMap = mapOf(
+        "All" to stringResource(id = R.string.all),
+        "Tech" to stringResource(id = R.string.tech),
+        "Finance" to stringResource(id = R.string.finance),
+        "Health" to stringResource(id = R.string.health),
+        "Science" to stringResource(id = R.string.science),
+        "Sports" to stringResource(id = R.string.sports),
+        "Entertainment" to stringResource(id = R.string.entertainment),
+        "Business" to stringResource(id = R.string.business),
+        "Politics" to stringResource(id = R.string.politics)
+    )
+
+    val selectedTag = remember { mutableStateOf("All") }
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .clip(RoundedCornerShape(12.dp))
+    ) {
+        items(tagMap.keys.toList()) { tag ->
+            FilterChip(
+                selected = tag == selectedTag.value,
+                onClick = {
+                    if (tag != selectedTag.value) {
+                        onTagClick(tag)
+                    }
+                    selectedTag.value = tag
+                },
+                label = { Text(tagMap[tag] ?: tag) }
+            )
+        }
+    }
+}
+

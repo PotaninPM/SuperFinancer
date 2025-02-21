@@ -2,7 +2,7 @@ package com.potaninpm.feature_home.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.potaninpm.feature_home.data.repository.ChatRepository
+import com.potaninpm.feature_home.domain.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

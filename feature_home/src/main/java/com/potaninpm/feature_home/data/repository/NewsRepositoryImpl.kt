@@ -45,6 +45,19 @@ class NewsRepositoryImpl(
         }
     }
 
+    override suspend fun getArticlesByCategory(category: String): List<NewsArticle> = withContext(Dispatchers.IO) {
+        try {
+            val response = nyTimesApi.getArticles(query = category)
+            val articles = response.response.docs.map { dto ->
+                dto.toDomainNews()
+            }
+            articles
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
     override suspend fun searchNews(query: String, page: Int): List<NewsArticle> {
         try {
             val response = nyTimesApi.getArticles(query = query, page = page)

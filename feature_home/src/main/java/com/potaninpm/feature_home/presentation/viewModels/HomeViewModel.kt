@@ -1,5 +1,6 @@
 package com.potaninpm.feature_home.presentation.viewModels
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potaninpm.feature_home.domain.model.NewsArticle
@@ -26,19 +27,29 @@ class HomeViewModel(
     private val _newTickerDataLoaded = MutableStateFlow(false)
     val newTickerDataLoaded: StateFlow<Boolean> = _newTickerDataLoaded
 
-    fun loadTickersData() {
+    fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val tickerSymbols = tickerRepository.getTickers().map { it.ticker }
-                val tickersDeferred = async { tickerRepository.getTickersInfo(tickerSymbols) }
+                val tickersDeferred = async { tickerRepository.getTickersInfo(tickerRepository.getTickers().map { it.ticker }) }
                 val newsDeferred = async { newsRepository.getLatestNews() }
 
-                _tickers.value = tickersDeferred.await()
-                _news.value = newsDeferred.await()
+                val tickers = tickersDeferred.await()
+                val news = newsDeferred.await()
 
+                _tickers.value = tickers
+                _news.value = news
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun loadNewsByCategory(category: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _news.value = emptyList()
+
+            val articles = newsRepository.getArticlesByCategory(category)
+            _news.value = articles
         }
     }
 
