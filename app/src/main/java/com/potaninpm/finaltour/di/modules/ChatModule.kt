@@ -3,7 +3,7 @@ package com.potaninpm.finaltour.di.modules
 import com.potaninpm.core.ApiConstants
 import com.potaninpm.feature_home.data.remote.api.ChatApi
 import com.potaninpm.feature_home.data.repository.ChatRepository
-import com.potaninpm.feature_home.domain.repository.ChatRepositoryImpl
+import com.potaninpm.feature_home.data.repository.ChatRepositoryImpl
 import com.potaninpm.feature_home.presentation.viewModels.ChatViewModel
 import okhttp3.OkHttpClient
 import org.koin.core.module.dsl.viewModel

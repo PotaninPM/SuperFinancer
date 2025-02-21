@@ -1,9 +1,8 @@
-package com.potaninpm.feature_home.domain.repository
+package com.potaninpm.feature_home.data.repository
 
 import com.potaninpm.feature_home.data.mappers.toDomain
 import com.potaninpm.feature_home.data.remote.api.ChatApi
 import com.potaninpm.feature_home.data.remote.dto.chat.ChatMessageDto
-import com.potaninpm.feature_home.data.repository.ChatRepository
 import com.potaninpm.feature_home.domain.model.ChatAnswer
 import com.potaninpm.feature_home.domain.model.ChatRequest
 
