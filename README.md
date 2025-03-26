@@ -8,9 +8,6 @@ SuperFinancer – это приложение для тех, кто интере
 ```bash
 git clone https://gitlab.prodcontest.ru/2025-final-projects-mobile/PotaninPM.git
 ```
-
-- `Внимание!` Так как в проекте используются не только api ключи NYTimes и Finnhub, то все эти ключи вынесены в проекте в ApiConstants.kt в common модуле, поэтому самим генерить и вставлять их не нужно!
-
 - Создайте файл `local.properties` в корне проекта и запишите в него локацию SDK
 
 ```properties
