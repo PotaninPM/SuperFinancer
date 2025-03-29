@@ -50,7 +50,8 @@ fun FullScreenImageDialog(
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
 
     Dialog(
-        onDismissRequest = onDismiss
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Box(
             modifier = Modifier
@@ -98,25 +99,25 @@ fun FullScreenImageDialog(
                         .fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
+            }
 
-                Box(
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable {
+                        onDismiss()
+                    }
+                    .align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.primary)
-                        .clickable {
-                            onDismiss()
-                        }
-                        .align(Alignment.TopEnd)
-                ) {
-                   Icon(
-                       imageVector = Icons.Default.Close,
-                       contentDescription = "Close",
-                       tint = MaterialTheme.colorScheme.onPrimary,
-                       modifier = Modifier
-                           .align(Alignment.Center)
-                   )
-                }
+                        .align(Alignment.Center)
+                )
             }
         }
     }
