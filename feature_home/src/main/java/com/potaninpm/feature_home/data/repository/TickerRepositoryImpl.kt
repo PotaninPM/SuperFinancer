@@ -16,7 +16,7 @@ class TickerRepositoryImpl(
             tickerApi.getTickers()
         } catch (e: Exception) {
             e.printStackTrace()
-            emptyList()
+            listOf("AAPL", "GOOGL", "AMZN", "TSLA", "MSFT").map { TickerDto(it) }
         }
     }
 
